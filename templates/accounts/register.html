@@ -1,0 +1,91 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block title %}Create Account | Fitness Master{% endblock %}
+
+{% block content %}
+<div class="py-12 sm:py-16 bg-[#F8FAFC] flex items-center justify-center min-h-[calc(100vh-160px)] px-4">
+  <div class="max-w-xl w-full">
+    <div class="bg-white rounded-3xl p-6 sm:p-10 border border-[#DCE2EA] shadow-xl">
+      
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="w-14 h-14 rounded-2xl bg-[#0F172A] text-[#06B6D4] flex items-center justify-center mx-auto mb-3 text-2xl shadow-md border border-[#1E293B]">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h2 class="font-heading text-2xl sm:text-3xl font-black text-[#0F172A]">Create Member Account</h2>
+        <p class="text-[#64748B] text-xs sm:text-sm mt-1">Join Fitness Master to track workouts, nutrition, and personal milestones</p>
+      </div>
+
+      <!-- Registration Form -->
+      <form method="post" action="{% url 'register' %}" class="space-y-4">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="p-3.5 rounded-xl text-xs font-bold bg-[#E53945]/10 border border-[#E53945]/30 text-[#E53945] flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>{{ form.non_field_errors.0 }}</span>
+          </div>
+        {% endif %}
+
+        <!-- 1 & 2: First Name & Last Name -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-[#64748B] mb-1.5">First Name *</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+              <span class="text-xs text-[#E53945] block mt-1 font-semibold">{{ form.first_name.errors.0 }}</span>
+            {% endif %}
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-[#64748B] mb-1.5">Last Name *</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+              <span class="text-xs text-[#E53945] block mt-1 font-semibold">{{ form.last_name.errors.0 }}</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- 3: Email Address -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#64748B] mb-1.5">Email Address *</label>
+          {{ form.email }}
+          {% if form.email.errors %}
+            <span class="text-xs text-[#E53945] block mt-1 font-semibold">{{ form.email.errors.0 }}</span>
+          {% endif %}
+        </div>
+
+        <!-- 4 & 5: Password & Confirm Password -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-[#64748B] mb-1.5">Password *</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+              <span class="text-xs text-[#E53945] block mt-1 font-semibold">{{ form.password.errors.0 }}</span>
+            {% endif %}
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-[#64748B] mb-1.5">Confirm Password *</label>
+            {{ form.confirm_password }}
+            {% if form.confirm_password.errors %}
+              <span class="text-xs text-[#E53945] block mt-1 font-semibold">{{ form.confirm_password.errors.0 }}</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-[#06B6D4] hover:bg-[#0891b2] text-white rounded-xl font-bold text-sm uppercase tracking-wider transition shadow-md flex items-center justify-center gap-2 mt-4">
+          <i class="fa-solid fa-bolt"></i> Create Free Account
+        </button>
+      </form>
+
+      <div class="text-center mt-6 pt-6 border-t border-[#DCE2EA]">
+        <p class="text-xs sm:text-sm text-[#64748B]">
+          Already have an account? 
+          <a href="{% url 'login' %}" class="font-bold text-[#06B6D4] hover:text-[#0891b2] transition">Sign in here</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

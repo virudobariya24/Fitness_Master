@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal Login | Fitness Master</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'deep-navy': '#0F172A',
+            'midnight': '#182230',
+            'charcoal': '#1E293B',
+            'electric-cyan': '#06B6D4',
+            'bright-orange': '#FF5722',
+            'light-bg': '#F8FAFC',
+            'text-dark': '#0F172A',
+            'muted-text': '#64748B',
+            'border-light': '#E2E8F0',
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            heading: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/fitness_master.css' %}">
+</head>
+<body class="bg-[#0F172A] text-white min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-md">
+    
+    <!-- Brand Header -->
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#FF5722] text-white text-2xl font-black mb-3 shadow-lg">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h1 class="text-3xl font-black font-heading tracking-tight text-white">
+        FITNESS<span class="text-[#FF5722]">ADMIN</span>
+      </h1>
+      <p class="text-xs uppercase tracking-widest text-[#06B6D4] font-bold mt-1">Master Management Portal</p>
+    </div>
+
+    <!-- Alert Messages -->
+    {% if messages %}
+      <div class="mb-5 space-y-2">
+        {% for message in messages %}
+          <div class="p-3.5 rounded-xl text-xs font-bold border flex items-center gap-2
+            {% if message.tags == 'error' %}bg-[#E53945]/20 border-[#E53945] text-white
+            {% elif message.tags == 'success' %}bg-[#10B981]/20 border-[#10B981] text-[#06B6D4]
+            {% else %}bg-[#182230] border-[#1E293B] text-slate-200{% endif %}">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Fixed Admin Credentials Badge -->
+    <div class="mb-5 p-4 rounded-2xl bg-[#182230] border border-[#06B6D4]/30 shadow-md flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-[#06B6D4]/20 text-[#06B6D4] flex items-center justify-center font-black">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase font-bold text-[#64748B] block">Default Admin Login</span>
+          <span class="font-bold text-white">Viraj</span> &bull; <span class="text-[#06B6D4] font-bold">Viraj123</span>
+        </div>
+      </div>
+      <span class="px-2.5 py-1 rounded-md text-[10px] font-black uppercase bg-[#06B6D4] text-[#0F172A]">Fixed</span>
+    </div>
+
+    <!-- Login Form Card -->
+    <div class="bg-[#182230] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl">
+      <form method="POST" action="{% url 'custom_admin_login' %}" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Admin Username</label>
+          <div class="relative">
+            <i class="fa-solid fa-user-shield absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]"></i>
+            <input type="text" name="username" value="Viraj" required placeholder="Viraj" autofocus
+              class="w-full pl-11 pr-4 py-3 bg-[#0F172A] border border-[#1E293B] rounded-xl text-sm font-semibold text-white focus:outline-none focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Admin Password</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-[#64748B]"></i>
+            <input type="password" name="password" value="Viraj123" required placeholder="••••••••"
+              class="w-full pl-11 pr-4 py-3 bg-[#0F172A] border border-[#1E293B] rounded-xl text-sm font-semibold text-white focus:outline-none focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] transition">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-[#FF5722] hover:bg-[#ea4a18] text-white rounded-xl font-bold text-sm uppercase tracking-wider transition shadow-lg flex items-center justify-center gap-2 mt-2">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Authenticate as Viraj
+        </button>
+      </form>
+    </div>
+
+    <!-- Bottom return link -->
+    <div class="text-center mt-6">
+      <a href="{% url 'home' %}" class="text-xs text-slate-400 hover:text-white transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-arrow-left"></i> Return to Fitness Master Public Site
+      </a>
+    </div>
+
+  </div>
+
+</body>
+</html>

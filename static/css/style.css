@@ -1,0 +1,592 @@
+/* ==========================================================================
+   FITNESSMASTER - ELECTRIC CRIMSON & CARBON BLACK THEME
+   Gymshark / Nike Athletic Powerhouse Aesthetic
+   Colors: Carbon Black (#09090B), Deep Slate (#121217), Crimson Red (#FF1E42), Lava Orange (#FF5722)
+   ========================================================================== */
+
+:root {
+  --fm-bg-dark: #09090b;
+  --fm-bg-surface: #111116;
+  --fm-bg-card: #15151c;
+  --fm-bg-card-hover: #1c1c26;
+  --fm-bg-input: #0d0d12;
+
+  --fm-primary: #ff1e42;
+  --fm-primary-glow: rgba(255, 30, 66, 0.32);
+  --fm-primary-dark: #d90429;
+  --fm-primary-light: #ff4767;
+
+  --fm-accent-orange: #ff5722;
+  --fm-accent-orange-glow: rgba(255, 87, 34, 0.28);
+
+  --fm-accent-cyan: #38bdf8;
+  --fm-accent-cyan-glow: rgba(56, 189, 248, 0.25);
+
+  --fm-text-primary: #f8fafc;
+  --fm-text-secondary: #a1a1aa;
+  --fm-text-muted: #71717a;
+
+  --fm-border: rgba(255, 255, 255, 0.08);
+  --fm-border-focus: rgba(255, 30, 66, 0.6);
+
+  --fm-gradient-brand: linear-gradient(135deg, #ff1e42 0%, #ff5722 100%);
+  --fm-gradient-fire: linear-gradient(135deg, #ff5722 0%, #f59e0b 100%);
+  --fm-gradient-card: linear-gradient(145deg, rgba(21, 21, 28, 0.95) 0%, rgba(13, 13, 18, 0.95) 100%);
+
+  --fm-radius-sm: 8px;
+  --fm-radius-md: 14px;
+  --fm-radius-lg: 20px;
+  --fm-radius-xl: 28px;
+  --fm-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  --fm-shadow-glow: 0 0 25px var(--fm-primary-glow);
+}
+
+/* Base Reset & Fonts */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--fm-bg-dark);
+  color: var(--fm-text-primary);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 12% 15%, rgba(255, 30, 66, 0.09) 0%, transparent 45%),
+    radial-gradient(circle at 88% 65%, rgba(255, 87, 34, 0.07) 0%, transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(255, 30, 66, 0.05) 0%, transparent 55%);
+  background-attachment: fixed;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--fm-text-primary);
+  letter-spacing: -0.025em;
+}
+
+a {
+  color: var(--fm-primary);
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+a:hover {
+  color: var(--fm-primary-light);
+}
+
+/* ==========================================================================
+   NAVBAR
+   ========================================================================== */
+.fm-navbar {
+  background: rgba(9, 9, 11, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--fm-border);
+  padding: 0.9rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.fm-brand {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.55rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #fff;
+  letter-spacing: -0.03em;
+}
+
+.fm-brand-icon {
+  background: var(--fm-gradient-brand);
+  color: #ffffff;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: 0 4px 18px var(--fm-primary-glow);
+  transform: rotate(-3deg);
+  transition: transform 0.3s ease;
+}
+
+.fm-brand:hover .fm-brand-icon {
+  transform: rotate(0deg) scale(1.06);
+}
+
+.fm-brand-text span {
+  background: var(--fm-gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-link {
+  color: var(--fm-text-secondary) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--fm-radius-sm);
+  transition: all 0.25s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+  color: var(--fm-primary) !important;
+  font-weight: 600;
+}
+
+/* Avatar Pill in Navbar */
+.nav-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--fm-border);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-user-pill:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--fm-primary);
+}
+
+.nav-avatar-mini {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--fm-gradient-brand);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn-fm-primary {
+  background: var(--fm-gradient-brand);
+  color: #ffffff !important;
+  font-weight: 700;
+  border: none;
+  padding: 0.7rem 1.6rem;
+  border-radius: var(--fm-radius-md);
+  box-shadow: 0 4px 20px var(--fm-primary-glow);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-fm-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px rgba(255, 30, 66, 0.5);
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #ff3355 0%, #ff6b3d 100%);
+}
+
+.btn-fm-outline {
+  background: transparent;
+  color: var(--fm-text-primary) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  font-weight: 600;
+  padding: 0.7rem 1.6rem;
+  border-radius: var(--fm-radius-md);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-fm-outline:hover {
+  border-color: var(--fm-primary);
+  background: rgba(255, 30, 66, 0.1);
+  color: var(--fm-primary) !important;
+  transform: translateY(-2px);
+}
+
+.btn-fm-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  font-weight: 600;
+  padding: 0.6rem 1.3rem;
+  border-radius: var(--fm-radius-md);
+  transition: all 0.25s ease;
+}
+
+.btn-fm-danger:hover {
+  background: #ef4444;
+  color: #fff !important;
+}
+
+/* ==========================================================================
+   CARDS & CONTAINERS
+   ========================================================================== */
+.fm-card {
+  background: var(--fm-gradient-card);
+  border: 1px solid var(--fm-border);
+  border-radius: var(--fm-radius-lg);
+  padding: 1.8rem;
+  box-shadow: var(--fm-shadow);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.fm-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 30, 66, 0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.fm-card:hover::before {
+  opacity: 1;
+}
+
+.fm-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 30, 66, 0.35);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7);
+}
+
+/* ==========================================================================
+   FORMS & INPUTS
+   ========================================================================== */
+.form-label {
+  color: var(--fm-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.form-control, .form-select {
+  background-color: var(--fm-bg-input) !important;
+  border: 1px solid var(--fm-border) !important;
+  color: var(--fm-text-primary) !important;
+  border-radius: var(--fm-radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--fm-primary) !important;
+  box-shadow: 0 0 0 3px var(--fm-primary-glow) !important;
+  background-color: #121218 !important;
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: var(--fm-text-muted);
+}
+
+.input-group-text {
+  background-color: var(--fm-bg-input);
+  border: 1px solid var(--fm-border);
+  color: var(--fm-text-secondary);
+  border-radius: var(--fm-radius-md);
+}
+
+/* Custom Checkbox */
+.form-check-input {
+  background-color: var(--fm-bg-input);
+  border-color: var(--fm-border);
+}
+
+.form-check-input:checked {
+  background-color: var(--fm-primary);
+  border-color: var(--fm-primary);
+}
+
+/* Password Toggle Icon */
+.pwd-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--fm-text-secondary);
+  cursor: pointer;
+  padding: 0 0.8rem;
+  transition: color 0.2s ease;
+}
+
+.pwd-toggle-btn:hover {
+  color: var(--fm-primary);
+}
+
+/* ==========================================================================
+   BADGES & PILLS
+   ========================================================================== */
+.badge-fm {
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  letter-spacing: 0.03em;
+}
+
+.badge-fm-primary {
+  background: rgba(255, 30, 66, 0.15);
+  color: #ff4767;
+  border: 1px solid rgba(255, 30, 66, 0.3);
+}
+
+.badge-fm-cyan {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.badge-fm-orange {
+  background: rgba(255, 87, 34, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(255, 87, 34, 0.3);
+}
+
+/* ==========================================================================
+   STAT CARDS (ADMIN DASHBOARD)
+   ========================================================================== */
+.stat-card {
+  background: var(--fm-bg-card);
+  border: 1px solid var(--fm-border);
+  border-radius: var(--fm-radius-lg);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 30, 66, 0.3);
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--fm-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.stat-icon-green {
+  background: rgba(255, 30, 66, 0.15);
+  color: #ff1e42;
+}
+
+.stat-icon-cyan {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.stat-icon-orange {
+  background: rgba(255, 87, 34, 0.15);
+  color: #ff5722;
+}
+
+.stat-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.stat-label {
+  color: var(--fm-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.35rem;
+}
+
+/* ==========================================================================
+   PROFILE HERO BANNER
+   ========================================================================== */
+.profile-hero {
+  background: linear-gradient(135deg, rgba(21, 21, 28, 0.98), rgba(13, 13, 18, 0.98)),
+              radial-gradient(circle at top right, rgba(255, 30, 66, 0.16), transparent 50%);
+  border: 1px solid var(--fm-border);
+  border-radius: var(--fm-radius-xl);
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+
+.profile-avatar-placeholder {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--fm-gradient-brand);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 25px var(--fm-primary-glow);
+}
+
+.profile-status-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  background: #ff1e42;
+  border: 3px solid var(--fm-bg-surface);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 30, 66, 0.6);
+}
+
+/* ==========================================================================
+   ALERTS / TOASTS
+   ========================================================================== */
+.alert {
+  border-radius: var(--fm-radius-md);
+  padding: 1rem 1.25rem;
+  border: 1px solid transparent;
+  font-size: 0.95rem;
+  backdrop-filter: blur(8px);
+}
+
+.alert-success {
+  background: rgba(255, 30, 66, 0.12);
+  border-color: rgba(255, 30, 66, 0.3);
+  color: #fca5a5;
+}
+
+.alert-danger {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.alert-info {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #7dd3fc;
+}
+
+.alert-warning {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fcd34d;
+}
+
+/* ==========================================================================
+   DROPDOWN MENUS
+   ========================================================================== */
+.dropdown-menu {
+  background: #171720;
+  border: 1px solid var(--fm-border);
+  border-radius: var(--fm-radius-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  padding: 0.5rem;
+}
+
+.dropdown-item {
+  color: var(--fm-text-secondary);
+  border-radius: var(--fm-radius-sm);
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 30, 66, 0.12);
+  color: #fff;
+}
+
+.dropdown-divider {
+  border-color: var(--fm-border);
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.fm-footer {
+  margin-top: auto;
+  background: #060608;
+  border-top: 1px solid var(--fm-border);
+  padding: 2rem 0;
+  color: var(--fm-text-secondary);
+}
+
+/* ==========================================================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================================================== */
+@media (max-width: 991.98px) {
+  .profile-hero {
+    text-align: center;
+    padding: 2rem 1.25rem;
+  }
+  .profile-avatar-wrap {
+    margin: 0 auto 1.2rem;
+  }
+  .stat-card {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .fm-card {
+    padding: 1.25rem;
+  }
+  .stat-value {
+    font-size: 1.7rem;
+  }
+  .btn-fm-primary, .btn-fm-outline {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,300 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Fitness Master | Personal Fitness & Wellness Platform{% endblock %}</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'deep-navy': '#0F172A',
+            'midnight': '#182230',
+            'charcoal': '#1E293B',
+            'electric-cyan': '#06B6D4',
+            'electric-lime': '#06B6D4',
+            'bright-orange': '#FF5722',
+            'light-bg': '#F8FAFC',
+            'text-dark': '#0F172A',
+            'muted-text': '#64748B',
+            'border-light': '#E2E8F0',
+            'success-green': '#10B981',
+            'danger-red': '#E53945',
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            heading: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Custom High-Contrast Fitness Master CSS -->
+  <link rel="stylesheet" href="{% static 'css/fitness_master.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-[#F4F6FA] text-[#172033] flex flex-col min-h-screen">
+
+  <!-- =========================================================================
+       PUBLIC TOP NAVBAR
+       ========================================================================= -->
+  <nav class="bg-[#101828] text-white border-b border-[#242C3A] sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Brand Logo -->
+        <a href="{% url 'home' %}" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-lg bg-[#06B6D4] text-white flex items-center justify-center font-black text-xl shadow-md transition transform group-hover:scale-105">
+            <i class="fa-solid fa-dumbbell"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-heading font-black text-2xl tracking-tight text-white">
+              FITNESS<span class="text-[#06B6D4]">MASTER</span>
+            </span>
+            <span class="text-[10px] uppercase tracking-widest text-[#667085] font-bold">Personal Wellness</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <div class="hidden md:flex items-center space-x-1 lg:space-x-3">
+          <a href="{% url 'home' %}" class="px-3 py-2 rounded-lg text-sm font-semibold transition {% if request.resolver_match.url_name == 'home' %}text-[#06B6D4] bg-[#182230]{% else %}text-white hover:text-[#06B6D4] hover:bg-[#182230]{% endif %}">
+            Home
+          </a>
+          <a href="{% url 'about' %}" class="px-3 py-2 rounded-lg text-sm font-semibold transition {% if request.resolver_match.url_name == 'about' %}text-[#06B6D4] bg-[#182230]{% else %}text-white hover:text-[#06B6D4] hover:bg-[#182230]{% endif %}">
+            About Us
+          </a>
+          <a href="{% url 'programs' %}" class="px-3 py-2 rounded-lg text-sm font-semibold transition {% if request.resolver_match.url_name == 'programs' %}text-[#06B6D4] bg-[#182230]{% else %}text-white hover:text-[#06B6D4] hover:bg-[#182230]{% endif %}">
+            Programs
+          </a>
+          <a href="{% url 'public_exercises' %}" class="px-3 py-2 rounded-lg text-sm font-semibold transition {% if request.resolver_match.url_name == 'public_exercises' %}text-[#06B6D4] bg-[#182230]{% else %}text-white hover:text-[#06B6D4] hover:bg-[#182230]{% endif %}">
+            Exercise Library
+          </a>
+          <a href="{% url 'public_nutrition' %}" class="px-3 py-2 rounded-lg text-sm font-semibold transition {% if request.resolver_match.url_name == 'public_nutrition' %}text-[#06B6D4] bg-[#182230]{% else %}text-white hover:text-[#06B6D4] hover:bg-[#182230]{% endif %}">
+            Nutrition
+          </a>
+          <a href="{% url 'bmi_calculator' %}" class="px-3 py-2 rounded-lg text-sm font-semibold transition {% if request.resolver_match.url_name == 'bmi_calculator' %}text-[#06B6D4] bg-[#182230]{% else %}text-white hover:text-[#06B6D4] hover:bg-[#182230]{% endif %}">
+            Calculators
+          </a>
+          <a href="{% url 'contact' %}" class="px-3 py-2 rounded-lg text-sm font-semibold transition {% if request.resolver_match.url_name == 'contact' %}text-[#06B6D4] bg-[#182230]{% else %}text-white hover:text-[#06B6D4] hover:bg-[#182230]{% endif %}">
+            Contact
+          </a>
+        </div>
+
+        <!-- Auth Buttons -->
+        <div class="hidden md:flex items-center gap-3">
+          {% if user.is_authenticated %}
+            {% if user.is_admin_user %}
+              <a href="{% url 'admin_dashboard' %}" class="px-4 py-2.5 rounded-lg bg-[#FF6B35] hover:bg-[#e5531d] text-white font-bold text-sm shadow transition flex items-center gap-2">
+                <i class="fa-solid fa-user-shield"></i> Admin Panel
+              </a>
+            {% else %}
+              <a href="{% url 'user_dashboard' %}" class="px-4 py-2.5 rounded-lg bg-[#06B6D4] hover:bg-[#0891b2] text-white font-bold text-sm shadow transition flex items-center gap-2">
+                <i class="fa-solid fa-gauge-high"></i> My Dashboard
+              </a>
+            {% endif %}
+            <!-- Profile Chip with Hover Dropdown -->
+            <div class="relative group py-2">
+              <a href="{% if user.is_admin_user %}{% url 'admin_profile' %}{% else %}{% url 'user_profile' %}{% endif %}" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#182230] border border-[#242C3A] hover:border-[#06B6D4] transition">
+                <div class="w-7 h-7 rounded-full bg-[#06B6D4] text-white font-black text-xs flex items-center justify-center">
+                  {% if user.is_admin_user %}AD{% else %}{{ user.profile.initials }}{% endif %}
+                </div>
+                <span class="text-xs font-bold text-white">{{ user.first_name|default:user.username }}</span>
+                <i class="fa-solid fa-chevron-down text-[10px] text-[#667085] group-hover:text-[#06B6D4] transition-transform duration-200 group-hover:rotate-180"></i>
+              </a>
+
+              <div class="dropdown-menu absolute right-0 top-full pt-1.5 w-56 opacity-0 invisible translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                <div class="bg-[#101828] text-white rounded-2xl border border-[#242C3A] shadow-xl overflow-hidden divide-y divide-[#242C3A]">
+                  <div class="p-3 bg-[#182230]">
+                    <p class="text-xs font-bold text-white truncate">{{ user.username }}</p>
+                    <p class="text-[11px] text-[#667085] truncate">{{ user.email }}</p>
+                  </div>
+                  <div class="py-1">
+                    {% if user.is_admin_user %}
+                      <a href="{% url 'admin_dashboard' %}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-[#DCE2EA] hover:bg-[#182230] hover:text-[#06B6D4]">
+                        <i class="fa-solid fa-gauge text-xs"></i> Admin Panel
+                      </a>
+                    {% else %}
+                      <a href="{% url 'user_profile' %}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-[#DCE2EA] hover:bg-[#182230] hover:text-[#06B6D4]">
+                        <i class="fa-solid fa-user-gear text-xs"></i> My Profile
+                      </a>
+                      <a href="{% url 'user_dashboard' %}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-[#DCE2EA] hover:bg-[#182230] hover:text-[#06B6D4]">
+                        <i class="fa-solid fa-gauge-high text-xs"></i> My Dashboard
+                      </a>
+                    {% endif %}
+                  </div>
+                  <div class="p-1.5 bg-[#182230]">
+                    <a href="{% url 'logout' %}" class="flex items-center gap-2 px-3 py-2 text-xs font-bold text-[#E53945] hover:bg-[#E53945]/10 rounded-xl transition">
+                      <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i> Log Out
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-semibold text-white hover:text-[#06B6D4] transition">
+              Log In
+            </a>
+            <a href="{% url 'register' %}" class="px-5 py-2.5 rounded-lg bg-[#06B6D4] hover:bg-[#0891b2] text-white font-bold text-sm shadow-md transition flex items-center gap-2">
+              <i class="fa-solid fa-bolt"></i> Get Started
+            </a>
+          {% endif %}
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <div class="flex md:hidden">
+          <button id="mobileMenuBtn" type="button" class="p-2 rounded-lg text-white hover:text-[#06B6D4] hover:bg-[#182230] focus:outline-none">
+            <i class="fa-solid fa-bars text-2xl"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-[#182230] border-t border-[#242C3A] px-4 pt-3 pb-6 space-y-2">
+      <a href="{% url 'home' %}" class="block px-3 py-2 rounded-lg font-semibold text-white hover:bg-[#101828] hover:text-[#06B6D4]">Home</a>
+      <a href="{% url 'about' %}" class="block px-3 py-2 rounded-lg font-semibold text-white hover:bg-[#101828] hover:text-[#06B6D4]">About Us</a>
+      <a href="{% url 'programs' %}" class="block px-3 py-2 rounded-lg font-semibold text-white hover:bg-[#101828] hover:text-[#06B6D4]">Programs</a>
+      <a href="{% url 'public_exercises' %}" class="block px-3 py-2 rounded-lg font-semibold text-white hover:bg-[#101828] hover:text-[#06B6D4]">Exercise Library</a>
+      <a href="{% url 'public_nutrition' %}" class="block px-3 py-2 rounded-lg font-semibold text-white hover:bg-[#101828] hover:text-[#06B6D4]">Nutrition</a>
+      <a href="{% url 'bmi_calculator' %}" class="block px-3 py-2 rounded-lg font-semibold text-white hover:bg-[#101828] hover:text-[#06B6D4]">Calculators</a>
+      <a href="{% url 'contact' %}" class="block px-3 py-2 rounded-lg font-semibold text-white hover:bg-[#101828] hover:text-[#06B6D4]">Contact</a>
+      <div class="pt-4 border-t border-[#242C3A] flex flex-col gap-2">
+        {% if user.is_authenticated %}
+          {% if user.is_admin_user %}
+            <a href="{% url 'admin_dashboard' %}" class="w-full text-center py-2.5 rounded-lg bg-[#FF6B35] text-white font-bold">Admin Panel</a>
+          {% else %}
+            <a href="{% url 'user_dashboard' %}" class="w-full text-center py-2.5 rounded-lg bg-[#06B6D4] text-white font-bold">My Dashboard</a>
+          {% endif %}
+          <a href="{% url 'logout' %}" class="w-full text-center py-2 rounded-lg bg-[#242C3A] text-white font-semibold">Log Out</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="w-full text-center py-2.5 rounded-lg bg-[#242C3A] text-white font-semibold">Log In</a>
+          <a href="{% url 'register' %}" class="w-full text-center py-2.5 rounded-lg bg-[#06B6D4] text-white font-bold">Get Started</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
+      {% for message in messages %}
+        <div class="p-4 rounded-lg flex items-center justify-between mb-3 shadow border {% if message.tags == 'success' %}bg-[#16A34A]/10 border-[#16A34A] text-[#16A34A]{% elif message.tags == 'error' or message.tags == 'danger' %}bg-[#E53945]/10 border-[#E53945] text-[#E53945]{% elif message.tags == 'warning' %}bg-[#FF6B35]/10 border-[#FF6B35] text-[#FF6B35]{% else %}bg-[#101828]/10 border-[#101828] text-[#101828]{% endif %}">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'error' or message.tags == 'danger' %}fa-circle-exclamation{% else %}fa-circle-info{% endif %} text-lg"></i>
+            <span class="font-semibold text-sm">{{ message }}</span>
+          </div>
+          <button onclick="this.parentElement.remove()" class="text-sm opacity-60 hover:opacity-100">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Main Content -->
+  <main class="flex-grow">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- =========================================================================
+       PUBLIC FOOTER
+       ========================================================================= -->
+  <footer class="bg-[#101828] text-white border-t border-[#242C3A] mt-auto pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+        
+        <!-- Col 1: Brand & Mission -->
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-[#06B6D4] text-white flex items-center justify-center font-black text-xl">
+              <i class="fa-solid fa-dumbbell"></i>
+            </div>
+            <span class="font-heading font-black text-2xl tracking-tight text-white">
+              FITNESS<span class="text-[#06B6D4]">MASTER</span>
+            </span>
+          </div>
+          <p class="text-[#667085] text-sm leading-relaxed mb-6">
+            A premium personal fitness and wellness platform engineered to empower your workouts, dial in your nutrition, and track real physical progress.
+          </p>
+          <div class="flex items-center gap-4 text-[#667085]">
+            <a href="#" class="hover:text-[#06B6D4] transition"><i class="fa-brands fa-instagram text-lg"></i></a>
+            <a href="#" class="hover:text-[#06B6D4] transition"><i class="fa-brands fa-youtube text-lg"></i></a>
+            <a href="#" class="hover:text-[#06B6D4] transition"><i class="fa-brands fa-x-twitter text-lg"></i></a>
+            <a href="#" class="hover:text-[#06B6D4] transition"><i class="fa-brands fa-facebook text-lg"></i></a>
+          </div>
+        </div>
+
+        <!-- Col 2: Navigation Links -->
+        <div>
+          <h4 class="font-heading text-lg font-bold text-white mb-4">Quick Links</h4>
+          <ul class="space-y-2.5 text-sm text-[#667085]">
+            <li><a href="{% url 'home' %}" class="hover:text-[#06B6D4] transition">Home</a></li>
+            <li><a href="{% url 'about' %}" class="hover:text-[#06B6D4] transition">About Us</a></li>
+            <li><a href="{% url 'programs' %}" class="hover:text-[#06B6D4] transition">Workout Programs</a></li>
+            <li><a href="{% url 'public_exercises' %}" class="hover:text-[#06B6D4] transition">Exercise Library</a></li>
+            <li><a href="{% url 'public_nutrition' %}" class="hover:text-[#06B6D4] transition">Nutrition & Diet</a></li>
+            <li><a href="{% url 'contact' %}" class="hover:text-[#06B6D4] transition">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Calculators & Tools -->
+        <div>
+          <h4 class="font-heading text-lg font-bold text-white mb-4">Health Calculators</h4>
+          <ul class="space-y-2.5 text-sm text-[#667085]">
+            <li><a href="{% url 'bmi_calculator' %}" class="hover:text-[#06B6D4] transition">BMI Calculator</a></li>
+            <li><a href="{% url 'calories_calculator' %}" class="hover:text-[#06B6D4] transition">TDEE Calories Calculator</a></li>
+            <li><a href="{% url 'login' %}" class="hover:text-[#06B6D4] transition">Water Tracker (Login Required)</a></li>
+            <li><a href="{% url 'login' %}" class="hover:text-[#06B6D4] transition">Weight History & Progress</a></li>
+            <li><a href="{% url 'login' %}" class="hover:text-[#06B6D4] transition">Fitness Challenges</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Platform Separation -->
+        <div>
+          <h4 class="font-heading text-lg font-bold text-white mb-4">Platform Portals</h4>
+          <div class="space-y-3">
+            <a href="{% url 'login' %}" class="block p-3 rounded-lg bg-[#182230] border border-[#242C3A] hover:border-[#06B6D4] transition">
+              <div class="text-xs uppercase font-bold text-[#06B6D4]">User Panel</div>
+              <div class="text-sm font-semibold text-white">Member Dashboard</div>
+            </a>
+            <a href="{% url 'custom_admin_login' %}" class="block p-3 rounded-lg bg-[#182230] border border-[#242C3A] hover:border-[#FF6B35] transition">
+              <div class="text-xs uppercase font-bold text-[#FF6B35]">Admin Panel</div>
+              <div class="text-sm font-semibold text-white">Custom Admin Portal</div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-8 border-t border-[#242C3A] flex flex-col sm:flex-row items-center justify-between text-xs text-[#667085] gap-4">
+        <div>&copy; 2026 Fitness Master. All rights reserved. Personal Fitness &amp; Wellness System.</div>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-white">Privacy Policy</a>
+          <a href="#" class="hover:text-white">Terms of Service</a>
+          <a href="{% url 'contact' %}" class="hover:text-white">Support</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toggle Mobile Menu JS -->
+  <script>
+    const btn = document.getElementById('mobileMenuBtn');
+    const menu = document.getElementById('mobileMenu');
+    if (btn && menu) {
+      btn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+      });
+    }
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

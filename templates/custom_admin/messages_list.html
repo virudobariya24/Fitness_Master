@@ -1,0 +1,114 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Messages &amp; Inquiries | Custom Admin{% endblock %}
+{% block page_title %}Communications Inbox{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-xl font-heading font-black text-[#172033]">Contact Inquiries &amp; Public Inbound</h2>
+      <p class="text-xs text-[#667085]">Review messages received from public website contact form.</p>
+    </div>
+  </div>
+
+  <!-- Messages Table -->
+  <div class="bg-white rounded-2xl border border-[#DCE2EA] overflow-hidden shadow-sm">
+    <div class="p-5 border-b border-[#DCE2EA] flex items-center justify-between">
+      <h3 class="font-heading font-black text-base text-[#172033]">Contact Messages ({{ inquiries.count }})</h3>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-[#172033]">
+        <thead class="bg-[#F4F6FA] text-[#667085] uppercase text-[10px] font-bold tracking-wider border-b border-[#DCE2EA]">
+          <tr>
+            <th class="py-3.5 px-5">Sender</th>
+            <th class="py-3.5 px-5">Subject</th>
+            <th class="py-3.5 px-5">Message Preview</th>
+            <th class="py-3.5 px-5">Received At</th>
+            <th class="py-3.5 px-5">Status</th>
+            <th class="py-3.5 px-5 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#DCE2EA]">
+          {% for m in inquiries %}
+            <tr class="hover:bg-[#F4F6FA]/50 transition {% if not m.is_read %}bg-[#FF6B35]/5{% endif %}">
+              <td class="py-4 px-5">
+                <span class="font-bold text-[#172033] block">{{ m.name }}</span>
+                <span class="text-[10px] text-[#667085]">{{ m.email }}</span>
+              </td>
+              <td class="py-4 px-5 font-bold text-[#172033]">
+                {{ m.subject }}
+              </td>
+              <td class="py-4 px-5 text-[#667085] max-w-sm">
+                {{ m.message }}
+              </td>
+              <td class="py-4 px-5 text-[#667085]">
+                {{ m.created_at|date:"M d, Y · h:i A" }}
+              </td>
+              <td class="py-4 px-5">
+                {% if m.is_read %}
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F4F6FA] text-[#667085]">Read</span>
+                {% else %}
+                  <span class="px-2 py-0.5 rounded text-[10px] font-black bg-[#FF6B35]/15 text-[#FF6B35]">Unread</span>
+                {% endif %}
+              </td>
+              <td class="py-4 px-5 text-right">
+                <div class="inline-flex items-center gap-2">
+                  <a href="{% url 'admin_message_toggle_read' m.id %}" class="p-1.5 rounded-lg bg-[#F4F6FA] text-[#101828] hover:bg-[#101828] hover:text-white transition" title="Toggle Read Status">
+                    {% if m.is_read %}<i class="fa-regular fa-envelope text-xs"></i>{% else %}<i class="fa-solid fa-envelope-open text-xs"></i>{% endif %}
+                  </a>
+                  <a href="{% url 'admin_message_delete' m.id %}" onclick="return confirm('Delete message from {{ m.name }}?');"
+                    class="p-1.5 rounded-lg bg-[#F4F6FA] text-[#E53945] hover:bg-[#E53945] hover:text-white transition" title="Delete Message">
+                    <i class="fa-solid fa-trash text-xs"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6" class="py-8 text-center text-[#667085]">No contact messages recorded yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- User Feedback Section -->
+  {% if feedbacks %}
+    <div class="bg-white rounded-2xl border border-[#DCE2EA] overflow-hidden shadow-sm">
+      <div class="p-5 border-b border-[#DCE2EA]">
+        <h3 class="font-heading font-black text-base text-[#172033]">User Testimonials &amp; Reviews</h3>
+      </div>
+      <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% for fb in feedbacks %}
+          <div class="p-4 bg-[#F4F6FA] rounded-xl border border-[#DCE2EA] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-bold text-xs text-[#172033]">{{ fb.user.get_full_name|default:fb.user.username }}</span>
+                <div class="text-amber-500 text-xs">
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= fb.rating %}
+                      <i class="fa-solid fa-star"></i>
+                    {% else %}
+                      <i class="fa-regular fa-star text-slate-300"></i>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              <p class="text-xs text-[#667085] leading-relaxed italic">"{{ fb.content }}"</p>
+            </div>
+            <span class="text-[10px] text-[#667085] block mt-3 pt-2 border-t border-[#DCE2EA]">
+              Submitted on {{ fb.created_at|date:"M d, Y" }}
+            </span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

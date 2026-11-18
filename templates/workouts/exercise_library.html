@@ -1,0 +1,133 @@
+{% extends "base_user.html" %}
+
+{% block title %}Exercise Library | Fitness Master{% endblock %}
+{% block page_title %}Exercise Library{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Search & Filter Bar -->
+  <div class="bg-white rounded-2xl p-5 border border-[#DCE2EA] shadow-sm">
+    <form method="GET" action="{% url 'user_exercise_library' %}" class="flex flex-col md:flex-row gap-3">
+      <div class="relative flex-1">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#667085]"></i>
+        <input type="text" name="q" value="{{ query }}" placeholder="Search exercise by name (e.g. Barbell Squat, Push-Ups)..."
+          class="w-full pl-11 pr-4 py-3 bg-[#F4F6FA] border border-[#DCE2EA] rounded-xl text-sm font-medium text-[#172033] focus:outline-none focus:border-[#06B6D4] focus:ring-2 focus:ring-[#06B6D4]/40 transition">
+      </div>
+
+      <div class="flex gap-2">
+        <button type="submit" class="bg-[#101828] hover:bg-[#182230] text-white px-6 py-3 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-filter"></i> Search
+        </button>
+        {% if query or selected_muscle %}
+          <a href="{% url 'user_exercise_library' %}" class="bg-[#F4F6FA] hover:bg-[#DCE2EA] text-[#667085] px-4 py-3 rounded-xl font-bold text-sm transition flex items-center justify-center">
+            Reset
+          </a>
+        {% endif %}
+      </div>
+    </form>
+
+    <!-- Muscle Category Pills -->
+    <div class="flex items-center gap-2 overflow-x-auto pt-4 mt-3 border-t border-[#DCE2EA]">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#667085] shrink-0 mr-1">Muscles:</span>
+      <a href="{% url 'user_exercise_library' %}"
+        class="px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition {% if not selected_muscle %}bg-[#101828] text-white{% else %}bg-[#F4F6FA] text-[#667085] hover:bg-[#DCE2EA]{% endif %}">
+        All Muscles
+      </a>
+      {% for m in muscles %}
+        <a href="{% url 'user_exercise_library' %}?muscle={{ m }}{% if query %}&q={{ query }}{% endif %}"
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition {% if selected_muscle == m %}bg-[#06B6D4] text-[#101828]{% else %}bg-[#F4F6FA] text-[#667085] hover:bg-[#DCE2EA]{% endif %}">
+          {{ m }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Exercises Grid -->
+  {% if exercises %}
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      {% for ex in exercises %}
+        <div class="bg-white rounded-2xl border border-[#DCE2EA] overflow-hidden shadow-sm hover:shadow-md transition flex flex-col group">
+          <!-- Exercise Header / Image -->
+          <div class="relative h-48 bg-[#182230] overflow-hidden">
+            {% if ex.image %}
+              <img src="{{ ex.image.url }}" alt="{{ ex.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            {% else %}
+              <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#101828] to-[#242C3A] text-white p-6 text-center">
+                <i class="fa-solid fa-dumbbell text-4xl text-[#06B6D4] mb-2"></i>
+                <span class="text-xs uppercase tracking-wider text-[#667085] font-bold">{{ ex.target_muscle }}</span>
+              </div>
+            {% endif %}
+            
+            <div class="absolute top-3 left-3 flex gap-2">
+              <span class="px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-[#101828]/90 text-white backdrop-blur-none">
+                {{ ex.category.name|default:"General" }}
+              </span>
+            </div>
+
+            <div class="absolute top-3 right-3">
+              <span class="px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider 
+                {% if ex.difficulty == 'Beginner' %}bg-[#16A34A] text-white
+                {% elif ex.difficulty == 'Intermediate' %}bg-[#FF6B35] text-white
+                {% else %}bg-[#E53945] text-white{% endif %}">
+                {{ ex.difficulty }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Exercise Body -->
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <h3 class="font-heading font-black text-lg text-[#172033]">{{ ex.name }}</h3>
+                <span class="text-xs font-bold text-[#FF6B35] shrink-0">{{ ex.target_muscle }}</span>
+              </div>
+              <p class="text-xs text-[#667085] line-clamp-2 leading-relaxed mb-4">
+                {{ ex.instructions|default:"Master standard execution with controlled eccentric movement and maximum mind-muscle connection." }}
+              </p>
+            </div>
+
+            <!-- Parameters Grid -->
+            <div class="grid grid-cols-3 gap-2 py-3 px-3.5 bg-[#F4F6FA] rounded-xl text-center mb-4">
+              <div>
+                <span class="text-[10px] uppercase font-bold text-[#667085] block">Sets</span>
+                <span class="font-black text-sm text-[#172033]">{{ ex.default_sets }}</span>
+              </div>
+              <div>
+                <span class="text-[10px] uppercase font-bold text-[#667085] block">Reps</span>
+                <span class="font-black text-sm text-[#172033]">{{ ex.default_reps }}</span>
+              </div>
+              <div>
+                <span class="text-[10px] uppercase font-bold text-[#667085] block">Rest</span>
+                <span class="font-black text-sm text-[#172033]">{{ ex.rest_time }}</span>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-[#DCE2EA] flex items-center justify-between text-xs text-[#667085]">
+              <span class="flex items-center gap-1.5">
+                <i class="fa-solid fa-wrench text-[#FF6B35]"></i>
+                <strong>Equip:</strong> {{ ex.equipment_required|default:"Bodyweight" }}
+              </span>
+              <a href="{% url 'user_workout_plans' %}" class="font-bold text-[#101828] hover:text-[#FF6B35] transition flex items-center gap-1">
+                Train <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="bg-white rounded-2xl p-12 text-center border border-[#DCE2EA] shadow-sm">
+      <div class="w-16 h-16 rounded-full bg-[#F4F6FA] text-[#667085] flex items-center justify-center text-2xl mx-auto mb-3">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <h3 class="font-heading font-black text-lg text-[#172033]">No exercises found</h3>
+      <p class="text-xs text-[#667085] mt-1 mb-5">Try searching with a different term or clear the muscle filter.</p>
+      <a href="{% url 'user_exercise_library' %}" class="inline-flex items-center gap-2 bg-[#101828] text-white px-5 py-2.5 rounded-xl font-bold text-xs">
+        Clear Filter
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

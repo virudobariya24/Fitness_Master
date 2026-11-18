@@ -1,0 +1,170 @@
+{% extends "base_user.html" %}
+
+{% block title %}Water Intake Tracker | Fitness Master{% endblock %}
+{% block page_title %}Daily Water Tracker{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Water Dashboard Summary Card -->
+  <div class="bg-white rounded-3xl border border-[#DCE2EA] p-6 sm:p-8 shadow-sm">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+      
+      <!-- Interactive Hydration Visual & Percentage -->
+      <div class="flex flex-col items-center text-center p-6 bg-[#F4F6FA] rounded-2xl border border-[#DCE2EA]">
+        <div class="relative w-36 h-36 flex items-center justify-center mb-4">
+          <!-- Circular Progress Indicator -->
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" stroke="#DCE2EA" stroke-width="10" fill="transparent" />
+            <circle cx="60" cy="60" r="50" stroke="#3B82F6" stroke-width="10" stroke-linecap="round" fill="transparent"
+              stroke-dasharray="314.16" stroke-dashoffset="{{ 314.16|floatformat:2 }}" 
+              class="transition-all duration-700"
+              style="stroke-dashoffset: calc(314.16 - (314.16 * {{ water_log.percentage }}) / 100);" />
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <i class="fa-solid fa-droplet text-blue-500 text-xl mb-0.5"></i>
+            <span class="text-2xl font-black font-heading text-[#172033]">{{ water_log.percentage }}%</span>
+            <span class="text-[10px] text-[#667085] uppercase font-bold tracking-wider">Hydrated</span>
+          </div>
+        </div>
+
+        <h4 class="font-heading font-black text-lg text-[#172033]">Today's Intake</h4>
+        <p class="text-xs text-[#667085] mt-0.5">Daily Goal: <strong>{{ water_log.goal_ml }} ml</strong></p>
+      </div>
+
+      <!-- Key Numbers -->
+      <div class="space-y-4">
+        <div class="p-4 bg-blue-50 border border-blue-200 rounded-2xl flex items-center justify-between">
+          <div>
+            <span class="text-xs uppercase font-bold text-blue-800">Total Consumed</span>
+            <h3 class="text-3xl font-black font-heading text-blue-600 mt-0.5">{{ water_log.amount_ml }} <span class="text-base font-bold text-blue-800">ml</span></h3>
+            <span class="text-xs text-blue-700 font-semibold">{{ water_log.glasses }} glasses (250 ml each)</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xl">
+            <i class="fa-solid fa-glass-water"></i>
+          </div>
+        </div>
+
+        <div class="p-4 bg-[#F4F6FA] border border-[#DCE2EA] rounded-2xl flex items-center justify-between">
+          <div>
+            <span class="text-xs uppercase font-bold text-[#667085]">Remaining Needed</span>
+            <h3 class="text-3xl font-black font-heading text-[#172033] mt-0.5">{{ water_log.remaining_ml }} <span class="text-base font-bold text-[#667085]">ml</span></h3>
+            <span class="text-xs text-[#667085] font-semibold">Keep drinking regularly</span>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-[#101828] text-[#06B6D4] flex items-center justify-center text-xl">
+            <i class="fa-solid fa-bottle-water"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="space-y-4">
+        <div class="p-5 bg-white border border-[#DCE2EA] rounded-2xl space-y-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#667085] block">Interactive Glass Counter</span>
+
+          <div class="flex items-center gap-3">
+            <form method="POST" action="{% url 'user_water_tracker' %}" class="flex-1">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="add_glass">
+              <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-plus"></i> +1 Glass (250ml)
+              </button>
+            </form>
+
+            <form method="POST" action="{% url 'user_water_tracker' %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="remove_glass">
+              <button type="submit" class="px-4 py-3 bg-[#F4F6FA] hover:bg-[#DCE2EA] text-[#667085] rounded-xl font-bold text-sm transition flex items-center justify-center" title="Undo glass">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Custom Volume Form -->
+          <form method="POST" action="{% url 'user_water_tracker' %}" class="pt-3 border-t border-[#DCE2EA] flex gap-2">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="custom">
+            <input type="number" name="custom_ml" placeholder="Custom ml (e.g. 500)" step="50" min="50" max="2000" required
+              class="w-full px-3 py-2 bg-[#F4F6FA] border border-[#DCE2EA] rounded-xl text-xs font-medium text-[#172033] focus:outline-none focus:border-blue-500">
+            <button type="submit" class="bg-[#101828] hover:bg-[#182230] text-white px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">
+              Add ml
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Visual Glass Representation -->
+  <div class="bg-white rounded-2xl border border-[#DCE2EA] p-6 shadow-sm">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-heading font-black text-lg text-[#172033]">Glasses Breakdown</h3>
+      <span class="text-xs text-[#667085] font-semibold">Standard 8 Glasses Target (2000ml)</span>
+    </div>
+
+    <div class="grid grid-cols-4 sm:grid-cols-8 gap-3 text-center">
+      {% for i in "12345678" %}
+        {% with glass_num=forloop.counter %}
+          <div class="p-4 rounded-xl border transition 
+            {% if water_log.glasses >= glass_num %}
+              bg-blue-50 border-blue-300 text-blue-600
+            {% else %}
+              bg-[#F4F6FA] border-[#DCE2EA] text-[#667085] opacity-50
+            {% endif %}">
+            <i class="fa-solid fa-glass-water text-3xl mb-1.5 block"></i>
+            <span class="text-[11px] font-black block">Glass {{ glass_num }}</span>
+            <span class="text-[10px] text-[#667085]">250 ml</span>
+          </div>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Recent Hydration History -->
+  <div class="bg-white rounded-2xl border border-[#DCE2EA] overflow-hidden shadow-sm">
+    <div class="p-5 border-b border-[#DCE2EA] flex items-center justify-between">
+      <h3 class="font-heading font-black text-lg text-[#172033]">Past 7 Days Hydration Log</h3>
+      <span class="text-xs text-[#667085]">Consistency Score</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-[#172033]">
+        <thead class="bg-[#F4F6FA] text-[#667085] uppercase text-[11px] font-bold tracking-wider border-b border-[#DCE2EA]">
+          <tr>
+            <th class="py-3 px-5">Date</th>
+            <th class="py-3 px-5">Glasses</th>
+            <th class="py-3 px-5">Total Consumed</th>
+            <th class="py-3 px-5">Daily Target</th>
+            <th class="py-3 px-5">Achievement</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#DCE2EA]">
+          {% for log in history %}
+            <tr class="hover:bg-[#F4F6FA]/50 transition">
+              <td class="py-3.5 px-5 font-bold text-[#172033]">{{ log.date|date:"l, M d, Y" }}</td>
+              <td class="py-3.5 px-5 font-semibold">{{ log.glasses }} glasses</td>
+              <td class="py-3.5 px-5 font-black text-blue-600">{{ log.amount_ml }} ml</td>
+              <td class="py-3.5 px-5 text-[#667085]">{{ log.goal_ml }} ml</td>
+              <td class="py-3.5 px-5">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold
+                  {% if log.percentage >= 100 %}bg-[#16A34A]/15 text-[#16A34A]
+                  {% elif log.percentage >= 70 %}bg-[#FF6B35]/15 text-[#FF6B35]
+                  {% else %}bg-[#E53945]/15 text-[#E53945]{% endif %}">
+                  {{ log.percentage }}%
+                  {% if log.percentage >= 100 %}🎉 Target Met!{% endif %}
+                </span>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="py-6 text-center text-[#667085]">No hydration history recorded yet. Drink your first glass today!</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

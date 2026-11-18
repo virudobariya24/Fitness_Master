@@ -1,0 +1,98 @@
+{% extends 'base_public.html' %}
+{% load static %}
+
+{% block title %}Nutrition & Diet Plans | Fitness Master{% endblock %}
+
+{% block content %}
+<section class="bg-[#101828] text-white py-14 border-b border-[#242C3A]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+    <span class="fm-badge-orange inline-block">Macro Precision</span>
+    <h1 class="font-heading text-4xl font-black text-white">Nutrition &amp; Diet Systems</h1>
+    <p class="text-[#667085] text-base max-w-xl mx-auto">
+      Fuel your body with calculated macronutrients. Sustainable, whole-food strategies for fat loss, hypertrophy, and clean daily energy.
+    </p>
+  </div>
+</section>
+
+<section class="py-12 bg-[#F4F6FA]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Macro Explanation Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="bg-white p-6 rounded-2xl border border-[#DCE2EA] shadow-sm">
+        <span class="px-2.5 py-1 rounded text-xs font-bold uppercase bg-[#FF6B35]/10 text-[#FF6B35] inline-block mb-3">1. Protein (4 kcal/g)</span>
+        <h4 class="font-heading text-lg font-bold text-[#101828] mb-2">Muscle Repair &amp; Satiety</h4>
+        <p class="text-[#667085] text-sm leading-relaxed">
+          The essential building block of muscle tissue. Promotes optimal cellular recovery and prevents catabolism during caloric deficits.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-[#DCE2EA] shadow-sm">
+        <span class="px-2.5 py-1 rounded text-xs font-bold uppercase bg-[#06B6D4]/20 text-[#101828] inline-block mb-3">2. Carbohydrates (4 kcal/g)</span>
+        <h4 class="font-heading text-lg font-bold text-[#101828] mb-2">High-Octane Training Energy</h4>
+        <p class="text-[#667085] text-sm leading-relaxed">
+          Replenishes muscle glycogen stores, powers heavy lifts, and supports sustained cardiovascular output.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-[#DCE2EA] shadow-sm">
+        <span class="px-2.5 py-1 rounded text-xs font-bold uppercase bg-[#101828] text-white inline-block mb-3">3. Healthy Fats (9 kcal/g)</span>
+        <h4 class="font-heading text-lg font-bold text-[#101828] mb-2">Hormonal &amp; Joint Health</h4>
+        <p class="text-[#667085] text-sm leading-relaxed">
+          Critical for testosterone and endocrine balance, brain cognition, and fat-soluble vitamin absorption (A, D, E, K).
+        </p>
+      </div>
+    </div>
+
+    <!-- Diet Plans Grid -->
+    <div class="mb-8 flex items-center justify-between">
+      <h2 class="font-heading text-2xl font-black text-[#101828]">Available Diet Blueprints</h2>
+      <span class="text-sm font-semibold text-[#667085]">{{ diet_plans.count }} Plans Configured</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {% for diet in diet_plans %}
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-[#DCE2EA] shadow-sm hover:shadow-md transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="fm-badge-navy">{{ diet.plan_type }}</span>
+              <span class="text-sm font-black text-[#FF6B35] font-heading">{{ diet.target_calories }} kcal / day</span>
+            </div>
+            
+            <h3 class="font-heading text-2xl font-bold text-[#101828] mb-2">{{ diet.name }}</h3>
+            <p class="text-[#667085] text-sm leading-relaxed mb-6">{{ diet.description }}</p>
+
+            <div class="grid grid-cols-3 gap-3 p-4 bg-[#F4F6FA] rounded-xl text-center mb-6 border border-[#DCE2EA]">
+              <div>
+                <span class="text-xs text-[#667085] block font-semibold">Protein</span>
+                <span class="font-heading text-lg font-bold text-[#101828]">{{ diet.target_protein }}g</span>
+              </div>
+              <div>
+                <span class="text-xs text-[#667085] block font-semibold">Carbs</span>
+                <span class="font-heading text-lg font-bold text-[#101828]">{{ diet.target_carbs }}g</span>
+              </div>
+              <div>
+                <span class="text-xs text-[#667085] block font-semibold">Fats</span>
+                <span class="font-heading text-lg font-bold text-[#101828]">{{ diet.target_fat }}g</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            {% if user.is_authenticated %}
+              <a href="{% url 'user_diet_detail' diet.id %}" class="w-full py-3 rounded-lg bg-[#06B6D4] hover:bg-[#0891b2] text-[#101828] font-bold text-sm text-center block transition shadow-sm">
+                View Daily Meal Schedule
+              </a>
+            {% else %}
+              <a href="{% url 'login' %}" class="w-full py-3 rounded-lg bg-[#101828] hover:bg-[#182230] text-white font-bold text-sm text-center block transition">
+                Sign In To View Meal Breakdown
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

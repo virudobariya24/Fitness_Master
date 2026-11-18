@@ -1,0 +1,160 @@
+{% extends 'base_user.html' %}
+{% load static %}
+
+{% block title %}Active Workout: {{ plan.title }} | Fitness Master{% endblock %}
+{% block header_title %}Active Workout Session{% endblock %}
+{% block header_subtitle %}{{ plan.title }} &bull; Track reps, rest, and save session{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+  <!-- Live Stopwatch & Controls Bar -->
+  <div class="bg-[#101828] text-white p-6 sm:p-8 rounded-2xl border border-[#242C3A] shadow-lg flex flex-col sm:flex-row items-center justify-between gap-6">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-[#182230] border border-[#242C3A] text-[#06B6D4] flex items-center justify-center text-2xl">
+        <i class="fa-solid fa-stopwatch animate-pulse"></i>
+      </div>
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#667085] block">Session Timer</span>
+        <div id="stopwatchDisplay" class="font-heading text-4xl sm:text-5xl font-black text-[#06B6D4]">00:00</div>
+      </div>
+    </div>
+
+    <!-- Timer Actions -->
+    <div class="flex items-center gap-3">
+      <button type="button" id="toggleTimerBtn" class="px-5 py-2.5 rounded-lg bg-[#06B6D4] text-[#101828] font-bold text-xs uppercase transition shadow">
+        <i class="fa-solid fa-pause me-1"></i> Pause
+      </button>
+      <button type="button" id="resetTimerBtn" class="px-4 py-2.5 rounded-lg bg-[#242C3A] hover:bg-[#DCE2EA] text-white hover:text-[#101828] font-bold text-xs uppercase transition">
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Session Form -->
+  <form method="post" id="finishWorkoutForm" class="space-y-6">
+    {% csrf_token %}
+    <input type="hidden" name="duration_minutes" id="hiddenDuration" value="30">
+    <input type="hidden" name="completed_count" id="hiddenCompletedCount" value="0">
+
+    <!-- Exercises Checklist -->
+    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-[#DCE2EA] shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[#DCE2EA]">
+        <h3 class="font-heading text-lg font-bold text-[#101828]">Check Off Completed Movements</h3>
+        <span id="progressCounterText" class="text-xs font-bold text-[#FF6B35]">0 of {{ items.count }} Completed</span>
+      </div>
+
+      <div class="space-y-3">
+        {% for item in items %}
+          <div class="p-4 rounded-xl border border-[#DCE2EA] bg-[#F4F6FA] flex items-start gap-4 transition hover:bg-white exercise-row">
+            <input type="checkbox" id="ex_{{ item.id }}" class="mt-1 w-5 h-5 text-[#06B6D4] rounded border-[#DCE2EA] focus:ring-0 ex-checkbox cursor-pointer">
+            <label for="ex_{{ item.id }}" class="flex-1 cursor-pointer">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-[#101828]">{{ item.exercise.name }}</span>
+                <span class="text-xs font-bold text-[#FF6B35]">{{ item.sets }} sets &times; {{ item.reps }}</span>
+              </div>
+              <p class="text-xs text-[#667085] mt-1">{{ item.exercise.instructions }}</p>
+              <div class="text-[11px] text-[#667085] mt-1.5 flex gap-4">
+                <span>Rest: <strong>{{ item.rest_seconds }}s</strong></span>
+                <span>Gear: <strong>{{ item.exercise.equipment_required }}</strong></span>
+              </div>
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Extra Workout Stats & Submission Box -->
+    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-[#DCE2EA] shadow-sm space-y-4">
+      <h4 class="font-heading text-base font-bold text-[#101828]">Session Summary &amp; Logging</h4>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase text-[#667085] mb-2">Estimated Calories Burned</label>
+          <input type="number" name="calories_burned" value="{{ plan.estimated_calories_burn }}" class="w-full px-4 py-2.5 rounded-lg border border-[#DCE2EA] text-sm font-bold text-[#FF6B35]">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-[#667085] mb-2">Personal Workout Notes</label>
+          <input type="text" name="notes" placeholder="e.g. Felt great, pushed weight on squats!" class="w-full px-4 py-2.5 rounded-lg border border-[#DCE2EA] text-sm">
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-[#DCE2EA] flex items-center justify-between">
+        <a href="{% url 'user_workout_plans' %}" class="text-xs font-bold text-[#667085] hover:text-[#101828]">Cancel Workout</a>
+        <button type="submit" class="btn-electric-lime px-8 py-3 text-sm font-bold shadow-md">
+          <i class="fa-solid fa-check-double me-1.5"></i> Finish &amp; Save Workout
+        </button>
+      </div>
+    </div>
+  </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  let seconds = 0;
+  let timerInterval = null;
+  let isRunning = true;
+
+  const display = document.getElementById('stopwatchDisplay');
+  const toggleBtn = document.getElementById('toggleTimerBtn');
+  const resetBtn = document.getElementById('resetTimerBtn');
+  const hiddenDuration = document.getElementById('hiddenDuration');
+
+  function updateDisplay() {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    hiddenDuration.value = Math.max(1, Math.round(seconds / 60));
+  }
+
+  function startTimer() {
+    timerInterval = setInterval(() => {
+      seconds++;
+      updateDisplay();
+    }, 1000);
+  }
+
+  startTimer();
+
+  toggleBtn.addEventListener('click', () => {
+    if (isRunning) {
+      clearInterval(timerInterval);
+      toggleBtn.innerHTML = '<i class="fa-solid fa-play me-1"></i> Resume';
+      toggleBtn.classList.replace('bg-[#06B6D4]', 'bg-[#FF6B35]');
+      toggleBtn.classList.replace('text-[#101828]', 'text-white');
+      isRunning = false;
+    } else {
+      startTimer();
+      toggleBtn.innerHTML = '<i class="fa-solid fa-pause me-1"></i> Pause';
+      toggleBtn.classList.replace('bg-[#FF6B35]', 'bg-[#06B6D4]');
+      toggleBtn.classList.replace('text-white', 'text-[#101828]');
+      isRunning = true;
+    }
+  });
+
+  resetBtn.addEventListener('click', () => {
+    seconds = 0;
+    updateDisplay();
+  });
+
+  // Checkbox count
+  const checkboxes = document.querySelectorAll('.ex-checkbox');
+  const counterText = document.getElementById('progressCounterText');
+  const hiddenCount = document.getElementById('hiddenCompletedCount');
+
+  function updateCheckboxCount() {
+    let count = 0;
+    checkboxes.forEach(cb => {
+      if (cb.checked) count++;
+    });
+    counterText.innerText = `${count} of ${checkboxes.length} Completed`;
+    hiddenCount.value = count;
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', updateCheckboxCount);
+  });
+</script>
+{% endblock %}

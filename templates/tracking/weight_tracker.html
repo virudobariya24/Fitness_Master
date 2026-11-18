@@ -1,0 +1,191 @@
+{% extends "base_user.html" %}
+
+{% block title %}Weight Tracker | Fitness Master{% endblock %}
+{% block page_title %}Weight Tracker &amp; Progress{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Summary KPI Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    
+    <div class="bg-white rounded-2xl p-5 border border-[#DCE2EA] shadow-sm flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-bold text-[#667085] tracking-wider">Current Weight</span>
+        <h3 class="text-3xl font-black font-heading text-[#172033] mt-1">{{ profile.current_weight|default:"--" }} <span class="text-sm font-semibold text-[#667085]">kg</span></h3>
+        <span class="text-xs text-[#667085] block mt-1">Height: <strong>{% if profile.height %}{{ profile.height }} cm{% else %}Not Set{% endif %}</strong></span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-[#101828] text-[#06B6D4] flex items-center justify-center text-xl font-bold">
+        <i class="fa-solid fa-weight-scale"></i>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 border border-[#DCE2EA] shadow-sm flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-bold text-[#667085] tracking-wider">Target Goal Weight</span>
+        <h3 class="text-3xl font-black font-heading text-[#FF6B35] mt-1">{{ profile.target_weight|default:"--" }} <span class="text-sm font-semibold text-[#667085]">kg</span></h3>
+        <span class="text-xs text-[#16A34A] font-semibold block mt-1">
+          Goal: <strong class="capitalize">{{ profile.get_fitness_goal_display|default:"Not Set" }}</strong>
+        </span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-[#FF6B35]/15 text-[#FF6B35] flex items-center justify-center text-xl font-bold">
+        <i class="fa-solid fa-bullseye"></i>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 border border-[#DCE2EA] shadow-sm flex items-center justify-between">
+      <div>
+        <span class="text-xs uppercase font-bold text-[#667085] tracking-wider">Current BMI</span>
+        <h3 class="text-3xl font-black font-heading text-[#172033] mt-1">{{ profile.bmi|default:"--" }}</h3>
+        <span class="text-xs font-bold block mt-1 {{ profile.bmi_category.badge }}">{{ profile.bmi_category.label }}</span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-[#06B6D4]/20 text-[#101828] flex items-center justify-center text-xl font-bold">
+        <i class="fa-solid fa-heart-pulse"></i>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Entry Form & Interactive Chart -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Weight Logging Form -->
+    <div class="bg-white rounded-2xl p-6 border border-[#DCE2EA] shadow-sm">
+      <h3 class="font-heading font-black text-lg text-[#172033] mb-1">Record Weight Entry</h3>
+      <p class="text-xs text-[#667085] mb-5">Keep an accurate log of your progressive changes.</p>
+
+      <form method="POST" action="{% url 'user_weight_tracker' %}" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-[#172033] mb-1.5">Weight (kg) *</label>
+          <div class="relative">
+            <input type="number" name="weight" step="0.1" min="30" max="300" value="{{ profile.current_weight|default:'' }}" required
+              class="w-full px-4 py-3 bg-[#F4F6FA] border border-[#DCE2EA] rounded-xl text-sm font-bold text-[#172033] focus:outline-none focus:border-[#06B6D4]">
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#667085]">kg</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-[#172033] mb-1.5">Date *</label>
+          <input type="date" name="recorded_date" value="{{ today }}" required
+            class="w-full px-4 py-3 bg-[#F4F6FA] border border-[#DCE2EA] rounded-xl text-sm font-medium text-[#172033] focus:outline-none focus:border-[#06B6D4]">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-[#172033] mb-1.5">Notes (Optional)</label>
+          <textarea name="notes" rows="2" placeholder="e.g., Morning weigh-in after fasting, feeling leaner..."
+            class="w-full px-4 py-3 bg-[#F4F6FA] border border-[#DCE2EA] rounded-xl text-xs font-medium text-[#172033] focus:outline-none focus:border-[#06B6D4]"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-[#101828] hover:bg-[#182230] text-white rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 shadow-sm">
+          <i class="fa-solid fa-plus text-[#06B6D4]"></i> Save Weight Entry
+        </button>
+      </form>
+    </div>
+
+    <!-- Chart.js Visualization -->
+    <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-[#DCE2EA] shadow-sm flex flex-col justify-between">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="font-heading font-black text-lg text-[#172033]">Weight Trend Curve</h3>
+          <p class="text-xs text-[#667085]">Historical progression towards your goal weight.</p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-black uppercase bg-[#06B6D4]/20 text-[#101828]">
+          Goal: {{ profile.target_weight|default:"--" }} kg
+        </span>
+      </div>
+
+      <div class="h-64 sm:h-80 w-full">
+        <canvas id="weightTrendChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Historical Table -->
+  <div class="bg-white rounded-2xl border border-[#DCE2EA] overflow-hidden shadow-sm">
+    <div class="p-5 border-b border-[#DCE2EA] flex items-center justify-between">
+      <h3 class="font-heading font-black text-lg text-[#172033]">Weight Entries History</h3>
+      <span class="text-xs text-[#667085] font-semibold">{{ history_logs.count }} Total Entries</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm text-[#172033]">
+        <thead class="bg-[#F4F6FA] text-[#667085] uppercase text-[11px] font-bold tracking-wider border-b border-[#DCE2EA]">
+          <tr>
+            <th class="py-3 px-5">Date</th>
+            <th class="py-3 px-5">Weight (kg)</th>
+            <th class="py-3 px-5">Distance to Target</th>
+            <th class="py-3 px-5">Notes</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#DCE2EA]">
+          {% for entry in history_logs %}
+            <tr class="hover:bg-[#F4F6FA]/50 transition">
+              <td class="py-3.5 px-5 font-bold text-[#172033]">
+                <i class="fa-regular fa-calendar text-[#667085] mr-2"></i>{{ entry.recorded_date|date:"M d, Y" }}
+              </td>
+              <td class="py-3.5 px-5 font-black text-base text-[#101828]">{{ entry.weight }} kg</td>
+              <td class="py-3.5 px-5 text-xs font-semibold">
+                Target: {{ profile.target_weight|default:"--" }} kg
+              </td>
+              <td class="py-3.5 px-5 text-xs text-[#667085] max-w-xs truncate">{{ entry.notes|default:"—" }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="py-6 text-center text-[#667085]">No weight entries recorded yet. Record your first check-in above.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const dates = {{ dates_json|safe }};
+    const weights = {{ weights_json|safe }};
+
+    const ctx = document.getElementById('weightTrendChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dates.length ? dates : ['No entries recorded'],
+        datasets: [{
+          label: 'Weight (kg)',
+          data: weights.length ? weights : [{% if profile.current_weight %}{{ profile.current_weight }}{% endif %}],
+          borderColor: '#101828',
+          backgroundColor: 'rgba(6, 182, 212, 0.2)',
+          borderWidth: 3,
+          tension: 0.35,
+          fill: true,
+          pointBackgroundColor: '#FF6B35',
+          pointBorderColor: '#101828',
+          pointBorderWidth: 2,
+          pointRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            grid: { color: '#DCE2EA' },
+            ticks: { color: '#667085' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: '#667085' }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

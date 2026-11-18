@@ -1,0 +1,92 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Exercise Management | Custom Admin{% endblock %}
+{% block page_title %}Exercise Catalog Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Header Actions -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h2 class="text-xl font-heading font-black text-[#172033]">Exercise Library Database</h2>
+      <p class="text-xs text-[#667085]">Manage movement definitions, muscle targeting, and guidance parameters.</p>
+    </div>
+    <a href="{% url 'admin_exercise_add' %}" class="bg-[#06B6D4] hover:bg-[#0891b2] text-[#101828] px-5 py-2.5 rounded-xl font-black text-xs transition flex items-center justify-center gap-2 shadow-sm shrink-0">
+      <i class="fa-solid fa-plus"></i> Add New Exercise
+    </a>
+  </div>
+
+  <!-- Exercise Table -->
+  <div class="bg-white rounded-2xl border border-[#DCE2EA] overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-[#172033]">
+        <thead class="bg-[#F4F6FA] text-[#667085] uppercase text-[10px] font-bold tracking-wider border-b border-[#DCE2EA]">
+          <tr>
+            <th class="py-3.5 px-5">Exercise</th>
+            <th class="py-3.5 px-5">Category</th>
+            <th class="py-3.5 px-5">Target Muscle</th>
+            <th class="py-3.5 px-5">Difficulty</th>
+            <th class="py-3.5 px-5">Sets / Reps</th>
+            <th class="py-3.5 px-5">Equipment</th>
+            <th class="py-3.5 px-5 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#DCE2EA]">
+          {% for ex in exercises %}
+            <tr class="hover:bg-[#F4F6FA]/50 transition">
+              <td class="py-4 px-5">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-[#101828] text-[#06B6D4] flex items-center justify-center font-bold text-sm shrink-0">
+                    <i class="fa-solid fa-dumbbell"></i>
+                  </div>
+                  <div>
+                    <h5 class="font-bold text-[#172033]">{{ ex.name }}</h5>
+                    <span class="text-[10px] text-[#667085]">Rest: {{ ex.rest_time }}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4 px-5 font-semibold text-[#667085]">
+                {{ ex.category.name|default:"General" }}
+              </td>
+              <td class="py-4 px-5 font-bold text-[#FF6B35]">
+                {{ ex.target_muscle }}
+              </td>
+              <td class="py-4 px-5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase
+                  {% if ex.difficulty == 'Beginner' %}bg-[#16A34A]/15 text-[#16A34A]
+                  {% elif ex.difficulty == 'Intermediate' %}bg-[#FF6B35]/15 text-[#FF6B35]
+                  {% else %}bg-[#E53945]/15 text-[#E53945]{% endif %}">
+                  {{ ex.difficulty }}
+                </span>
+              </td>
+              <td class="py-4 px-5 font-semibold">
+                {{ ex.default_sets }} sets × {{ ex.default_reps }}
+              </td>
+              <td class="py-4 px-5 text-[#667085]">
+                {{ ex.equipment_required|default:"Bodyweight" }}
+              </td>
+              <td class="py-4 px-5 text-right">
+                <div class="inline-flex items-center gap-2">
+                  <a href="{% url 'admin_exercise_edit' ex.id %}" class="p-1.5 rounded-lg bg-[#F4F6FA] text-[#101828] hover:bg-[#101828] hover:text-white transition" title="Edit">
+                    <i class="fa-solid fa-pen text-xs"></i>
+                  </a>
+                  <a href="{% url 'admin_exercise_delete' ex.id %}" onclick="return confirm('Delete exercise {{ ex.name }}?');"
+                    class="p-1.5 rounded-lg bg-[#F4F6FA] text-[#E53945] hover:bg-[#E53945] hover:text-white transition" title="Delete">
+                    <i class="fa-solid fa-trash text-xs"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" class="py-8 text-center text-[#667085]">No exercises present in the database.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

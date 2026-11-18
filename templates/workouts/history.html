@@ -1,0 +1,137 @@
+{% extends "base_user.html" %}
+
+{% block title %}Workout History | Fitness Master{% endblock %}
+{% block page_title %}Workout History{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Summary KPI Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div class="bg-white rounded-2xl p-5 border border-[#DCE2EA] shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs uppercase tracking-wider font-bold text-[#667085]">Total Sessions</p>
+        <h3 class="text-3xl font-black font-heading text-[#172033] mt-1">{{ total_workouts }}</h3>
+        <span class="text-xs text-[#16A34A] font-semibold flex items-center gap-1 mt-1">
+          <i class="fa-solid fa-check"></i> Completed workouts
+        </span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-[#06B6D4]/20 text-[#101828] flex items-center justify-center text-xl font-bold">
+        <i class="fa-solid fa-dumbbell"></i>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 border border-[#DCE2EA] shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs uppercase tracking-wider font-bold text-[#667085]">Time Trained</p>
+        <h3 class="text-3xl font-black font-heading text-[#172033] mt-1">{{ total_minutes }} <span class="text-base font-medium text-[#667085]">mins</span></h3>
+        <span class="text-xs text-[#667085] font-semibold flex items-center gap-1 mt-1">
+          <i class="fa-regular fa-clock"></i> Total active time
+        </span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-[#101828] text-[#06B6D4] flex items-center justify-center text-xl font-bold">
+        <i class="fa-solid fa-stopwatch"></i>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 border border-[#DCE2EA] shadow-sm flex items-center justify-between">
+      <div>
+        <p class="text-xs uppercase tracking-wider font-bold text-[#667085]">Calories Burned</p>
+        <h3 class="text-3xl font-black font-heading text-[#FF6B35] mt-1">{{ total_calories }} <span class="text-base font-medium text-[#667085]">kcal</span></h3>
+        <span class="text-xs text-[#FF6B35] font-semibold flex items-center gap-1 mt-1">
+          <i class="fa-solid fa-fire"></i> Estimated energy burn
+        </span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-[#FF6B35]/15 text-[#FF6B35] flex items-center justify-center text-xl font-bold">
+        <i class="fa-solid fa-fire-flame-curved"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header & Action -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h2 class="text-xl font-heading font-black text-[#172033]">Your Logged Workout Activity</h2>
+      <p class="text-xs text-[#667085]">Every rep counts towards your ultimate transformation.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="{% url 'user_log_workout' %}" class="inline-flex items-center gap-2 bg-[#101828] hover:bg-[#182230] text-white px-4 py-2.5 rounded-xl font-bold text-xs transition shadow-sm">
+        <i class="fa-solid fa-plus text-[#06B6D4]"></i> Log Custom Workout
+      </a>
+      <a href="{% url 'user_workout_plans' %}" class="inline-flex items-center gap-2 bg-[#06B6D4] hover:bg-[#0891b2] text-[#101828] px-4 py-2.5 rounded-xl font-bold text-xs transition shadow-sm">
+        <i class="fa-solid fa-play"></i> Start A Plan
+      </a>
+    </div>
+  </div>
+
+  <!-- Workout Log Table / Cards -->
+  <div class="bg-white rounded-2xl border border-[#DCE2EA] shadow-sm overflow-hidden">
+    {% if logs %}
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-[#172033]">
+          <thead class="bg-[#F4F6FA] text-[#667085] uppercase text-[11px] font-bold tracking-wider border-b border-[#DCE2EA]">
+            <tr>
+              <th class="py-3.5 px-5">Workout / Plan</th>
+              <th class="py-3.5 px-5">Duration</th>
+              <th class="py-3.5 px-5">Burned</th>
+              <th class="py-3.5 px-5">Exercises</th>
+              <th class="py-3.5 px-5">Date &amp; Time</th>
+              <th class="py-3.5 px-5">Notes</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#DCE2EA]">
+            {% for log in logs %}
+              <tr class="hover:bg-[#F4F6FA]/60 transition">
+                <td class="py-4 px-5">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-[#101828] text-[#06B6D4] flex items-center justify-center font-bold text-sm shrink-0">
+                      <i class="fa-solid fa-dumbbell"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-[#172033]">{{ log.workout_name }}</h4>
+                      {% if log.workout_plan %}
+                        <span class="text-[11px] text-[#667085]">Plan: {{ log.workout_plan.title }}</span>
+                      {% else %}
+                        <span class="text-[11px] text-[#667085]">Custom Routine</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4 px-5 font-bold text-[#172033]">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#F4F6FA] text-xs">
+                    <i class="fa-regular fa-clock text-[#667085]"></i> {{ log.duration_minutes }} min
+                  </span>
+                </td>
+                <td class="py-4 px-5 font-bold text-[#FF6B35]">
+                  🔥 {{ log.calories_burned }} kcal
+                </td>
+                <td class="py-4 px-5 text-sm font-semibold text-[#172033]">
+                  {{ log.exercises_completed }} completed
+                </td>
+                <td class="py-4 px-5 text-xs text-[#667085]">
+                  {{ log.completed_at|date:"M d, Y · h:i A" }}
+                </td>
+                <td class="py-4 px-5 text-xs text-[#667085] max-w-xs truncate">
+                  {{ log.notes|default:"—" }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-center py-16 px-6">
+        <div class="w-16 h-16 rounded-full bg-[#F4F6FA] border border-[#DCE2EA] flex items-center justify-center text-2xl text-[#667085] mx-auto mb-4">
+          <i class="fa-solid fa-dumbbell"></i>
+        </div>
+        <h3 class="text-lg font-heading font-black text-[#172033]">No workouts recorded yet</h3>
+        <p class="text-sm text-[#667085] max-w-md mx-auto mt-1 mb-6">Start your first routine now or log an offline gym session to begin tracking your athletic consistency.</p>
+        <a href="{% url 'user_workout_plans' %}" class="inline-flex items-center gap-2 bg-[#06B6D4] text-[#101828] font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-[#0891b2] transition shadow">
+          <i class="fa-solid fa-play"></i> Browse Workout Plans
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
