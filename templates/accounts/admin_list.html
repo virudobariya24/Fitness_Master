@@ -22,9 +22,6 @@
       <button type="button" class="btn btn-primary fw-bold d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#addAdminModal">
         <i class="bi bi-person-plus-fill"></i> Add New Admin
       </button>
-      <a href="{% url 'admin:accounts_admin_changelist' %}" target="_blank" class="btn btn-outline-secondary fw-semibold d-flex align-items-center gap-1.5" title="Manage in Django Admin">
-        <i class="bi bi-gear-fill"></i> Django Admin Site
-      </a>
     </div>
   </div>
 
@@ -79,7 +76,7 @@
     <div class="fm-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
       <div>
         <h5 class="mb-0 fw-bold">Administrator Accounts List</h5>
-        <small class="text-muted">Accounts created via Django Admin or form with hashed credentials</small>
+        <small class="text-muted">Accounts created with secure hashed credentials (Task 2)</small>
       </div>
       <button type="button" class="btn btn-sm btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#addAdminModal">
         <i class="bi bi-person-plus-fill me-1"></i> Add Admin
@@ -97,7 +94,7 @@
             <th class="py-3">Status</th>
             <th class="py-3">Registered On</th>
             <th class="py-3">Last Login</th>
-            <th class="text-end pe-4 py-3">Django Admin</th>
+            <th class="text-end pe-4 py-3">Security Level</th>
           </tr>
         </thead>
         <tbody>
@@ -151,9 +148,9 @@
                 {% endif %}
               </td>
               <td class="text-end pe-4">
-                <a href="{% url 'admin:accounts_admin_change' admin.id %}" target="_blank" class="btn btn-sm btn-outline-secondary fw-semibold">
-                  <i class="bi bi-pencil-square text-primary me-1"></i>Edit in Django Admin
-                </a>
+                <span class="badge bg-light text-dark border px-2.5 py-1.5 fw-semibold">
+                  <i class="bi bi-shield-lock-fill text-success me-1"></i>PBKDF2 Hashed
+                </span>
               </td>
             </tr>
           {% endfor %}

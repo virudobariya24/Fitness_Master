@@ -180,12 +180,6 @@
           <i class="bi bi-shield-lock"></i> Admin Accounts
         </a>
       </li>
-      <li class="nav-item mt-3">
-        <small class="text-secondary text-uppercase fw-bold px-3 mb-2 d-block" style="font-size: 10px;">Django System</small>
-        <a href="{% url 'admin:index' %}" target="_blank" class="nav-link text-warning">
-          <i class="bi bi-gear-wide-connected"></i> Django Admin Site <i class="bi bi-box-arrow-up-right ms-auto" style="font-size: 11px;"></i>
-        </a>
-      </li>
     </ul>
 
     <!-- Bottom Admin Info & Logout -->
@@ -231,11 +225,6 @@
             <i class="bi bi-shield-lock"></i> Admin Accounts
           </a>
         </li>
-        <li class="nav-item">
-          <a href="{% url 'admin:index' %}" target="_blank" class="nav-link text-warning">
-            <i class="bi bi-gear-wide-connected"></i> Django Admin Site
-          </a>
-        </li>
       </ul>
       <div class="border-top border-secondary border-opacity-25 pt-3 mt-auto">
         <a href="{% url 'logout' %}" class="btn btn-danger w-100 fw-bold">
@@ -262,19 +251,13 @@
       </div>
 
       <!-- Right Header Actions -->
-      <div class="d-flex align-items-center gap-2 gap-sm-3">
-        <a href="{% url 'admin:index' %}" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-sm-inline-flex align-items-center gap-1.5 fw-semibold" style="font-size: 12px;">
-          <i class="bi bi-gear-fill"></i> Django Admin
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-success-subtle text-success border border-success-subtle d-none d-md-inline-block px-2.5 py-1.5" style="font-size: 11px;">
+          <i class="bi bi-check-circle-fill me-1"></i> Admin Authenticated
+        </span>
+        <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger fw-bold d-flex align-items-center gap-1.5" title="Log Out">
+          <i class="bi bi-box-arrow-right"></i> <span class="d-none d-sm-inline">Logout</span>
         </a>
-        <div class="vr d-none d-sm-block"></div>
-        <div class="d-flex align-items-center gap-2">
-          <span class="badge bg-success-subtle text-success border border-success-subtle d-none d-md-inline-block px-2.5 py-1.5" style="font-size: 11px;">
-            <i class="bi bi-check-circle-fill me-1"></i> Admin Authenticated
-          </span>
-          <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger fw-bold d-flex align-items-center gap-1.5" title="Log Out">
-            <i class="bi bi-box-arrow-right"></i> <span class="d-none d-sm-inline">Logout</span>
-          </a>
-        </div>
       </div>
     </header>
 
