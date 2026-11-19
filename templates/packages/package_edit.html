@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Package: {{ package.title }} | Fitness Master{% endblock %}
+{% block page_heading %}Edit Package Configuration{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0" style="max-width: 900px;">
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Edit {{ package.title }}</li>
+    </ol>
+  </nav>
+
+  <!-- Edit Card -->
+  <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+    <div class="card-header text-white p-3.5" style="background: linear-gradient(135deg, #0f172a, #1e293b);">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h5 class="card-title fw-bold mb-0">
+            <i class="bi bi-pencil-square text-info me-2"></i>Edit Package: {{ package.title }}
+          </h5>
+          <small class="text-light text-opacity-75">Modify pricing, hours, duration, equipment, or instructor allocation</small>
+        </div>
+        <span class="badge bg-info text-dark fw-bold px-2.5 py-1.5" style="font-size: 11px;">#PKG-{{ package.id }}</span>
+      </div>
+    </div>
+
+    <div class="card-body p-4">
+      <form method="post" action="{% url 'package_edit' package.id %}">
+        {% csrf_token %}
+
+        <div class="row g-3">
+          
+          <!-- Title -->
+          <div class="col-md-8">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Package Title *</label>
+            {{ form.title }}
+          </div>
+
+          <!-- Price -->
+          <div class="col-md-4">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Price ($) *</label>
+            {{ form.price }}
+          </div>
+
+          <!-- Duration -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Duration *</label>
+            {{ form.duration }}
+          </div>
+
+          <!-- Access Hours -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Access Hours *</label>
+            {{ form.access_hours }}
+          </div>
+
+          <!-- Classes Per Week -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Classes Per Week *</label>
+            {{ form.classes_per_week }}
+          </div>
+
+          <!-- Membership Duration -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Membership Duration *</label>
+            {{ form.membership_duration }}
+          </div>
+
+          <!-- Drinking Package -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Drinking Package *</label>
+            {{ form.drinking_package }}
+          </div>
+
+          <!-- Personal Instructor -->
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Personal Instructor *</label>
+            {{ form.personal_instructor }}
+          </div>
+
+          <!-- Instruments -->
+          <div class="col-12">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Instruments &amp; Equipment Included *</label>
+            {{ form.instruments }}
+          </div>
+
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between pt-4 mt-3 border-top">
+          <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary fw-semibold">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+          </a>
+          <button type="submit" class="btn btn-primary fw-bold px-4" style="background-color: #0284c7; border-color: #0284c7;">
+            <i class="bi bi-check2-circle me-1"></i> Update Package Details
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

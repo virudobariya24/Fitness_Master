@@ -38,15 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # Custom Fitness Master Apps
-    'core.apps.CoreConfig',
+    # Fitness Master Apps
     'accounts.apps.AccountsConfig',
-    'workouts.apps.WorkoutsConfig',
-    'nutrition.apps.NutritionConfig',
-    'tracking.apps.TrackingConfig',
-    'challenges.apps.ChallengesConfig',
-    'dashboard.apps.DashboardConfig',
-    'custom_admin.apps.CustomAdminConfig',
+    'packages.apps.PackagesConfig',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +80,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.Admin'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -120,8 +114,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Authentication URLs
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'user_dashboard'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'admin_dashboard'
+LOGOUT_REDIRECT_URL = 'login'
 
 # Bootstrap / Message styling tags
 from django.contrib.messages import constants as messages
