@@ -147,15 +147,25 @@
     }
 
     .profile-dropdown-menu {
-      min-width: 260px;
-      border-radius: 14px;
+      min-width: 170px;
+      border-radius: 12px;
       border: 1px solid var(--fm-border);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-      padding: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 6px;
       right: 0 !important;
       left: auto !important;
       top: 100%;
       margin-top: 6px !important;
+    }
+
+    .profile-dropdown-menu .dropdown-item {
+      transition: all 0.15s ease;
+      border-radius: 8px;
+    }
+
+    .profile-dropdown-menu .dropdown-item:hover {
+      background-color: #fee2e2;
+      color: #dc2626 !important;
     }
 
     /* Desktop Hover Trigger */
@@ -329,43 +339,10 @@
             <i class="bi bi-chevron-down text-muted" style="font-size: 11px;"></i>
           </div>
 
-          <!-- Dropdown Menu -->
+          <!-- Dropdown Menu: ONLY Log Out Option -->
           <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu shadow-lg border-0" aria-labelledby="adminHeaderProfile">
-            <!-- Profile Info Header -->
-            <li class="px-3 py-2.5 border-bottom mb-2 bg-light rounded-top-3">
-              <div class="d-flex align-items-center gap-2.5">
-                <div class="profile-avatar-circle" style="width: 38px; height: 38px; font-size: 13px;">
-                  {{ request.user.username|slice:":2"|upper }}
-                </div>
-                <div class="overflow-hidden">
-                  <div class="fw-bold text-dark text-truncate" style="font-size: 14px;">{{ request.user.username }}</div>
-                  <div class="text-muted text-truncate" style="font-size: 11px;">{{ request.user.email }}</div>
-                </div>
-              </div>
-            </li>
-
-            <!-- Quick Navigation Options -->
             <li>
-              <a class="dropdown-item rounded-2 py-2 fw-semibold d-flex align-items-center gap-2 text-secondary" href="{% url 'admin_dashboard' %}">
-                <i class="bi bi-speedometer2 text-primary"></i> Dashboard Overview
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item rounded-2 py-2 fw-semibold d-flex align-items-center gap-2 text-secondary" href="{% url 'packages_list' %}">
-                <i class="bi bi-box-seam text-info"></i> Packages Management
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item rounded-2 py-2 fw-semibold d-flex align-items-center gap-2 text-secondary" href="{% url 'admin_accounts' %}">
-                <i class="bi bi-shield-lock text-success"></i> Admin Accounts
-              </a>
-            </li>
-
-            <li><hr class="dropdown-divider my-2"></li>
-
-            <!-- Logout Option -->
-            <li>
-              <a class="dropdown-item rounded-2 py-2 text-danger fw-bold d-flex align-items-center gap-2" href="{% url 'logout' %}">
+              <a class="dropdown-item py-2 px-3 text-danger fw-bold d-flex align-items-center gap-2" href="{% url 'logout' %}">
                 <i class="bi bi-box-arrow-right fs-5"></i> Log Out
               </a>
             </li>
