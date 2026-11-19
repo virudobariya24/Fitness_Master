@@ -19,7 +19,7 @@ class PackageForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'step': '0.01',
-                'placeholder': 'e.g. 49.99',
+                'placeholder': 'e.g. 1999.00',
                 'required': True
             }),
             'duration': forms.TextInput(attrs={

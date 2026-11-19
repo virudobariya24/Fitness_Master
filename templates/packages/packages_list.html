@@ -46,7 +46,7 @@
       <div class="stat-card d-flex align-items-center justify-content-between">
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Average Price</small>
-          <h3 class="fw-black text-dark mb-0 mt-1">${{ avg_price }}</h3>
+          <h3 class="fw-black text-dark mb-0 mt-1">₹{{ avg_price }}</h3>
           <small class="text-info fw-semibold"><i class="bi bi-tag-fill"></i> Across all durations</small>
         </div>
         <div class="rounded-3 p-3 bg-success bg-opacity-10 text-success">
@@ -121,7 +121,7 @@
               </td>
               <td>
                 <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2.5 py-1.5" style="font-size: 13px;">
-                  ${{ pkg.price }}
+                  ₹{{ pkg.price }}
                 </span>
               </td>
               <td class="fw-semibold text-dark">{{ pkg.duration }}</td>
@@ -241,7 +241,7 @@
 
             <!-- 2. Price -->
             <div class="col-md-4">
-              <label class="form-label small fw-bold text-uppercase text-secondary">Price ($) *</label>
+              <label class="form-label small fw-bold text-uppercase text-secondary">Price (₹) *</label>
               {{ form.price }}
             </div>
 

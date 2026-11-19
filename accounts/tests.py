@@ -127,7 +127,7 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertContains(resp, 'Welcome Back, Administrator Viraj!')
         # Verify Packages table
         self.assertContains(resp, 'Gold Pro Membership')
-        self.assertContains(resp, '$79.99')
+        self.assertContains(resp, '₹79.99')
         self.assertContains(resp, '24/7 Access')
         self.assertContains(resp, 'Unlimited Protein Shakes')
         # Verify Admin accounts table
@@ -192,7 +192,7 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Packages Management')
         self.assertContains(resp, 'Gold Pro Membership')
-        self.assertContains(resp, '$79.99')
+        self.assertContains(resp, '₹79.99')
 
     def test_admin_accounts_individual_page(self):
         """Dedicated Admin Accounts page loads with status 200 and displays admins list"""

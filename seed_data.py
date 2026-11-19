@@ -38,7 +38,7 @@ def seed_database():
     packages_data = [
         {
             'title': 'Starter Fitness Pass',
-            'price': 29.99,
+            'price': 1499.00,
             'duration': '1 Month',
             'access_hours': '6:00 AM - 10:00 PM',
             'instruments': 'All Cardio Machines (Treadmills, Rowers, Ellipticals) and Basic Dumbbells & Barbells.',
@@ -49,7 +49,7 @@ def seed_database():
         },
         {
             'title': 'Silver Strength & Conditioning',
-            'price': 59.99,
+            'price': 2999.00,
             'duration': '3 Months',
             'access_hours': '24/7 Unlimited Access',
             'instruments': 'Cardio Zone, Olympic Lifting Platforms, Squat Racks, Resistance Machines, Kettlebells.',
@@ -60,7 +60,7 @@ def seed_database():
         },
         {
             'title': 'Gold Pro Athlete Membership',
-            'price': 99.99,
+            'price': 4999.00,
             'duration': '6 Months',
             'access_hours': '24/7 VIP Access',
             'instruments': 'Full Gym Floor, Functional Turf, Crossfit Rig, Recovery Compression Boots & Infrared Sauna.',
@@ -71,7 +71,7 @@ def seed_database():
         },
         {
             'title': 'Diamond VIP Elite Master',
-            'price': 149.99,
+            'price': 8999.00,
             'duration': '12 Months',
             'access_hours': '24/7 Priority VIP Access All Locations',
             'instruments': 'Complete Pro Equipment, Private Studio Access, Hydro-Massage Beds, Cold Plunge & Sauna.',
@@ -83,14 +83,14 @@ def seed_database():
     ]
 
     for pdata in packages_data:
-        pkg, created = Packages.objects.get_or_create(
+        pkg, created = Packages.objects.update_or_create(
             title=pdata['title'],
             defaults=pdata
         )
         if created:
-            print(f"📦 Created Package: {pkg.title} (${pkg.price})")
+            print(f"📦 Created Package: {pkg.title} (₹{pkg.price})")
         else:
-            print(f"📦 Package exists: {pkg.title}")
+            print(f"📦 Updated Package: {pkg.title} (₹{pkg.price})")
 
     print("\n🎉 Database Seeding Completed Successfully!")
     print(f"Total Admins: {AdminModel.objects.count()}")
