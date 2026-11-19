@@ -34,9 +34,41 @@
       width: 260px;
       background-color: var(--fm-primary-dark);
       color: #fff;
-      min-height: 100vh;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
       border-right: 1px solid #1e293b;
-      z-index: 1040;
+      z-index: 1030;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .admin-sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .admin-sidebar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    /* Main Content Area */
+    .main-wrapper {
+      min-width: 0;
+      flex: 1 1 auto;
+      min-height: 100vh;
+      margin-left: 0;
+      width: 100%;
+      background-color: var(--fm-bg-light);
+    }
+
+    @media (min-width: 992px) {
+      .main-wrapper {
+        margin-left: 260px !important;
+        width: calc(100% - 260px) !important;
+        max-width: calc(100% - 260px) !important;
+      }
     }
 
     .admin-sidebar .nav-link {
@@ -116,10 +148,10 @@
 <body>
 
 {% if request.user.is_authenticated %}
-<div class="d-flex">
+<div class="d-flex w-100 min-vh-100 position-relative">
 
   <!-- Desktop Sidebar -->
-  <aside class="admin-sidebar d-none d-lg-flex flex-column p-3 position-fixed top-0 bottom-0 start-0">
+  <aside class="admin-sidebar d-none d-lg-flex flex-column p-3">
     <!-- Brand -->
     <div class="d-flex align-items-center gap-2 px-2 py-3 mb-3 border-bottom border-secondary border-opacity-25">
       <div class="bg-primary bg-opacity-25 text-info rounded-3 p-2 d-flex align-items-center justify-center" style="width: 38px; height: 38px;">
@@ -214,8 +246,7 @@
   </div>
 
   <!-- Main Content Wrapper -->
-  <div class="flex-grow-1" style="margin-left: 0; min-width: 0;" id="mainContentWrapper">
-    <div class="d-none d-lg-block" style="width: 260px; float: left; height: 1px;"></div>
+  <div class="main-wrapper" id="mainContentWrapper">
 
     <!-- Top Navbar -->
     <header class="admin-navbar d-flex align-items-center justify-content-between px-3 px-lg-4 sticky-top shadow-sm">

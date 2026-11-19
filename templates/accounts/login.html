@@ -33,22 +33,6 @@
       </div>
     {% endif %}
 
-    <!-- Fixed Credentials Helper Badge -->
-    <div class="p-3 mb-3 rounded-3 border d-flex align-items-center justify-content-between" style="background-color: #1e293b; border-color: rgba(14, 165, 233, 0.25) !important;">
-      <div class="d-flex align-items-center gap-2.5">
-        <div class="rounded-2xl p-2 bg-info bg-opacity-10 text-info">
-          <i class="bi bi-key-fill"></i>
-        </div>
-        <div>
-          <small class="text-secondary d-block fw-bold" style="font-size: 10px; text-transform: uppercase;">Default Admin Credentials</small>
-          <span class="text-white fw-bold small">Viraj</span> &bull; <span class="text-info fw-bold small">Viraj123</span>
-        </div>
-      </div>
-      <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 fw-bold" style="font-size: 11px;" onclick="fillAdminCredentials()">
-        Auto-Fill
-      </button>
-    </div>
-
     <!-- Login Card -->
     <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="background-color: #ffffff;">
       <div class="card-body p-4 p-sm-5">
@@ -114,12 +98,4 @@
   </div>
 </div>
 
-<script>
-  function fillAdminCredentials() {
-    const u = document.getElementById('adminUsername');
-    const p = document.getElementById('adminPassword');
-    if (u) u.value = 'Viraj';
-    if (p) p.value = 'Viraj123';
-  }
-</script>
 {% endblock %}
