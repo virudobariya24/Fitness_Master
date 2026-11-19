@@ -103,12 +103,17 @@
   <div class="fm-card mb-4" id="packagesSection">
     <div class="fm-card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
       <div>
-        <h5 class="mb-0 fw-bold"><i class="bi bi-box-seam text-primary me-2"></i>Fitness Packages Management</h5>
+        <h5 class="mb-0 fw-bold"><i class="bi bi-box-seam text-primary me-2"></i>Fitness Packages Overview</h5>
         <small class="text-muted">Manage all subscription packages with pricing, instruments, and amenities</small>
       </div>
-      <button type="button" class="btn btn-sm btn-primary fw-bold d-flex align-items-center gap-1.5 shadow-sm" data-bs-toggle="modal" data-bs-target="#addPackageModal">
-        <i class="bi bi-plus-lg"></i> Add New Package
-      </button>
+      <div class="d-flex align-items-center gap-2">
+        <a href="{% url 'packages_list' %}" class="btn btn-sm btn-outline-primary fw-bold">
+          <i class="bi bi-box-seam me-1"></i> Full Packages Page &rarr;
+        </a>
+        <button type="button" class="btn btn-sm btn-primary fw-bold d-flex align-items-center gap-1.5 shadow-sm" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+          <i class="bi bi-plus-lg"></i> Add New Package
+        </button>
+      </div>
     </div>
 
     <div class="table-responsive">
@@ -233,9 +238,14 @@
         <h5 class="mb-0 fw-bold"><i class="bi bi-shield-lock text-info me-2"></i>System Administrators (`Admin` Model)</h5>
         <small class="text-muted">Accounts created under the Admin model with hashed password security</small>
       </div>
-      <a href="{% url 'admin:accounts_admin_add' %}" target="_blank" class="btn btn-sm btn-outline-info fw-bold d-flex align-items-center gap-1.5 shadow-sm">
-        <i class="bi bi-person-plus-fill"></i> Manually Add Admin in Django Admin <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 10px;"></i>
-      </a>
+      <div class="d-flex align-items-center gap-2">
+        <a href="{% url 'admin_accounts' %}" class="btn btn-sm btn-outline-info fw-bold">
+          <i class="bi bi-people me-1"></i> Full Admins Page &rarr;
+        </a>
+        <a href="{% url 'admin:accounts_admin_add' %}" target="_blank" class="btn btn-sm btn-info fw-bold text-dark d-flex align-items-center gap-1.5 shadow-sm">
+          <i class="bi bi-person-plus-fill"></i> Manually Add Admin <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 10px;"></i>
+        </a>
+      </div>
     </div>
 
     <div class="table-responsive">

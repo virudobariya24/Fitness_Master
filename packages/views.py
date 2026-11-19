@@ -46,17 +46,47 @@ def admin_dashboard_view(request):
 
 @login_required(login_url='login')
 @user_passes_test(admin_check, login_url='login')
+def packages_list_view(request):
+    """
+    Dedicated Page for Option 2: Packages Management.
+    Lists all subscription packages with full details for all 9 fields.
+    Includes search, filter, and modal to add new package.
+    """
+    search_query = request.GET.get('q', '').strip()
+    packages = Packages.objects.all()
+
+    if search_query:
+        packages = packages.filter(title__icontains=search_query)
+
+    packages = packages.order_by('price')
+    total_packages = packages.count()
+    avg_price = packages.aggregate(avg=Avg('price'))['avg'] or 0.0
+
+    form = PackageForm()
+
+    return render(request, 'packages/packages_list.html', {
+        'packages': packages,
+        'total_packages': total_packages,
+        'avg_price': round(avg_price, 2),
+        'form': form,
+        'search_query': search_query,
+    })
+
+
+@login_required(login_url='login')
+@user_passes_test(admin_check, login_url='login')
 def package_add_view(request):
     """Create a new package"""
+    next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'packages_list'
     if request.method == 'POST':
         form = PackageForm(request.POST)
         if form.is_valid():
             pkg = form.save()
             messages.success(request, f"Package '{pkg.title}' has been successfully created!")
-            return redirect('admin_dashboard')
+            return redirect(next_url)
         else:
             messages.error(request, "Failed to create package. Please review the errors in the form.")
-    return redirect('admin_dashboard')
+    return redirect(next_url)
 
 
 @login_required(login_url='login')
@@ -69,7 +99,7 @@ def package_edit_view(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, f"Package '{package.title}' has been updated successfully!")
-            return redirect('admin_dashboard')
+            return redirect('packages_list')
         else:
             messages.error(request, "Failed to update package. Please verify the inputs.")
     else:
@@ -86,8 +116,9 @@ def package_edit_view(request, pk):
 def package_delete_view(request, pk):
     """Delete a package"""
     package = get_object_or_404(Packages, pk=pk)
+    next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'packages_list'
     if request.method == 'POST':
         title = package.title
         package.delete()
         messages.success(request, f"Package '{title}' was deleted successfully.")
-    return redirect('admin_dashboard')
+    return redirect(next_url)

@@ -171,12 +171,12 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="#packagesSection" class="nav-link">
+        <a href="{% url 'packages_list' %}" class="nav-link {% if request.resolver_match.url_name == 'packages_list' or request.resolver_match.url_name == 'package_edit' %}active{% endif %}">
           <i class="bi bi-box-seam"></i> Packages Management
         </a>
       </li>
       <li class="nav-item">
-        <a href="#adminsSection" class="nav-link">
+        <a href="{% url 'admin_accounts' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_accounts' %}active{% endif %}">
           <i class="bi bi-shield-lock"></i> Admin Accounts
         </a>
       </li>
@@ -217,17 +217,17 @@
     <div class="offcanvas-body p-0 d-flex flex-column">
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="{% url 'admin_dashboard' %}" class="nav-link active">
+          <a href="{% url 'admin_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
             <i class="bi bi-speedometer2"></i> Dashboard Overview
           </a>
         </li>
         <li class="nav-item">
-          <a href="#packagesSection" class="nav-link" data-bs-dismiss="offcanvas">
+          <a href="{% url 'packages_list' %}" class="nav-link {% if request.resolver_match.url_name == 'packages_list' or request.resolver_match.url_name == 'package_edit' %}active{% endif %}">
             <i class="bi bi-box-seam"></i> Packages Management
           </a>
         </li>
         <li class="nav-item">
-          <a href="#adminsSection" class="nav-link" data-bs-dismiss="offcanvas">
+          <a href="{% url 'admin_accounts' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_accounts' %}active{% endif %}">
             <i class="bi bi-shield-lock"></i> Admin Accounts
           </a>
         </li>

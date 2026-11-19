@@ -181,3 +181,39 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Admins')
         self.assertContains(resp, 'Packages')
+
+    # =========================================================================
+    # INDIVIDUAL SIDEBAR PAGES TESTS
+    # =========================================================================
+    def test_packages_list_individual_page(self):
+        """Dedicated Packages Management page loads with status 200 and displays catalog"""
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get(reverse('packages_list'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Packages Management')
+        self.assertContains(resp, 'Gold Pro Membership')
+        self.assertContains(resp, '$79.99')
+
+    def test_admin_accounts_individual_page(self):
+        """Dedicated Admin Accounts page loads with status 200 and displays admins list"""
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get(reverse('admin_accounts'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Admin Accounts Management')
+        self.assertContains(resp, 'Viraj')
+        self.assertContains(resp, 'viraj@fitnessmaster.com')
+
+    def test_create_admin_from_individual_page(self):
+        """Admin can create another admin user with hashed password from the dedicated page"""
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.post(reverse('admin_accounts'), {
+            'username': 'RahulAdmin',
+            'email': 'rahul@fitnessmaster.com',
+            'password': 'RahulPassword123',
+            'confirm_password': 'RahulPassword123',
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(AdminModel.objects.filter(username='RahulAdmin').exists())
+        new_admin = AdminModel.objects.get(username='RahulAdmin')
+        self.assertTrue(check_password('RahulPassword123', new_admin.password))
+        self.assertTrue(new_admin.is_staff)
