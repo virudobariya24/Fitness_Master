@@ -43,7 +43,7 @@
       z-index: 1030;
       overflow-y: auto;
       overflow-x: hidden;
-      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .admin-sidebar::-webkit-scrollbar {
@@ -62,7 +62,7 @@
       margin-left: 0;
       width: 100%;
       background-color: var(--fm-bg-light);
-      transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @media (min-width: 992px) {
@@ -71,15 +71,62 @@
         width: calc(100% - 260px) !important;
         max-width: calc(100% - 260px) !important;
       }
+
+      /* Collapsed State: Icon-Only Compact Mini Sidebar */
       body.sidebar-collapsed .admin-sidebar,
       html.sidebar-collapsed-init body .admin-sidebar {
-        transform: translateX(-260px) !important;
+        width: 72px !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        transform: none !important;
       }
+
       body.sidebar-collapsed .main-wrapper,
       html.sidebar-collapsed-init body .main-wrapper {
-        margin-left: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
+        margin-left: 72px !important;
+        width: calc(100% - 72px) !important;
+        max-width: calc(100% - 72px) !important;
+      }
+
+      body.sidebar-collapsed .brand-text,
+      html.sidebar-collapsed-init body .brand-text,
+      body.sidebar-collapsed .nav-label,
+      html.sidebar-collapsed-init body .nav-label {
+        display: none !important;
+      }
+
+      body.sidebar-collapsed .brand-container,
+      html.sidebar-collapsed-init body .brand-container {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      body.sidebar-collapsed .admin-sidebar .nav-link,
+      html.sidebar-collapsed-init body .admin-sidebar .nav-link {
+        justify-content: center !important;
+        padding: 0.75rem 0 !important;
+        gap: 0 !important;
+      }
+
+      body.sidebar-collapsed .admin-sidebar .nav-link i,
+      html.sidebar-collapsed-init body .admin-sidebar .nav-link i {
+        font-size: 1.25rem !important;
+        width: auto !important;
+        margin: 0 auto !important;
+      }
+
+      body.sidebar-collapsed .sidebar-logout-btn,
+      html.sidebar-collapsed-init body .sidebar-logout-btn {
+        padding: 0.75rem 0 !important;
+        justify-content: center !important;
+        gap: 0 !important;
+      }
+
+      body.sidebar-collapsed .sidebar-logout-btn i,
+      html.sidebar-collapsed-init body .sidebar-logout-btn i {
+        margin: 0 auto !important;
+        font-size: 1.25rem !important;
       }
     }
 
@@ -325,47 +372,44 @@
 
   <!-- Desktop Sidebar -->
   <aside class="admin-sidebar d-none d-lg-flex flex-column p-3" id="adminDesktopSidebar">
-    <!-- Brand & Desktop Collapse Button -->
-    <div class="d-flex align-items-center justify-content-between px-2 py-3 mb-3 border-bottom border-secondary border-opacity-25">
-      <div class="d-flex align-items-center gap-2">
-        <div class="bg-primary bg-opacity-25 text-info rounded-3 p-2 d-flex align-items-center justify-center" style="width: 38px; height: 38px;">
-          <i class="fa-solid fa-dumbbell text-info fs-5"></i>
-        </div>
-        <div>
-          <h6 class="mb-0 fw-bold text-white tracking-wide">FITNESS<span class="text-info">MASTER</span></h6>
-          <small class="text-secondary fw-semibold" style="font-size: 10px; letter-spacing: 0.5px;">ADMIN DASHBOARD</small>
-        </div>
+    <!-- Brand -->
+    <div class="brand-container d-flex align-items-center gap-2 px-2 py-3 mb-3 border-bottom border-secondary border-opacity-25">
+      <div class="brand-icon bg-primary bg-opacity-25 text-info rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; flex-shrink: 0;">
+        <i class="fa-solid fa-dumbbell text-info fs-5"></i>
       </div>
-      <!-- Desktop Sidebar Close Button -->
-      <button type="button" class="btn btn-sm btn-outline-secondary text-secondary p-1 rounded-2 border-0 d-flex align-items-center justify-content-center" id="desktopSidebarCloseBtn" title="Close Sidebar" style="width: 28px; height: 28px;">
-        <i class="bi bi-chevron-left text-white fs-6"></i>
-      </button>
+      <div class="brand-text text-truncate">
+        <h6 class="mb-0 fw-bold text-white tracking-wide">FITNESS<span class="text-info">MASTER</span></h6>
+        <small class="text-secondary fw-semibold" style="font-size: 10px; letter-spacing: 0.5px;">ADMIN DASHBOARD</small>
+      </div>
     </div>
 
     <!-- Navigation -->
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="{% url 'admin_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-          <i class="bi bi-speedometer2"></i> Dashboard Overview
+        <a href="{% url 'admin_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" title="Dashboard Overview">
+          <i class="bi bi-speedometer2"></i>
+          <span class="nav-label">Dashboard Overview</span>
         </a>
       </li>
       <li class="nav-item">
-        <a href="{% url 'packages_list' %}" class="nav-link {% if request.resolver_match.url_name == 'packages_list' or request.resolver_match.url_name == 'package_edit' or request.resolver_match.url_name == 'packages_cards' %}active{% endif %}">
-          <i class="bi bi-box-seam"></i> Packages Management
+        <a href="{% url 'packages_list' %}" class="nav-link {% if request.resolver_match.url_name == 'packages_list' or request.resolver_match.url_name == 'package_edit' or request.resolver_match.url_name == 'packages_cards' %}active{% endif %}" title="Packages Management">
+          <i class="bi bi-box-seam"></i>
+          <span class="nav-label">Packages Management</span>
         </a>
       </li>
       <li class="nav-item">
-        <a href="{% url 'admin_accounts' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_accounts' %}active{% endif %}">
-          <i class="bi bi-shield-lock"></i> Admin Accounts
+        <a href="{% url 'admin_accounts' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_accounts' %}active{% endif %}" title="Admin Accounts">
+          <i class="bi bi-shield-lock"></i>
+          <span class="nav-label">Admin Accounts</span>
         </a>
       </li>
     </ul>
 
     <!-- Sidebar Bottom / Footer: Log Out (Desktop) -->
     <div class="border-top border-secondary border-opacity-25 pt-3 mt-auto">
-      <a href="{% url 'logout' %}" class="sidebar-logout-btn w-100">
+      <a href="{% url 'logout' %}" class="sidebar-logout-btn w-100" title="Log Out">
         <i class="bi bi-box-arrow-right fs-5"></i>
-        <span>Log Out</span>
+        <span class="nav-label">Log Out</span>
       </a>
     </div>
   </aside>
@@ -519,16 +563,6 @@
             mobileOffcanvas.toggle();
           }
         }
-      });
-    }
-
-    if (desktopCloseBtn) {
-      desktopCloseBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.body.classList.add('sidebar-collapsed');
-        try {
-          localStorage.setItem('fm_sidebar_collapsed', 'true');
-        } catch (e) {}
       });
     }
 
