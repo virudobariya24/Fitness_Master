@@ -12,23 +12,27 @@
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
       <h3 class="fw-black text-dark mb-1">
-        <i class="bi bi-box-seam text-primary me-2"></i>Packages Catalog
+        <i class="bi bi-box-seam text-primary me-2"></i>Packages Catalog (1 Box = 1 Package)
       </h3>
       <p class="text-muted small mb-0">
-        Configure subscription tiers, access hours, pricing, and fitness amenities.
+        Each membership plan is arranged in an individual box card with pricing, duration, and all 9 specifications.
       </p>
     </div>
     <div class="d-flex align-items-center gap-2">
-      <!-- Layout Toggle: Cards vs Table -->
-      <div class="btn-group btn-group-sm" role="group" aria-label="View switch">
-        <a href="{% url 'packages_cards' %}" class="btn btn-outline-secondary fw-semibold" title="Card View">
-          <i class="bi bi-grid-fill me-1"></i> Cards
-        </a>
-        <a href="{% url 'packages_list' %}" class="btn btn-primary active fw-semibold" title="Table View">
-          <i class="bi bi-table me-1"></i> Table
-        </a>
-      </div>
-      <button type="button" class="btn btn-primary btn-sm fw-bold d-flex align-items-center gap-1.5 shadow-sm" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+      <!-- Layout Tabs Switcher: Cards (1 Box / Package) vs Table -->
+      <ul class="nav nav-pills bg-light border p-1 rounded-3" id="packagesViewTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active py-1.5 px-3 fw-bold btn-sm" id="cards-tab" data-bs-toggle="pill" data-bs-target="#cardsViewPane" type="button" role="tab" aria-selected="true">
+            <i class="bi bi-grid-fill me-1"></i> 1 Box / Package
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link py-1.5 px-3 fw-bold btn-sm" id="table-tab" data-bs-toggle="pill" data-bs-target="#tableViewPane" type="button" role="tab" aria-selected="false">
+            <i class="bi bi-table me-1"></i> Table View
+          </button>
+        </li>
+      </ul>
+      <button type="button" class="btn btn-primary btn-sm fw-bold d-flex align-items-center gap-1.5 shadow-sm px-3 py-1.5" data-bs-toggle="modal" data-bs-target="#addPackageModal">
         <i class="bi bi-plus-circle-fill"></i> Add Package
       </button>
     </div>
@@ -43,7 +47,7 @@
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Total Active Packages</small>
           <h3 class="fw-black text-dark mb-0 mt-1">{{ total_packages }}</h3>
-          <small class="text-success fw-semibold"><i class="bi bi-check-circle-fill"></i> Available for Members</small>
+          <small class="text-success fw-semibold"><i class="bi bi-check-circle-fill"></i> 1 Box per Tier</small>
         </div>
         <div class="rounded-3 p-3 bg-primary bg-opacity-10 text-primary">
           <i class="bi bi-box-seam fs-3"></i>
@@ -56,7 +60,7 @@
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Average Price</small>
           <h3 class="fw-black text-dark mb-0 mt-1">₹{{ avg_price }}</h3>
-          <small class="text-info fw-semibold"><i class="bi bi-tag-fill"></i> Across all durations</small>
+          <small class="text-info fw-semibold"><i class="bi bi-tag-fill"></i> Indian Rupees (₹)</small>
         </div>
         <div class="rounded-3 p-3 bg-success bg-opacity-10 text-success">
           <i class="bi bi-cash-stack fs-3"></i>
@@ -67,9 +71,9 @@
     <div class="col-sm-12 col-md-4">
       <div class="stat-card d-flex align-items-center justify-content-between">
         <div>
-          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Model Structure</small>
-          <h6 class="fw-bold text-dark mb-0 mt-1">9 Fields Configured</h6>
-          <small class="text-muted fw-semibold"><i class="bi bi-database-check"></i> Task 4 Compliant</small>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Layout Format</small>
+          <h6 class="fw-bold text-dark mb-0 mt-1">1 Box = 1 Package</h6>
+          <small class="text-info fw-semibold"><i class="bi bi-layers-fill"></i> Responsive 3-Box Grid</small>
         </div>
         <div class="rounded-3 p-3 bg-info bg-opacity-10 text-info">
           <i class="bi bi-layers-fill fs-3"></i>
@@ -79,143 +83,262 @@
   </div>
 
   <!-- =========================================================================
-       PACKAGES TABLE CARD
+       TAB CONTENT: 1 BOX PER PACKAGE (PRIMARY) & TABLE VIEW
        ========================================================================= -->
-  <div class="fm-card mb-4 shadow-sm">
-    <div class="fm-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
-      <div class="d-flex align-items-center gap-2">
-        <h5 class="mb-0 fw-bold">All Fitness Packages ({{ total_packages }})</h5>
-      </div>
+  <div class="tab-content" id="packagesTabContent">
 
-      <!-- Search Input -->
-      <form method="get" action="{% url 'packages_list' %}" class="d-flex align-items-center gap-2">
-        <div class="input-group input-group-sm" style="max-width: 280px;">
-          <span class="input-group-text bg-light text-muted border-end-0">
-            <i class="bi bi-search"></i>
-          </span>
-          <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search by title...">
-          {% if search_query %}
-            <a href="{% url 'packages_list' %}" class="btn btn-outline-secondary" title="Clear search">
-              <i class="bi bi-x"></i>
-            </a>
-          {% endif %}
-        </div>
-      </form>
-    </div>
+    <!-- PANE 1: 1 BOX = 1 PACKAGE CARD GRID (ACTIVE DEFAULT) -->
+    <div class="tab-pane fade show active" id="cardsViewPane" role="tabpanel" aria-labelledby="cards-tab">
+      <div class="row g-4 mb-4">
+        {% for pkg in packages %}
+          <div class="col-12 col-md-6 col-lg-4 d-flex">
+            <!-- Individual Package Box -->
+            <div class="card h-100 w-100 border shadow-sm rounded-4 overflow-hidden d-flex flex-column" style="border-color: #cbd5e1 !important; background: #ffffff; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+              
+              <!-- Box Header -->
+              <div class="p-4 border-bottom text-white" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="badge bg-info text-dark fw-bold px-2.5 py-1" style="font-size: 11px;">
+                    <i class="bi bi-box-seam me-1"></i> Box #{{ forloop.counter }}
+                  </span>
+                  <span class="badge bg-white text-dark fw-bold px-2.5 py-1 shadow-sm" style="font-size: 11px;">
+                    {{ pkg.duration }}
+                  </span>
+                </div>
+                <h4 class="fw-black mb-1 text-white tracking-tight">{{ pkg.title }}</h4>
+                <small class="text-light text-opacity-75" style="font-size: 12px;">ID: #PKG-{{ pkg.id }}</small>
+              </div>
 
-    <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
-        <thead class="table-light text-uppercase text-secondary fw-bold" style="font-size: 11px;">
-          <tr>
-            <th class="ps-4 py-3">#</th>
-            <th class="py-3">Package Title</th>
-            <th class="py-3">Price</th>
-            <th class="py-3">Duration</th>
-            <th class="py-3">Access Hours</th>
-            <th class="py-3">Classes / Wk</th>
-            <th class="py-3">Membership</th>
-            <th class="py-3">Drinking Package</th>
-            <th class="py-3">Personal Instructor</th>
-            <th class="py-3">Instruments</th>
-            <th class="text-end pe-4 py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for pkg in packages %}
-            <tr>
-              <td class="ps-4 fw-bold text-muted">{{ forloop.counter }}</td>
-              <td>
-                <div class="fw-bold text-dark">{{ pkg.title }}</div>
-                <small class="text-muted d-block" style="font-size: 11px;">ID: #PKG-{{ pkg.id }}</small>
-              </td>
-              <td>
-                <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2.5 py-1.5" style="font-size: 13px;">
-                  ₹{{ pkg.price }}
-                </span>
-              </td>
-              <td class="fw-semibold text-dark">{{ pkg.duration }}</td>
-              <td>
-                <span class="badge bg-light text-dark border">
-                  <i class="bi bi-clock me-1 text-muted"></i>{{ pkg.access_hours }}
-                </span>
-              </td>
-              <td>
-                <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
-                  {{ pkg.classes_per_week }}
-                </span>
-              </td>
-              <td>
-                <span class="badge bg-secondary-subtle text-secondary-emphasis">
-                  {{ pkg.membership_duration }}
-                </span>
-              </td>
-              <td>
-                <div class="text-truncate" style="max-width: 140px;" title="{{ pkg.drinking_package }}">
-                  <i class="bi bi-cup-straw text-primary me-1"></i>{{ pkg.drinking_package }}
+              <!-- Price Box in Indian Rupees -->
+              <div class="p-3 bg-light border-bottom text-center">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                  <span class="display-6 fw-black text-primary">₹{{ pkg.price }}</span>
                 </div>
-              </td>
-              <td>
-                <div class="text-truncate" style="max-width: 140px;" title="{{ pkg.personal_instructor }}">
-                  <i class="bi bi-person-badge text-warning me-1"></i>{{ pkg.personal_instructor }}
-                </div>
-              </td>
-              <td>
-                <div class="text-truncate text-muted" style="max-width: 160px;" title="{{ pkg.instruments }}">
-                  {{ pkg.instruments }}
-                </div>
-              </td>
-              <td class="text-end pe-4">
-                <div class="btn-group btn-group-sm">
-                  <a href="{% url 'package_edit' pkg.id %}" class="btn btn-outline-secondary" title="Edit Package">
-                    <i class="bi bi-pencil-square text-primary"></i>
+                <small class="text-muted fw-bold text-uppercase" style="font-size: 11px; letter-spacing: 0.5px;">
+                  {{ pkg.membership_duration }} Plan
+                </small>
+              </div>
+
+              <!-- Box Specifications (All 9 Model Fields) -->
+              <div class="p-4 flex-grow-1 d-flex flex-column">
+                <ul class="list-unstyled mb-4 small flex-grow-1">
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
+                    <span class="text-muted"><i class="bi bi-clock-fill text-primary me-2"></i>Access Hours</span>
+                    <strong class="text-dark">{{ pkg.access_hours }}</strong>
+                  </li>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
+                    <span class="text-muted"><i class="bi bi-calendar2-check-fill text-success me-2"></i>Classes / Week</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold">{{ pkg.classes_per_week }}</span>
+                  </li>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
+                    <span class="text-muted"><i class="bi bi-hourglass-split text-info me-2"></i>Duration</span>
+                    <strong class="text-dark">{{ pkg.duration }}</strong>
+                  </li>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
+                    <span class="text-muted"><i class="bi bi-cup-straw text-primary me-2"></i>Drinking Package</span>
+                    <span class="text-dark fw-semibold text-end" style="max-width: 55%;">{{ pkg.drinking_package }}</span>
+                  </li>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
+                    <span class="text-muted"><i class="bi bi-person-badge-fill text-warning me-2"></i>Personal Trainer</span>
+                    <span class="text-dark fw-semibold text-end" style="max-width: 55%;">{{ pkg.personal_instructor }}</span>
+                  </li>
+                  <li class="pt-3">
+                    <span class="text-muted d-block mb-1.5"><i class="bi bi-tools text-secondary me-2"></i>Instruments & Equipment</span>
+                    <div class="p-2.5 bg-light rounded-3 border small text-dark fw-semibold">
+                      {{ pkg.instruments }}
+                    </div>
+                  </li>
+                </ul>
+
+                <!-- Box Footer Actions -->
+                <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between gap-2">
+                  <a href="{% url 'package_edit' pkg.id %}" class="btn btn-outline-primary btn-sm fw-bold flex-grow-1 py-1.5">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Plan
                   </a>
-                  <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deletePackageModal{{ pkg.id }}" title="Delete Package">
-                    <i class="bi bi-trash3 text-danger"></i>
+                  <button type="button" class="btn btn-outline-danger btn-sm py-1.5 px-3" data-bs-toggle="modal" data-bs-target="#deletePackageModalListCards{{ pkg.id }}" title="Delete Package">
+                    <i class="bi bi-trash3"></i>
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <!-- Delete Confirmation Modal -->
-                <div class="modal fade" id="deletePackageModal{{ pkg.id }}" tabindex="-1" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header border-0 pb-0">
-                        <h6 class="modal-title fw-bold text-danger">
-                          <i class="bi bi-exclamation-triangle-fill me-1"></i> Delete Package Confirmation
-                        </h6>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body text-start py-3">
-                        Are you sure you want to delete the package <strong>"{{ pkg.title }}"</strong>? This action cannot be reversed.
-                      </div>
-                      <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                        <form method="post" action="{% url 'package_delete' pkg.id %}" class="d-inline">
-                          {% csrf_token %}
-                          <input type="hidden" name="next" value="{% url 'packages_list' %}">
-                          <button type="submit" class="btn btn-danger btn-sm fw-bold">Confirm Delete</button>
-                        </form>
+          <!-- Delete Confirmation Modal for Card View -->
+          <div class="modal fade" id="deletePackageModalListCards{{ pkg.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                  <h6 class="modal-title fw-bold text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Delete Package Confirmation
+                  </h6>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-start py-3">
+                  Are you sure you want to delete <strong>"{{ pkg.title }}"</strong>? This action cannot be reversed.
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                  <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                  <form method="post" action="{% url 'package_delete' pkg.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'packages_list' %}">
+                    <button type="submit" class="btn btn-danger btn-sm fw-bold">Confirm Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <div class="card p-5 text-center text-muted border rounded-4 bg-white shadow-sm">
+              <i class="bi bi-box-seam fs-1 text-secondary opacity-50 mb-2"></i>
+              <h5>No Packages Found</h5>
+              <p class="small text-muted mb-3">Get started by creating your first fitness package.</p>
+              <div>
+                <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+                  <i class="bi bi-plus-circle-fill me-1"></i> Add Package
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- PANE 2: TABLE VIEW -->
+    <div class="tab-pane fade" id="tableViewPane" role="tabpanel" aria-labelledby="table-tab">
+      <div class="fm-card mb-4 shadow-sm">
+        <div class="fm-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-2">
+            <h5 class="mb-0 fw-bold">All Fitness Packages ({{ total_packages }})</h5>
+          </div>
+
+          <!-- Search Input -->
+          <form method="get" action="{% url 'packages_list' %}" class="d-flex align-items-center gap-2">
+            <div class="input-group input-group-sm" style="max-width: 280px;">
+              <span class="input-group-text bg-light text-muted border-end-0">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search by title...">
+              {% if search_query %}
+                <a href="{% url 'packages_list' %}" class="btn btn-outline-secondary" title="Clear search">
+                  <i class="bi bi-x"></i>
+                </a>
+              {% endif %}
+            </div>
+          </form>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+            <thead class="table-light text-uppercase text-secondary fw-bold" style="font-size: 11px;">
+              <tr>
+                <th class="ps-4 py-3">#</th>
+                <th class="py-3">Package Title</th>
+                <th class="py-3">Price</th>
+                <th class="py-3">Duration</th>
+                <th class="py-3">Access Hours</th>
+                <th class="py-3">Classes / Wk</th>
+                <th class="py-3">Membership</th>
+                <th class="py-3">Drinking Package</th>
+                <th class="py-3">Personal Instructor</th>
+                <th class="py-3">Instruments</th>
+                <th class="text-end pe-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for pkg in packages %}
+                <tr>
+                  <td class="ps-4 fw-bold text-muted">{{ forloop.counter }}</td>
+                  <td>
+                    <div class="fw-bold text-dark">{{ pkg.title }}</div>
+                    <small class="text-muted d-block" style="font-size: 11px;">ID: #PKG-{{ pkg.id }}</small>
+                  </td>
+                  <td>
+                    <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2.5 py-1.5" style="font-size: 13px;">
+                      ₹{{ pkg.price }}
+                    </span>
+                  </td>
+                  <td class="fw-semibold text-dark">{{ pkg.duration }}</td>
+                  <td>
+                    <span class="badge bg-light text-dark border">
+                      <i class="bi bi-clock me-1 text-muted"></i>{{ pkg.access_hours }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
+                      {{ pkg.classes_per_week }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge bg-secondary-subtle text-secondary-emphasis">
+                      {{ pkg.membership_duration }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="text-truncate" style="max-width: 140px;" title="{{ pkg.drinking_package }}">
+                      <i class="bi bi-cup-straw text-primary me-1"></i>{{ pkg.drinking_package }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="text-truncate" style="max-width: 140px;" title="{{ pkg.personal_instructor }}">
+                      <i class="bi bi-person-badge text-warning me-1"></i>{{ pkg.personal_instructor }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="text-truncate text-muted" style="max-width: 160px;" title="{{ pkg.instruments }}">
+                      {{ pkg.instruments }}
+                    </div>
+                  </td>
+                  <td class="text-end pe-4">
+                    <div class="btn-group btn-group-sm">
+                      <a href="{% url 'package_edit' pkg.id %}" class="btn btn-outline-secondary" title="Edit Package">
+                        <i class="bi bi-pencil-square text-primary"></i>
+                      </a>
+                      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deletePackageModal{{ pkg.id }}" title="Delete Package">
+                        <i class="bi bi-trash3 text-danger"></i>
+                      </button>
+                    </div>
+
+                    <!-- Delete Confirmation Modal -->
+                    <div class="modal fade" id="deletePackageModal{{ pkg.id }}" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header border-0 pb-0">
+                            <h6 class="modal-title fw-bold text-danger">
+                              <i class="bi bi-exclamation-triangle-fill me-1"></i> Delete Package Confirmation
+                            </h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body text-start py-3">
+                            Are you sure you want to delete the package <strong>"{{ pkg.title }}"</strong>? This action cannot be reversed.
+                          </div>
+                          <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                            <form method="post" action="{% url 'package_delete' pkg.id %}" class="d-inline">
+                              {% csrf_token %}
+                              <input type="hidden" name="next" value="{% url 'packages_list' %}">
+                              <button type="submit" class="btn btn-danger btn-sm fw-bold">Confirm Delete</button>
+                            </form>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="11" class="text-center py-5 text-muted">
-                <i class="bi bi-box-seam display-4 d-block mb-3 text-secondary opacity-50"></i>
-                <h6 class="fw-bold">No packages found</h6>
-                <p class="small mb-3">Get started by creating your first subscription package.</p>
-                <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#addPackageModal">
-                  <i class="bi bi-plus-circle me-1"></i> Add New Package
-                </button>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="11" class="text-center py-5 text-muted">
+                    <i class="bi bi-box-seam fs-1 text-secondary opacity-50 d-block mb-2"></i>
+                    <p class="mb-2 fw-semibold">No packages found matching your criteria.</p>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+
   </div>
 
 </div>

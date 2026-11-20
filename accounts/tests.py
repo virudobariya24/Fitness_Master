@@ -226,7 +226,7 @@ class FitnessMaster6TasksTests(TestCase):
         self.client.login(username='Viraj', password='Viraj123')
         resp = self.client.get(reverse('packages_cards'))
         self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, 'Packages Catalog (Card View)')
+        self.assertContains(resp, 'Fitness Packages (1 Box per Package)')
         self.assertContains(resp, 'Gold Pro Membership')
         self.assertContains(resp, '₹79.99')
         self.assertContains(resp, 'card h-100')
@@ -235,6 +235,6 @@ class FitnessMaster6TasksTests(TestCase):
         """Card view renders public card-based Bootstrap layout for visitors"""
         resp = self.client.get(reverse('packages_cards'))
         self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, 'Choose Your Fitness Package')
+        self.assertContains(resp, 'Fitness Master Packages')
         self.assertContains(resp, 'Gold Pro Membership')
         self.assertContains(resp, '₹79.99')
