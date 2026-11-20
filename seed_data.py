@@ -34,63 +34,50 @@ def seed_database():
         admin_user.save()
         print("✅ Updated Fixed Admin user: Viraj / Viraj123")
 
-    # 2. Seed Default Packages (Task 4)
+    # 2. Reset and Insert exactly 3 Dummy Packages (Task 4)
+    print("\n🧹 Removing any old/extra packages...")
+    deleted_count, _ = Packages.objects.all().delete()
+    print(f"🗑️ Removed {deleted_count} old package(s).")
+
     packages_data = [
         {
-            'title': 'Starter Fitness Pass',
+            'title': 'Silver Fitness Package',
             'price': 1499.00,
             'duration': '1 Month',
             'access_hours': '6:00 AM - 10:00 PM',
-            'instruments': 'All Cardio Machines (Treadmills, Rowers, Ellipticals) and Basic Dumbbells & Barbells.',
+            'instruments': 'Cardio Machines, Basic Dumbbells, Free Weights, and Stretching Area',
             'classes_per_week': '2 Classes / Week',
             'membership_duration': 'Monthly',
             'drinking_package': 'Filtered Mineral Water Station Included',
             'personal_instructor': 'General Floor Fitness Coach Support',
         },
         {
-            'title': 'Silver Strength & Conditioning',
+            'title': 'Gold Pro Package',
             'price': 2999.00,
             'duration': '3 Months',
-            'access_hours': '24/7 Unlimited Access',
-            'instruments': 'Cardio Zone, Olympic Lifting Platforms, Squat Racks, Resistance Machines, Kettlebells.',
+            'access_hours': '5:00 AM - 11:00 PM',
+            'instruments': 'Cardio Zone, Olympic Lifting Platforms, Squat Racks, Resistance Machines, Kettlebells',
             'classes_per_week': '4 Classes / Week',
             'membership_duration': 'Quarterly',
             'drinking_package': 'Hydration Bar + BCAA Energy Drinks Included',
-            'personal_instructor': '2 Free 1-on-1 Personal Trainer Sessions / Month',
+            'personal_instructor': '2 Personal Trainer Sessions / Month',
         },
         {
-            'title': 'Gold Pro Athlete Membership',
+            'title': 'Platinum Elite Package',
             'price': 4999.00,
             'duration': '6 Months',
-            'access_hours': '24/7 VIP Access',
-            'instruments': 'Full Gym Floor, Functional Turf, Crossfit Rig, Recovery Compression Boots & Infrared Sauna.',
-            'classes_per_week': 'Unlimited Classes (HIIT, Spin, Yoga, Crossfit)',
+            'access_hours': '24/7 Unlimited VIP Access',
+            'instruments': 'Complete Pro Equipment Floor, Crossfit Rig, Steam Room, Sauna & Recovery Zone',
+            'classes_per_week': 'Unlimited Classes (HIIT, Yoga, Zumba, CrossFit)',
             'membership_duration': 'Semi-Annual',
             'drinking_package': 'Unlimited Premium Protein Shakes & Fresh Juice Bar',
-            'personal_instructor': 'Dedicated 1-on-1 Certified Personal Instructor Weekly',
-        },
-        {
-            'title': 'Diamond VIP Elite Master',
-            'price': 8999.00,
-            'duration': '12 Months',
-            'access_hours': '24/7 Priority VIP Access All Locations',
-            'instruments': 'Complete Pro Equipment, Private Studio Access, Hydro-Massage Beds, Cold Plunge & Sauna.',
-            'classes_per_week': 'Unlimited All Inclusive & Priority Booking',
-            'membership_duration': 'Annual',
-            'drinking_package': 'All-Access Unlimited Nutrition & Hydration Bar',
-            'personal_instructor': 'Full-Time Master Coach & Dedicated Nutritionist',
+            'personal_instructor': 'Dedicated Certified Personal Instructor Weekly',
         },
     ]
 
     for pdata in packages_data:
-        pkg, created = Packages.objects.update_or_create(
-            title=pdata['title'],
-            defaults=pdata
-        )
-        if created:
-            print(f"📦 Created Package: {pkg.title} (₹{pkg.price})")
-        else:
-            print(f"📦 Updated Package: {pkg.title} (₹{pkg.price})")
+        pkg = Packages.objects.create(**pdata)
+        print(f"📦 Added Package: {pkg.title} (₹{pkg.price})")
 
     print("\n🎉 Database Seeding Completed Successfully!")
     print(f"Total Admins: {AdminModel.objects.count()}")
