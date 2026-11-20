@@ -363,12 +363,12 @@
   </div>
 
   <!-- =========================================================================
-       4. REGISTERED ADMINS TABLE (Task 2)
+       4. REGISTERED ADMINS TABLE
        ========================================================================= -->
   <div class="fm-card mb-4" id="adminsSection">
     <div class="fm-card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
       <div>
-        <h5 class="mb-0 fw-bold"><i class="bi bi-shield-lock text-info me-2"></i>System Administrators (`Admin` Model)</h5>
+        <h5 class="mb-0 fw-bold"><i class="bi bi-shield-lock text-info me-2"></i>System Administrators</h5>
         <small class="text-muted">Accounts created under the Admin model with hashed password security</small>
       </div>
       <div>
@@ -382,7 +382,7 @@
       <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
         <thead class="table-light text-uppercase text-secondary fw-bold" style="font-size: 11px;">
           <tr>
-            <th class="ps-4 py-3">#</th>
+            <th class="ps-4 py-3" style="width: 60px;">#</th>
             <th class="py-3">Username</th>
             <th class="py-3">Email Address</th>
             <th class="py-3">Role / Permissions</th>
@@ -417,7 +417,9 @@
                   <span class="badge bg-secondary-subtle text-secondary">Admin</span>
                 {% endif %}
               </td>
-              <td class="text-muted">{{ a.date_joined|date:"M d, Y - H:i" }}</td>
+              <td class="text-muted fw-semibold">
+                <i class="bi bi-calendar3 me-1.5 text-secondary"></i>{{ a.date_joined|date:"M d, Y" }}
+              </td>
               <td class="text-end pe-4">
                 <span class="badge bg-success-subtle text-success px-2 py-1">
                   <i class="bi bi-check-circle-fill me-1"></i> Active

@@ -15,7 +15,7 @@
         <i class="bi bi-shield-lock-fill text-primary me-2"></i>System Administrators
       </h3>
       <p class="text-muted small mb-0">
-        Manage authorized administrator accounts with hashed passwords and system privileges (Task 2).
+        Manage authorized administrator accounts with hashed passwords and system privileges.
       </p>
     </div>
     <div class="d-flex align-items-center gap-2">
@@ -76,7 +76,7 @@
     <div class="fm-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
       <div>
         <h5 class="mb-0 fw-bold">Administrator Accounts List</h5>
-        <small class="text-muted">Accounts created with secure hashed credentials (Task 2)</small>
+        <small class="text-muted">Accounts created with secure hashed credentials</small>
       </div>
       <button type="button" class="btn btn-sm btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#addAdminModal">
         <i class="bi bi-person-plus-fill me-1"></i> Add Admin
@@ -87,14 +87,12 @@
       <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
         <thead class="table-light text-uppercase text-secondary fw-bold" style="font-size: 11px;">
           <tr>
-            <th class="ps-4 py-3">#</th>
+            <th class="ps-4 py-3" style="width: 60px;">#</th>
             <th class="py-3">Administrator</th>
             <th class="py-3">Email Address</th>
             <th class="py-3">Role</th>
-            <th class="py-3">Status</th>
-            <th class="py-3">Registered On</th>
-            <th class="py-3">Last Login</th>
-            <th class="text-end pe-4 py-3">Security Level</th>
+            <th class="py-3">Registered Date</th>
+            <th class="text-end pe-4 py-3">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -115,42 +113,30 @@
                 </div>
               </td>
               <td>
-                <span class="text-muted"><i class="bi bi-envelope me-1"></i>{{ admin.email|default:"No email set" }}</span>
+                <span class="text-secondary fw-semibold"><i class="bi bi-envelope me-1.5 text-primary"></i>{{ admin.email|default:"No email set" }}</span>
               </td>
               <td>
                 {% if admin.is_superuser %}
-                  <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle fw-bold px-2 py-1">
+                  <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle fw-bold px-2.5 py-1">
                     <i class="bi bi-star-fill me-1"></i>Superuser
                   </span>
                 {% else %}
-                  <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-semibold px-2 py-1">
+                  <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-semibold px-2.5 py-1">
                     <i class="bi bi-shield me-1"></i>Staff Admin
                   </span>
                 {% endif %}
               </td>
-              <td>
+              <td class="text-muted fw-semibold">
+                <i class="bi bi-calendar3 me-1.5 text-secondary"></i>{{ admin.date_joined|date:"M d, Y" }}
+              </td>
+              <td class="text-end pe-4">
                 {% if admin.is_active %}
-                  <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2 py-1">
+                  <span class="badge bg-success bg-opacity-10 text-success fw-bold px-2.5 py-1">
                     <i class="bi bi-check-circle-fill me-1"></i>Active
                   </span>
                 {% else %}
-                  <span class="badge bg-secondary text-white fw-bold px-2 py-1">Inactive</span>
+                  <span class="badge bg-secondary text-white fw-bold px-2.5 py-1">Inactive</span>
                 {% endif %}
-              </td>
-              <td class="text-muted">
-                {{ admin.date_joined|date:"M d, Y H:i" }}
-              </td>
-              <td class="text-muted">
-                {% if admin.last_login %}
-                  {{ admin.last_login|date:"M d, Y H:i" }}
-                {% else %}
-                  <span class="text-secondary opacity-75">Never</span>
-                {% endif %}
-              </td>
-              <td class="text-end pe-4">
-                <span class="badge bg-light text-dark border px-2.5 py-1.5 fw-semibold">
-                  <i class="bi bi-shield-lock-fill text-success me-1"></i>PBKDF2 Hashed
-                </span>
               </td>
             </tr>
           {% endfor %}
@@ -162,7 +148,7 @@
 </div>
 
 <!-- =========================================================================
-     ADD NEW ADMIN MODAL (Task 2)
+     ADD NEW ADMIN MODAL
      ========================================================================= -->
 <div class="modal fade" id="addAdminModal" tabindex="-1" aria-labelledby="addAdminModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
