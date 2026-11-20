@@ -217,3 +217,24 @@ class FitnessMaster6TasksTests(TestCase):
         new_admin = AdminModel.objects.get(username='RahulAdmin')
         self.assertTrue(check_password('RahulPassword123', new_admin.password))
         self.assertTrue(new_admin.is_staff)
+
+    # =========================================================================
+    # TASK 1 & 2: CARD-BASED BOOTSTRAP PACKAGES VIEW TESTS
+    # =========================================================================
+    def test_packages_cards_view_authenticated(self):
+        """Card view retrieves all packages from DB and renders in card-based Bootstrap layout"""
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get(reverse('packages_cards'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Packages Catalog (Card View)')
+        self.assertContains(resp, 'Gold Pro Membership')
+        self.assertContains(resp, '₹79.99')
+        self.assertContains(resp, 'card h-100')
+
+    def test_packages_cards_view_unauthenticated(self):
+        """Card view renders public card-based Bootstrap layout for visitors"""
+        resp = self.client.get(reverse('packages_cards'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Choose Your Fitness Package')
+        self.assertContains(resp, 'Gold Pro Membership')
+        self.assertContains(resp, '₹79.99')

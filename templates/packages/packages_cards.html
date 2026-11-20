@@ -1,0 +1,382 @@
+{% extends 'base.html' %}
+
+{% block title %}Packages Cards | Fitness Master{% endblock %}
+{% block page_heading %}Fitness Packages Catalog{% endblock %}
+
+{% block content %}
+<!-- =========================================================================
+     AUTHENTICATED ADMIN CARD-BASED BOOTSTRAP LAYOUT (Task 2)
+     ========================================================================= -->
+<div class="container-fluid px-0">
+
+  <!-- Header & Toolbar -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <h3 class="fw-black text-dark mb-1">
+        <i class="bi bi-grid-fill text-primary me-2"></i>Packages Catalog (Card View)
+      </h3>
+      <p class="text-muted small mb-0">
+        Card-based responsive Bootstrap layout displaying all membership tiers and features.
+      </p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <!-- Layout Toggle: Cards vs Table -->
+      <div class="btn-group btn-group-sm" role="group" aria-label="View switch">
+        <a href="{% url 'packages_cards' %}" class="btn btn-primary active fw-semibold" title="Card View">
+          <i class="bi bi-grid-fill me-1"></i> Cards
+        </a>
+        <a href="{% url 'packages_list' %}" class="btn btn-outline-secondary fw-semibold" title="Table View">
+          <i class="bi bi-table me-1"></i> Table
+        </a>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm fw-bold d-flex align-items-center gap-1.5 shadow-sm" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+        <i class="bi bi-plus-circle-fill"></i> Add Package
+      </button>
+    </div>
+  </div>
+
+  <!-- Metric Summary -->
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-md-4">
+      <div class="stat-card d-flex align-items-center justify-content-between">
+        <div>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Active Packages</small>
+          <h3 class="fw-black text-dark mb-0 mt-1">{{ total_packages }}</h3>
+          <small class="text-success fw-semibold"><i class="bi bi-check-circle-fill"></i> Live in Catalog</small>
+        </div>
+        <div class="rounded-3 p-3 bg-primary bg-opacity-10 text-primary">
+          <i class="bi bi-box-seam fs-3"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+      <div class="stat-card d-flex align-items-center justify-content-between">
+        <div>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Average Price</small>
+          <h3 class="fw-black text-dark mb-0 mt-1">₹{{ avg_price }}</h3>
+          <small class="text-info fw-semibold"><i class="bi bi-tag-fill"></i> Across all plans</small>
+        </div>
+        <div class="rounded-3 p-3 bg-success bg-opacity-10 text-success">
+          <i class="bi bi-cash-stack fs-3"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4">
+      <div class="stat-card d-flex align-items-center justify-content-between">
+        <div>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Design Architecture</small>
+          <h6 class="fw-bold text-dark mb-0 mt-1">Bootstrap 5 Cards</h6>
+          <small class="text-primary fw-semibold"><i class="bi bi-laptop"></i> Fully Responsive</small>
+        </div>
+        <div class="rounded-3 p-3 bg-info bg-opacity-10 text-info">
+          <i class="bi bi-grid-3x3-gap-fill fs-3"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       CARD-BASED BOOTSTRAP GRID LAYOUT
+       ========================================================================= -->
+  <div class="row g-4 mb-4">
+    {% for pkg in packages %}
+      <div class="col-12 col-md-6 col-lg-4 d-flex">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden w-100 d-flex flex-column" style="transition: transform 0.2s ease, box-shadow 0.2s ease; border-top: 5px solid {% cycle '#0ea5e9' '#10b981' '#8b5cf6' '#f59e0b' %} !important;">
+          
+          <!-- Card Header -->
+          <div class="card-body p-4 d-flex flex-column flex-grow-1">
+            <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+              <div>
+                <span class="badge bg-light text-secondary border px-2 py-1 mb-2" style="font-size: 11px;">
+                  #PKG-{{ pkg.id }}
+                </span>
+                <h4 class="card-title fw-black text-dark mb-1">{{ pkg.title }}</h4>
+              </div>
+              <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-2.5 py-1.5" style="font-size: 11px;">
+                {{ pkg.duration }}
+              </span>
+            </div>
+
+            <!-- Price Block in Indian Rupees (₹) -->
+            <div class="my-3 py-3 px-3 bg-light rounded-3 text-center border">
+              <div class="d-flex align-items-baseline justify-content-center gap-1">
+                <span class="display-6 fw-black text-dark">₹{{ pkg.price }}</span>
+              </div>
+              <small class="text-muted fw-semibold">Duration: {{ pkg.membership_duration }}</small>
+            </div>
+
+            <!-- Features List (All 9 model fields represented) -->
+            <ul class="list-unstyled mb-4 small flex-grow-1">
+              <li class="py-2 border-bottom d-flex align-items-center gap-2">
+                <i class="bi bi-clock-fill text-primary"></i>
+                <div>
+                  <strong class="text-dark">Access:</strong>
+                  <span class="text-muted">{{ pkg.access_hours }}</span>
+                </div>
+              </li>
+              <li class="py-2 border-bottom d-flex align-items-center gap-2">
+                <i class="bi bi-calendar2-check-fill text-success"></i>
+                <div>
+                  <strong class="text-dark">Classes / Week:</strong>
+                  <span class="text-muted">{{ pkg.classes_per_week }}</span>
+                </div>
+              </li>
+              <li class="py-2 border-bottom d-flex align-items-center gap-2">
+                <i class="bi bi-cup-straw text-info"></i>
+                <div>
+                  <strong class="text-dark">Drinking Package:</strong>
+                  <span class="text-muted">{{ pkg.drinking_package }}</span>
+                </div>
+              </li>
+              <li class="py-2 border-bottom d-flex align-items-center gap-2">
+                <i class="bi bi-person-badge-fill text-warning"></i>
+                <div>
+                  <strong class="text-dark">Trainer:</strong>
+                  <span class="text-muted">{{ pkg.personal_instructor }}</span>
+                </div>
+              </li>
+              <li class="pt-2 d-flex align-items-start gap-2">
+                <i class="bi bi-tools text-secondary mt-1"></i>
+                <div>
+                  <strong class="text-dark">Instruments & Gear:</strong>
+                  <span class="text-muted d-block mt-0.5">{{ pkg.instruments }}</span>
+                </div>
+              </li>
+            </ul>
+
+            <!-- Card Actions -->
+            <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between gap-2">
+              <a href="{% url 'package_edit' pkg.id %}" class="btn btn-outline-primary btn-sm fw-bold flex-grow-1">
+                <i class="bi bi-pencil-square me-1"></i> Edit Plan
+              </a>
+              <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePackageModalCards{{ pkg.id }}" title="Delete Package">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deletePackageModalCards{{ pkg.id }}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header border-0 pb-0">
+                <h6 class="modal-title fw-bold text-danger">
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i> Delete Package Confirmation
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-start py-3">
+                Are you sure you want to delete the package <strong>"{{ pkg.title }}"</strong>?
+              </div>
+              <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'package_delete' pkg.id %}" class="d-inline">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{% url 'packages_cards' %}">
+                  <button type="submit" class="btn btn-danger btn-sm fw-bold">Confirm Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    {% empty %}
+      <div class="col-12 text-center py-5">
+        <i class="bi bi-box-seam display-4 d-block mb-3 text-secondary opacity-50"></i>
+        <h5 class="fw-bold">No Packages Available</h5>
+        <p class="text-muted small mb-3">Get started by creating your first membership package.</p>
+        <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+          <i class="bi bi-plus-circle me-1"></i> Add New Package
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- Add Package Modal -->
+<div class="modal fade" id="addPackageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header text-white p-4" style="background: linear-gradient(135deg, #0f172a, #1e293b);">
+        <div>
+          <h5 class="modal-title fw-bold mb-1">
+            <i class="bi bi-plus-circle-fill text-info me-2"></i>Add Subscription Package
+          </h5>
+          <small class="text-light text-opacity-75">Configure all 9 package attributes for the card catalog</small>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form method="post" action="{% url 'package_add' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'packages_cards' %}">
+        <div class="modal-body p-4">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Package Title *</label>
+              {{ form.title }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Price (₹) *</label>
+              {{ form.price }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Duration *</label>
+              {{ form.duration }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Access Hours *</label>
+              {{ form.access_hours }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Classes Per Week *</label>
+              {{ form.classes_per_week }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Membership Duration *</label>
+              {{ form.membership_duration }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Drinking Package *</label>
+              {{ form.drinking_package }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Personal Instructor *</label>
+              {{ form.personal_instructor }}
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold text-uppercase text-secondary">Instruments & Facilities *</label>
+              {{ form.instruments }}
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-light border-top p-3 px-4">
+          <button type="button" class="btn btn-outline-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary fw-bold px-4 shadow-sm">
+            <i class="bi bi-save me-1"></i> Save Package
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block auth_content %}
+<!-- =========================================================================
+     PUBLIC / VISITOR CARD-BASED BOOTSTRAP LAYOUT (Task 2)
+     ========================================================================= -->
+<div class="min-vh-100 d-flex flex-column" style="background-color: #f8fafc;">
+  
+  <!-- Public Top Bar -->
+  <header class="bg-white border-bottom py-3 px-4 shadow-sm sticky-top">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-dumbbell text-primary fs-3"></i>
+        <h5 class="mb-0 fw-black text-dark tracking-tight">FITNESS<span class="text-primary">MASTER</span></h5>
+      </div>
+      <a href="{% url 'login' %}" class="btn btn-primary btn-sm fw-bold px-3">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Admin Sign In
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Header -->
+  <div class="py-5 text-center text-white" style="background: linear-gradient(135deg, #0f172a, #1e293b);">
+    <div class="container py-3">
+      <span class="badge bg-info text-dark fw-bold text-uppercase px-3 py-1.5 mb-3 rounded-pill" style="font-size: 11px;">
+        Flexible Membership Plans
+      </span>
+      <h1 class="display-5 fw-black mb-2">Choose Your Fitness Package</h1>
+      <p class="lead text-light text-opacity-75 mb-0 mx-auto" style="max-width: 650px;">
+        Explore our comprehensive gym and bodybuilding membership tiers with transparent Indian Rupee pricing.
+      </p>
+    </div>
+  </div>
+
+  <!-- Cards Grid -->
+  <div class="container py-5 flex-grow-1">
+    <div class="row g-4 justify-content-center">
+      {% for pkg in packages %}
+        <div class="col-12 col-md-6 col-lg-4 d-flex">
+          <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden w-100 d-flex flex-column" style="border-top: 5px solid {% cycle '#0ea5e9' '#10b981' '#8b5cf6' '#f59e0b' %} !important;">
+            <div class="card-body p-4 d-flex flex-column flex-grow-1">
+              
+              <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                <h4 class="card-title fw-black text-dark mb-1">{{ pkg.title }}</h4>
+                <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-2.5 py-1.5" style="font-size: 11px;">
+                  {{ pkg.duration }}
+                </span>
+              </div>
+
+              <!-- Price -->
+              <div class="my-3 py-3 px-3 bg-light rounded-3 text-center border">
+                <span class="display-6 fw-black text-dark">₹{{ pkg.price }}</span>
+                <div class="text-muted small fw-semibold">Duration: {{ pkg.membership_duration }}</div>
+              </div>
+
+              <!-- Features List -->
+              <ul class="list-unstyled mb-4 small flex-grow-1">
+                <li class="py-2 border-bottom d-flex align-items-center gap-2">
+                  <i class="bi bi-clock-fill text-primary"></i>
+                  <div>
+                    <strong class="text-dark">Access Hours:</strong>
+                    <span class="text-muted">{{ pkg.access_hours }}</span>
+                  </div>
+                </li>
+                <li class="py-2 border-bottom d-flex align-items-center gap-2">
+                  <i class="bi bi-calendar2-check-fill text-success"></i>
+                  <div>
+                    <strong class="text-dark">Classes / Wk:</strong>
+                    <span class="text-muted">{{ pkg.classes_per_week }}</span>
+                  </div>
+                </li>
+                <li class="py-2 border-bottom d-flex align-items-center gap-2">
+                  <i class="bi bi-cup-straw text-info"></i>
+                  <div>
+                    <strong class="text-dark">Drinking Package:</strong>
+                    <span class="text-muted">{{ pkg.drinking_package }}</span>
+                  </div>
+                </li>
+                <li class="py-2 border-bottom d-flex align-items-center gap-2">
+                  <i class="bi bi-person-badge-fill text-warning"></i>
+                  <div>
+                    <strong class="text-dark">Instructor:</strong>
+                    <span class="text-muted">{{ pkg.personal_instructor }}</span>
+                  </div>
+                </li>
+                <li class="pt-2 d-flex align-items-start gap-2">
+                  <i class="bi bi-tools text-secondary mt-1"></i>
+                  <div>
+                    <strong class="text-dark">Instruments:</strong>
+                    <span class="text-muted d-block mt-0.5">{{ pkg.instruments }}</span>
+                  </div>
+                </li>
+              </ul>
+
+              <div class="mt-auto pt-3 border-top">
+                <a href="{% url 'login' %}" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                  Get Started with {{ pkg.title }} &rarr;
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-3 text-center text-muted small">
+    Fitness Master &copy; 2026. All rights reserved.
+  </footer>
+
+</div>
+{% endblock %}

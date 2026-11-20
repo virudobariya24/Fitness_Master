@@ -19,8 +19,17 @@
       </p>
     </div>
     <div class="d-flex align-items-center gap-2">
-      <button type="button" class="btn btn-primary fw-bold d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#addPackageModal">
-        <i class="bi bi-plus-circle-fill"></i> Add New Package
+      <!-- Layout Toggle: Cards vs Table -->
+      <div class="btn-group btn-group-sm" role="group" aria-label="View switch">
+        <a href="{% url 'packages_cards' %}" class="btn btn-outline-secondary fw-semibold" title="Card View">
+          <i class="bi bi-grid-fill me-1"></i> Cards
+        </a>
+        <a href="{% url 'packages_list' %}" class="btn btn-primary active fw-semibold" title="Table View">
+          <i class="bi bi-table me-1"></i> Table
+        </a>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm fw-bold d-flex align-items-center gap-1.5 shadow-sm" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+        <i class="bi bi-plus-circle-fill"></i> Add Package
       </button>
     </div>
   </div>

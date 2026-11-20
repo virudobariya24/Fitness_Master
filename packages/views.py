@@ -73,6 +73,24 @@ def packages_list_view(request):
     })
 
 
+def packages_cards_view(request):
+    """
+    Task (1): Create a view that retrieves all available packages from the database.
+    Task (2): Design a template to display packages in a card-based Bootstrap layout.
+    """
+    packages = Packages.objects.all().order_by('price')
+    total_packages = packages.count()
+    avg_price = packages.aggregate(avg=Avg('price'))['avg'] or 0.0
+    form = PackageForm()
+
+    return render(request, 'packages/packages_cards.html', {
+        'packages': packages,
+        'total_packages': total_packages,
+        'avg_price': round(avg_price, 2),
+        'form': form,
+    })
+
+
 @login_required(login_url='login')
 @user_passes_test(admin_check, login_url='login')
 def package_add_view(request):
