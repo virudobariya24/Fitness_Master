@@ -18,7 +18,7 @@
         Each membership plan is arranged in an individual box card with pricing, duration, and all 9 specifications.
       </p>
     </div>
-    <div class="d-flex align-items-center gap-2">
+    <div class="d-flex flex-wrap align-items-center gap-2">
       <!-- Layout Tabs Switcher: Cards (1 Box / Package) vs Table -->
       <ul class="nav nav-pills bg-light border p-1 rounded-3" id="packagesViewTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -42,8 +42,8 @@
        METRIC COUNTERS ROW
        ========================================================================= -->
   <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-md-4">
-      <div class="stat-card d-flex align-items-center justify-content-between">
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Total Active Packages</small>
           <h3 class="fw-black text-dark mb-0 mt-1">{{ total_packages }}</h3>
@@ -55,8 +55,8 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-md-4">
-      <div class="stat-card d-flex align-items-center justify-content-between">
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Average Price</small>
           <h3 class="fw-black text-dark mb-0 mt-1">₹{{ avg_price }}</h3>
@@ -68,8 +68,8 @@
       </div>
     </div>
 
-    <div class="col-sm-12 col-md-4">
-      <div class="stat-card d-flex align-items-center justify-content-between">
+    <div class="col-12 col-sm-12 col-md-4">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Layout Format</small>
           <h6 class="fw-bold text-dark mb-0 mt-1">1 Box = 1 Package</h6>

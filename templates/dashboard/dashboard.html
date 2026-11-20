@@ -22,13 +22,15 @@
             All tasks are organized and responsive below.
           </p>
         </div>
-        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-          <button type="button" class="btn btn-info fw-bold px-4 py-2.5 shadow-sm text-dark me-2" data-bs-toggle="modal" data-bs-target="#addPackageModal">
-            <i class="bi bi-plus-circle-fill me-1"></i> Add New Package
-          </button>
-          <a href="{% url 'admin_accounts' %}" class="btn btn-outline-light fw-bold px-3 py-2.5">
-            <i class="bi bi-people-fill me-1"></i> Admin Accounts
-          </a>
+        <div class="col-lg-4 mt-3 mt-lg-0">
+          <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-lg-end">
+            <button type="button" class="btn btn-info fw-bold px-3 py-2 shadow-sm text-dark" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+              <i class="bi bi-plus-circle-fill me-1"></i> Add New Package
+            </button>
+            <a href="{% url 'admin_accounts' %}" class="btn btn-outline-light fw-bold px-3 py-2">
+              <i class="bi bi-people-fill me-1"></i> Admin Accounts
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -40,7 +42,7 @@
   <div class="row g-3 mb-4">
     <!-- Card 1: Total Packages -->
     <div class="col-sm-6 col-xl-3">
-      <div class="stat-card d-flex align-items-center justify-content-between">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Total Packages</small>
           <h3 class="fw-black text-dark mb-0 mt-1">{{ total_packages }}</h3>
@@ -54,7 +56,7 @@
 
     <!-- Card 2: Average Price -->
     <div class="col-sm-6 col-xl-3">
-      <div class="stat-card d-flex align-items-center justify-content-between">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Avg Package Price</small>
           <h3 class="fw-black text-dark mb-0 mt-1">₹{{ avg_price }}</h3>
@@ -68,7 +70,7 @@
 
     <!-- Card 3: Registered Admins -->
     <div class="col-sm-6 col-xl-3">
-      <div class="stat-card d-flex align-items-center justify-content-between">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Registered Admins</small>
           <h3 class="fw-black text-dark mb-0 mt-1">{{ total_admins }}</h3>
@@ -82,7 +84,7 @@
 
     <!-- Card 4: System Security -->
     <div class="col-sm-6 col-xl-3">
-      <div class="stat-card d-flex align-items-center justify-content-between">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
           <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">System Security</small>
           <h6 class="fw-bold text-dark mb-0 mt-1">PBKDF2 SHA-256</h6>
@@ -104,7 +106,7 @@
         <h5 class="mb-0 fw-bold"><i class="bi bi-box-seam text-primary me-2"></i>Fitness Packages (1 Box per Package)</h5>
         <small class="text-muted">Manage all subscription packages with pricing, instruments, and amenities</small>
       </div>
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex flex-wrap align-items-center gap-2">
         <!-- View Switcher Tabs: 1 Box Cards vs Table -->
         <ul class="nav nav-pills bg-light border p-1 rounded-3" id="dashboardPackagesTab" role="tablist">
           <li class="nav-item" role="presentation">
