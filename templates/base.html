@@ -29,7 +29,7 @@
       min-height: 100vh;
     }
 
-    /* Sidebar Styling */
+    /* Sidebar Styling & Smooth Transitions */
     .admin-sidebar {
       width: 260px;
       background-color: var(--fm-primary-dark);
@@ -43,6 +43,7 @@
       z-index: 1030;
       overflow-y: auto;
       overflow-x: hidden;
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .admin-sidebar::-webkit-scrollbar {
@@ -53,7 +54,7 @@
       border-radius: 4px;
     }
 
-    /* Main Content Area */
+    /* Main Content Area & Smooth Transitions */
     .main-wrapper {
       min-width: 0;
       flex: 1 1 auto;
@@ -61,6 +62,7 @@
       margin-left: 0;
       width: 100%;
       background-color: var(--fm-bg-light);
+      transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @media (min-width: 992px) {
@@ -68,6 +70,16 @@
         margin-left: 260px !important;
         width: calc(100% - 260px) !important;
         max-width: calc(100% - 260px) !important;
+      }
+      body.sidebar-collapsed .admin-sidebar,
+      html.sidebar-collapsed-init body .admin-sidebar {
+        transform: translateX(-260px) !important;
+      }
+      body.sidebar-collapsed .main-wrapper,
+      html.sidebar-collapsed-init body .main-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
       }
     }
 
@@ -298,6 +310,13 @@
     }
   </style>
   {% block extra_css %}{% endblock %}
+  <script>
+    try {
+      if (window.innerWidth >= 992 && localStorage.getItem('fm_sidebar_collapsed') === 'true') {
+        document.documentElement.classList.add('sidebar-collapsed-init');
+      }
+    } catch(e) {}
+  </script>
 </head>
 <body>
 
@@ -305,16 +324,22 @@
 <div class="d-flex w-100 min-vh-100 position-relative">
 
   <!-- Desktop Sidebar -->
-  <aside class="admin-sidebar d-none d-lg-flex flex-column p-3">
-    <!-- Brand -->
-    <div class="d-flex align-items-center gap-2 px-2 py-3 mb-3 border-bottom border-secondary border-opacity-25">
-      <div class="bg-primary bg-opacity-25 text-info rounded-3 p-2 d-flex align-items-center justify-center" style="width: 38px; height: 38px;">
-        <i class="fa-solid fa-dumbbell text-info fs-5"></i>
+  <aside class="admin-sidebar d-none d-lg-flex flex-column p-3" id="adminDesktopSidebar">
+    <!-- Brand & Desktop Collapse Button -->
+    <div class="d-flex align-items-center justify-content-between px-2 py-3 mb-3 border-bottom border-secondary border-opacity-25">
+      <div class="d-flex align-items-center gap-2">
+        <div class="bg-primary bg-opacity-25 text-info rounded-3 p-2 d-flex align-items-center justify-center" style="width: 38px; height: 38px;">
+          <i class="fa-solid fa-dumbbell text-info fs-5"></i>
+        </div>
+        <div>
+          <h6 class="mb-0 fw-bold text-white tracking-wide">FITNESS<span class="text-info">MASTER</span></h6>
+          <small class="text-secondary fw-semibold" style="font-size: 10px; letter-spacing: 0.5px;">ADMIN DASHBOARD</small>
+        </div>
       </div>
-      <div>
-        <h6 class="mb-0 fw-bold text-white tracking-wide">FITNESS<span class="text-info">MASTER</span></h6>
-        <small class="text-secondary fw-semibold" style="font-size: 10px; letter-spacing: 0.5px;">ADMIN DASHBOARD</small>
-      </div>
+      <!-- Desktop Sidebar Close Button -->
+      <button type="button" class="btn btn-sm btn-outline-secondary text-secondary p-1 rounded-2 border-0 d-flex align-items-center justify-content-center" id="desktopSidebarCloseBtn" title="Close Sidebar" style="width: 28px; height: 28px;">
+        <i class="bi bi-chevron-left text-white fs-6"></i>
+      </button>
     </div>
 
     <!-- Navigation -->
@@ -388,9 +413,9 @@
     <!-- Top Navbar -->
     <header class="admin-navbar d-flex align-items-center justify-content-between px-3 px-lg-4 sticky-top shadow-sm">
       <div class="d-flex align-items-center gap-3">
-        <!-- Mobile Toggle Button -->
-        <button class="btn btn-outline-secondary d-lg-none py-1 px-2.5" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileAdminSidebar">
-          <i class="bi bi-list fs-5"></i>
+        <!-- Universal Sidebar Toggle Button (Desktop & Mobile) -->
+        <button class="btn btn-outline-secondary py-1.5 px-2.5 rounded-3 d-flex align-items-center justify-content-center shadow-sm" id="universalSidebarToggle" type="button" aria-label="Toggle Sidebar" title="Open / Close Sidebar">
+          <i class="bi bi-list fs-5" id="sidebarToggleIcon"></i>
         </button>
         <div>
           <h5 class="mb-0 fw-bold text-dark" style="font-size: 1.15rem;">{% block page_heading %}Admin Dashboard{% endblock %}</h5>
@@ -459,8 +484,55 @@
 <!-- Bootstrap 5.3.3 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Smooth mouse hover dropdown functionality for Admin Profile
+  // Sidebar Open & Close Toggle Handler (Desktop & Mobile)
   document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('universalSidebarToggle');
+    const desktopCloseBtn = document.getElementById('desktopSidebarCloseBtn');
+    const mobileOffcanvasEl = document.getElementById('mobileAdminSidebar');
+    let mobileOffcanvas = null;
+
+    if (mobileOffcanvasEl && typeof bootstrap !== 'undefined') {
+      mobileOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(mobileOffcanvasEl);
+    }
+
+    // Sync initial collapsed state to body
+    if (document.documentElement.classList.contains('sidebar-collapsed-init')) {
+      document.body.classList.add('sidebar-collapsed');
+      document.documentElement.classList.remove('sidebar-collapsed-init');
+    }
+
+    function toggleDesktopSidebar() {
+      document.body.classList.toggle('sidebar-collapsed');
+      const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+      try {
+        localStorage.setItem('fm_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+      } catch (e) {}
+    }
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (window.innerWidth >= 992) {
+          toggleDesktopSidebar();
+        } else {
+          if (mobileOffcanvas) {
+            mobileOffcanvas.toggle();
+          }
+        }
+      });
+    }
+
+    if (desktopCloseBtn) {
+      desktopCloseBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.body.classList.add('sidebar-collapsed');
+        try {
+          localStorage.setItem('fm_sidebar_collapsed', 'true');
+        } catch (e) {}
+      });
+    }
+
+    // Smooth mouse hover dropdown functionality for Admin Profile
     const dropdown = document.querySelector('.profile-dropdown');
     const menu = document.querySelector('.profile-dropdown-menu');
     if (dropdown && menu) {
