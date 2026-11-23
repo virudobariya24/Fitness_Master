@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.views.decorators.csrf import ensure_csrf_cookie
-from .models import User
+from .models import User, ContactMessage
 from .forms import AdminLoginForm, AdminCreationForm, UserRegistrationForm, UserLoginForm
 from packages.models import Packages
 
@@ -239,16 +239,24 @@ def about_us_view(request):
 def contact_us_view(request):
     """
     Public and Member Contact Us page.
-    Renders contact info, map preview, operating hours, and interactive message form.
+    Saves inquiries into the ContactMessage model so administrators can view them in Admin Panel.
     """
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
         email = request.POST.get('email', '').strip()
+        phone = request.POST.get('phone', '').strip()
         subject = request.POST.get('subject', '').strip()
         message = request.POST.get('message', '').strip()
 
         if name and email and message:
-            messages.success(request, f"Thank you, {name}! Your message has been sent successfully. Our team will get back to you shortly.")
+            ContactMessage.objects.create(
+                name=name,
+                email=email,
+                phone=phone,
+                subject=subject if subject else "General Inquiry",
+                message=message,
+            )
+            messages.success(request, f"Thank you, {name}! Your message has been received and forwarded to our fitness team. We will get back to you shortly.")
             return redirect('contact_us')
         else:
             messages.error(request, "Please fill in all required fields (Name, Email, and Message).")
@@ -256,3 +264,66 @@ def contact_us_view(request):
     return render(request, 'pages/contact_us.html', {
         'is_user_page': True,
     })
+
+
+@login_required(login_url='login')
+@user_passes_test(admin_check, login_url='login')
+def admin_contact_messages_view(request):
+    """
+    Admin View for Contact Inquiries.
+    Displays all submitted contact messages in the admin panel with search & filter.
+    """
+    search_query = request.GET.get('q', '').strip()
+    status_filter = request.GET.get('status', '').strip()
+
+    messages_qs = ContactMessage.objects.all().order_by('-created_at')
+
+    if search_query:
+        messages_qs = messages_qs.filter(
+            name__icontains=search_query
+        ) | messages_qs.filter(
+            email__icontains=search_query
+        ) | messages_qs.filter(
+            subject__icontains=search_query
+        ) | messages_qs.filter(
+            message__icontains=search_query
+        )
+
+    if status_filter == 'unread':
+        messages_qs = messages_qs.filter(is_read=False)
+    elif status_filter == 'read':
+        messages_qs = messages_qs.filter(is_read=True)
+
+    total_messages = ContactMessage.objects.count()
+    unread_messages = ContactMessage.objects.filter(is_read=False).count()
+
+    return render(request, 'accounts/contact_messages_list.html', {
+        'contact_messages': messages_qs,
+        'total_messages': total_messages,
+        'unread_messages': unread_messages,
+        'search_query': search_query,
+        'status_filter': status_filter,
+    })
+
+
+@login_required(login_url='login')
+@user_passes_test(admin_check, login_url='login')
+def admin_contact_toggle_read_view(request, pk):
+    """Toggle read / unread status for a contact inquiry."""
+    contact_msg = get_object_or_404(ContactMessage, pk=pk)
+    contact_msg.is_read = not contact_msg.is_read
+    contact_msg.save()
+    status_str = "Read" if contact_msg.is_read else "Unread"
+    messages.success(request, f"Inquiry from {contact_msg.name} marked as {status_str}.")
+    return redirect('admin_contact_messages')
+
+
+@login_required(login_url='login')
+@user_passes_test(admin_check, login_url='login')
+def admin_contact_delete_view(request, pk):
+    """Delete a contact message from the admin panel."""
+    contact_msg = get_object_or_404(ContactMessage, pk=pk)
+    sender_name = contact_msg.name
+    contact_msg.delete()
+    messages.success(request, f"Contact message from {sender_name} was deleted successfully.")
+    return redirect('admin_contact_messages')

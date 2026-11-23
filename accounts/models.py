@@ -56,3 +56,25 @@ class User(models.Model):
 
 # Alias for explicit custom user model references
 CustomUser = User
+
+
+class ContactMessage(models.Model):
+    """
+    Model to store inquiries submitted via the Contact Us form.
+    Displays in the Admin Panel for administrator review and response.
+    """
+    name = models.CharField(max_length=150, verbose_name="Sender Name")
+    email = models.EmailField(verbose_name="Sender Email")
+    phone = models.CharField(max_length=25, blank=True, verbose_name="Phone Number")
+    subject = models.CharField(max_length=200, verbose_name="Inquiry Subject")
+    message = models.TextField(verbose_name="Message Content")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Submission Date")
+    is_read = models.BooleanField(default=False, verbose_name="Read Status")
+
+    class Meta:
+        verbose_name = 'Contact Inquiry'
+        verbose_name_plural = 'Contact Inquiries'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.subject} ({self.created_at.strftime('%b %d, %Y')})"

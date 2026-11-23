@@ -13,6 +13,9 @@ urlpatterns = [
     path('logout/', views.admin_logout_view, name='logout'),
     path('admins/', views.admin_accounts_view, name='admin_accounts'),
     path('registered-users/', views.admin_registered_users_view, name='admin_registered_users'),
+    path('contact-inquiries/', views.admin_contact_messages_view, name='admin_contact_messages'),
+    path('contact-inquiries/<int:pk>/toggle-read/', views.admin_contact_toggle_read_view, name='admin_contact_toggle_read'),
+    path('contact-inquiries/<int:pk>/delete/', views.admin_contact_delete_view, name='admin_contact_delete'),
 
     # User Panel (Registration, Session Login & Logout, Member Dashboard)
     path('register/', views.user_register_view, name='user_register'),

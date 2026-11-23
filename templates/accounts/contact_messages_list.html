@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+
+{% block title %}User Contact Inquiries | Fitness Master Admin{% endblock %}
+{% block page_heading %}User Contact Inquiries{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+  <!-- =========================================================================
+       PAGE HEADER & TOOLBAR
+       ========================================================================= -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <h3 class="fw-black text-dark mb-1">
+        <i class="bi bi-chat-left-text-fill text-primary me-2"></i>User Contact Inquiries
+      </h3>
+      <p class="text-muted small mb-0">
+        Review, respond to, and manage contact messages submitted by visitors and gym members.
+      </p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary fw-semibold btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard Overview
+      </a>
+      <a href="{% url 'contact_us' %}" target="_blank" class="btn btn-outline-primary fw-semibold btn-sm">
+        <i class="bi bi-box-arrow-up-right me-1"></i> View Live Form
+      </a>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       METRICS CARDS ROW
+       ========================================================================= -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between p-3.5 bg-white rounded-3 border shadow-sm">
+        <div>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Total Inquiries</small>
+          <h3 class="fw-black text-dark mb-0 mt-1">{{ total_messages }}</h3>
+          <small class="text-secondary fw-semibold">All submitted inquiries</small>
+        </div>
+        <div class="rounded-3 p-3 bg-primary bg-opacity-10 text-primary">
+          <i class="bi bi-chat-dots-fill fs-3"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between p-3.5 bg-white rounded-3 border shadow-sm">
+        <div>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">New / Unread</small>
+          <h3 class="fw-black text-danger mb-0 mt-1">{{ unread_messages }}</h3>
+          <small class="text-danger fw-semibold"><i class="bi bi-bell-fill"></i> Needs Admin Attention</small>
+        </div>
+        <div class="rounded-3 p-3 bg-danger bg-opacity-10 text-danger">
+          <i class="bi bi-envelope-exclamation-fill fs-3"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card h-100 d-flex align-items-center justify-content-between p-3.5 bg-white rounded-3 border shadow-sm">
+        <div>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Processed / Read</small>
+          <h3 class="fw-black text-success mb-0 mt-1">{{ total_messages|add:"-"|add:unread_messages|default:0 }}</h3>
+          <small class="text-success fw-semibold"><i class="bi bi-check2-circle"></i> Handled Inquiries</small>
+        </div>
+        <div class="rounded-3 p-3 bg-success bg-opacity-10 text-success">
+          <i class="bi bi-envelope-check-fill fs-3"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SEARCH & FILTERS
+       ========================================================================= -->
+  <div class="fm-card mb-4 shadow-sm">
+    <div class="p-3 bg-white border-bottom">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        
+        <!-- Search Input -->
+        <form method="get" action="{% url 'admin_contact_messages' %}" class="d-flex align-items-center gap-2 flex-grow-1" style="max-width: 500px;">
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search by name, email, phone, subject, or message...">
+            {% if status_filter %}
+              <input type="hidden" name="status" value="{{ status_filter }}">
+            {% endif %}
+            {% if search_query %}
+              <a href="{% url 'admin_contact_messages' %}{% if status_filter %}?status={{ status_filter }}{% endif %}" class="btn btn-outline-secondary">Clear</a>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-primary fw-bold">
+            <i class="bi bi-funnel-fill me-1"></i> Search
+          </button>
+        </form>
+
+        <!-- Status Filter Buttons -->
+        <div class="btn-group" role="group" aria-label="Status filters">
+          <a href="{% url 'admin_contact_messages' %}{% if search_query %}?q={{ search_query }}{% endif %}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline-secondary{% endif %} fw-semibold">
+            All ({{ total_messages }})
+          </a>
+          <a href="{% url 'admin_contact_messages' %}?status=unread{% if search_query %}&q={{ search_query }}{% endif %}" class="btn btn-sm {% if status_filter == 'unread' %}btn-danger{% else %}btn-outline-danger{% endif %} fw-semibold">
+            <i class="bi bi-bell-fill me-1"></i> Unread ({{ unread_messages }})
+          </a>
+          <a href="{% url 'admin_contact_messages' %}?status=read{% if search_query %}&q={{ search_query }}{% endif %}" class="btn btn-sm {% if status_filter == 'read' %}btn-success{% else %}btn-outline-success{% endif %} fw-semibold">
+            <i class="bi bi-check2 me-1"></i> Read
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Messages Table -->
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+        <thead class="table-light text-uppercase text-secondary fw-bold" style="font-size: 11px;">
+          <tr>
+            <th class="ps-4 py-3" style="width: 50px;">#</th>
+            <th class="py-3">Sender Details</th>
+            <th class="py-3">Contact Information</th>
+            <th class="py-3">Subject</th>
+            <th class="py-3">Message Preview</th>
+            <th class="py-3">Date Received</th>
+            <th class="py-3">Status</th>
+            <th class="text-end pe-4 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for msg in contact_messages %}
+            <tr {% if not msg.is_read %}class="table-light fw-semibold"{% endif %}>
+              <td class="ps-4 fw-bold text-muted">{{ forloop.counter }}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2.5">
+                  <div class="rounded-circle {% if not msg.is_read %}bg-danger bg-opacity-10 text-danger{% else %}bg-primary bg-opacity-10 text-primary{% endif %} fw-bold d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; font-size: 13px;">
+                    {{ msg.name|slice:":2"|upper }}
+                  </div>
+                  <div>
+                    <div class="fw-bold text-dark">{{ msg.name }}</div>
+                    <small class="text-muted">Inquiry #MSG-{{ msg.id }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="text-dark fw-semibold">
+                  <a href="mailto:{{ msg.email }}" class="text-decoration-none text-primary">
+                    <i class="bi bi-envelope me-1"></i>{{ msg.email }}
+                  </a>
+                </div>
+                {% if msg.phone %}
+                  <small class="text-muted d-block mt-0.5">
+                    <a href="tel:{{ msg.phone }}" class="text-decoration-none text-secondary">
+                      <i class="bi bi-telephone me-1"></i>{{ msg.phone }}
+                    </a>
+                  </small>
+                {% else %}
+                  <small class="text-muted fst-italic">No phone provided</small>
+                {% endif %}
+              </td>
+              <td>
+                <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-2 py-1" style="font-size: 11px;">
+                  {{ msg.subject }}
+                </span>
+              </td>
+              <td>
+                <div class="text-truncate text-secondary" style="max-width: 280px;" title="{{ msg.message }}">
+                  {{ msg.message }}
+                </div>
+              </td>
+              <td class="text-muted fw-semibold">
+                <i class="bi bi-calendar3 me-1 text-secondary"></i>{{ msg.created_at|date:"M d, Y" }}
+                <small class="text-muted d-block">{{ msg.created_at|date:"h:i A" }}</small>
+              </td>
+              <td>
+                {% if msg.is_read %}
+                  <span class="badge bg-secondary-subtle text-secondary border px-2.5 py-1">
+                    <i class="bi bi-check2"></i> Read
+                  </span>
+                {% else %}
+                  <span class="badge bg-danger text-white fw-bold px-2.5 py-1 shadow-sm">
+                    <i class="bi bi-circle-fill me-1" style="font-size: 6px;"></i> New
+                  </span>
+                {% endif %}
+              </td>
+              <td class="text-end pe-4">
+                <div class="d-inline-flex align-items-center gap-1.5">
+                  <!-- View Full Message Button -->
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewModal{{ msg.id }}" title="View Full Message">
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
+
+                  <!-- Mark as Read / Unread -->
+                  <a href="{% url 'admin_contact_toggle_read' msg.id %}" class="btn btn-sm {% if msg.is_read %}btn-outline-secondary{% else %}btn-outline-success{% endif %}" title="{% if msg.is_read %}Mark as Unread{% else %}Mark as Read{% endif %}">
+                    <i class="bi {% if msg.is_read %}bi-envelope{% else %}bi-envelope-check{% endif %}"></i>
+                  </a>
+
+                  <!-- Delete Message Button -->
+                  <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ msg.id }}" title="Delete Message">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </div>
+
+                <!-- Modal: View Full Inquiry -->
+                <div class="modal fade text-start" id="viewModal{{ msg.id }}" tabindex="-1" aria-labelledby="viewModalLabel{{ msg.id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content rounded-4 border-0 shadow">
+                      <div class="modal-header bg-dark text-white rounded-top-4">
+                        <div class="d-flex align-items-center gap-2">
+                          <i class="bi bi-chat-left-text-fill text-info"></i>
+                          <h5 class="modal-title fw-bold" id="viewModalLabel{{ msg.id }}">Inquiry from {{ msg.name }}</h5>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body p-4">
+                        <div class="row g-3 mb-3 pb-3 border-bottom">
+                          <div class="col-sm-6">
+                            <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 11px;">Sender Name</small>
+                            <span class="fw-bold text-dark fs-6">{{ msg.name }}</span>
+                          </div>
+                          <div class="col-sm-6">
+                            <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 11px;">Submission Date &amp; Time</small>
+                            <span class="text-dark">{{ msg.created_at|date:"F d, Y - h:i A" }}</span>
+                          </div>
+                          <div class="col-sm-6">
+                            <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 11px;">Email Address</small>
+                            <a href="mailto:{{ msg.email }}" class="text-primary fw-semibold">{{ msg.email }}</a>
+                          </div>
+                          <div class="col-sm-6">
+                            <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 11px;">Phone Number</small>
+                            <span class="text-dark">{{ msg.phone|default:"Not Provided" }}</span>
+                          </div>
+                          <div class="col-12">
+                            <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 11px;">Subject</small>
+                            <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-2.5 py-1.5 fs-6">{{ msg.subject }}</span>
+                          </div>
+                        </div>
+
+                        <div>
+                          <small class="text-muted fw-bold text-uppercase d-block mb-2" style="font-size: 11px;">Message Content</small>
+                          <div class="p-3 bg-light rounded-3 border text-dark" style="white-space: pre-wrap; font-size: 14px; line-height: 1.6;">
+                            {{ msg.message }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer bg-light rounded-bottom-4 d-flex justify-content-between">
+                        <div>
+                          <a href="mailto:{{ msg.email }}?subject=Re: {{ msg.subject }}" class="btn btn-primary btn-sm fw-bold">
+                            <i class="bi bi-reply-fill me-1"></i> Reply via Email
+                          </a>
+                          {% if msg.phone %}
+                            <a href="https://wa.me/{{ msg.phone|cut:' '|cut:'+'|cut:'-' }}" target="_blank" class="btn btn-success btn-sm fw-bold ms-1">
+                              <i class="bi bi-whatsapp me-1"></i> WhatsApp
+                            </a>
+                          {% endif %}
+                        </div>
+                        <div class="d-flex gap-2">
+                          <a href="{% url 'admin_contact_toggle_read' msg.id %}" class="btn btn-sm {% if msg.is_read %}btn-outline-secondary{% else %}btn-success{% endif %} fw-semibold">
+                            {% if msg.is_read %}Mark as Unread{% else %}Mark as Read{% endif %}
+                          </a>
+                          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal: Confirm Delete Inquiry -->
+                <div class="modal fade text-start" id="deleteModal{{ msg.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ msg.id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 border-0 shadow">
+                      <div class="modal-header bg-danger text-white rounded-top-4">
+                        <div class="d-flex align-items-center gap-2">
+                          <i class="bi bi-exclamation-triangle-fill"></i>
+                          <h5 class="modal-title fw-bold" id="deleteModalLabel{{ msg.id }}">Confirm Delete Inquiry</h5>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body p-4 text-center">
+                        <i class="bi bi-trash3 text-danger fs-1 mb-2 d-block"></i>
+                        <h6 class="fw-bold text-dark">Are you sure you want to delete this inquiry?</h6>
+                        <p class="text-muted small mb-0">
+                          Inquiry from <strong>{{ msg.name }}</strong> ({{ msg.email }}) will be permanently removed from the system.
+                        </p>
+                      </div>
+                      <div class="modal-footer bg-light rounded-bottom-4 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                        <form method="post" action="{% url 'admin_contact_delete' msg.id %}" class="d-inline">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger btn-sm fw-bold">
+                            <i class="bi bi-trash3-fill me-1"></i> Delete Inquiry
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="8" class="text-center py-5 text-muted">
+                <i class="bi bi-chat-left-dots fs-1 text-secondary opacity-50 d-block mb-2"></i>
+                <h6 class="fw-bold mb-1 text-dark">No contact inquiries found</h6>
+                <p class="small text-muted mb-0">
+                  {% if search_query or status_filter %}
+                    No messages match your current filters. <a href="{% url 'admin_contact_messages' %}" class="text-primary fw-semibold">Reset filters</a>
+                  {% else %}
+                    Messages sent through the Contact Us form will appear here in real-time.
+                  {% endif %}
+                </p>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

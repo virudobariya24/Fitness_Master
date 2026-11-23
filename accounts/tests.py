@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from packages.models import Packages
+from accounts.models import ContactMessage, User
 
 AdminModel = get_user_model()
 
@@ -519,11 +520,103 @@ class FitnessMaster6TasksTests(TestCase):
         resp_post = self.client.post(reverse('contact_us'), {
             'name': 'Aarav Mehta',
             'email': 'aarav@example.com',
+            'phone': '+91 98765 43210',
             'subject': 'Membership Inquiry',
             'message': 'I would like to inquire about personal training in Gold plan.'
         })
         self.assertEqual(resp_post.status_code, 302)
         self.assertRedirects(resp_post, reverse('contact_us'))
+        
+        # Verify ContactMessage was saved to database
+        msg = ContactMessage.objects.filter(email='aarav@example.com').first()
+        self.assertIsNotNone(msg)
+        self.assertEqual(msg.name, 'Aarav Mehta')
+        self.assertEqual(msg.phone, '+91 98765 43210')
+        self.assertFalse(msg.is_read)
+
+    def test_admin_contact_messages_access_and_filters(self):
+        """Admin can access contact messages list and search/filter inquiries"""
+        # Create test contact messages
+        ContactMessage.objects.create(
+            name='Kavita Sharma',
+            email='kavita@example.com',
+            phone='9988776655',
+            subject='Package Membership Inquiry',
+            message='Please provide platinum pricing details.',
+            is_read=False
+        )
+        ContactMessage.objects.create(
+            name='Rohan Patel',
+            email='rohan@example.com',
+            phone='9911223344',
+            subject='General Feedback',
+            message='Great facility and clean gym equipment.',
+            is_read=True
+        )
+
+        # Unauthenticated access redirected
+        unauth_resp = self.client.get(reverse('admin_contact_messages'))
+        self.assertEqual(unauth_resp.status_code, 302)
+
+        # Admin login
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get(reverse('admin_contact_messages'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'User Contact Inquiries')
+        self.assertContains(resp, 'Kavita Sharma')
+        self.assertContains(resp, 'Rohan Patel')
+
+        # Filter by unread
+        resp_unread = self.client.get(reverse('admin_contact_messages') + '?status=unread')
+        self.assertEqual(resp_unread.status_code, 200)
+        self.assertContains(resp_unread, 'Kavita Sharma')
+        self.assertNotContains(resp_unread, 'Rohan Patel')
+
+        # Search query
+        resp_search = self.client.get(reverse('admin_contact_messages') + '?q=platinum')
+        self.assertEqual(resp_search.status_code, 200)
+        self.assertContains(resp_search, 'Kavita Sharma')
+        self.assertNotContains(resp_search, 'Rohan Patel')
+
+    def test_admin_contact_toggle_read_and_delete(self):
+        """Admin can toggle read status and delete contact messages"""
+        msg = ContactMessage.objects.create(
+            name='Devendra Rao',
+            email='dev@example.com',
+            subject='Gym Tour Request',
+            message='Can I schedule a visit tomorrow evening?'
+        )
+        self.assertFalse(msg.is_read)
+
+        # Log in as admin
+        self.client.login(username='Viraj', password='Viraj123')
+
+        # Toggle read
+        toggle_resp = self.client.get(reverse('admin_contact_toggle_read', args=[msg.pk]))
+        self.assertEqual(toggle_resp.status_code, 302)
+        msg.refresh_from_db()
+        self.assertTrue(msg.is_read)
+
+        # Delete message
+        delete_resp = self.client.post(reverse('admin_contact_delete', args=[msg.pk]))
+        self.assertEqual(delete_resp.status_code, 302)
+        self.assertFalse(ContactMessage.objects.filter(pk=msg.pk).exists())
+
+    def test_admin_dashboard_shows_contact_inquiries(self):
+        """Admin dashboard renders contact inquiries and unread count badge"""
+        ContactMessage.objects.create(
+            name='Sneha Shah',
+            email='sneha@example.com',
+            subject='Membership',
+            message='I want to join with my family.',
+            is_read=False
+        )
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get(reverse('admin_dashboard'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'User Contact Inquiries')
+        self.assertContains(resp, 'Sneha Shah')
+        self.assertContains(resp, 'View All Inquiries')
 
 
 

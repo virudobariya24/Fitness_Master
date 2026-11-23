@@ -409,6 +409,12 @@
           <span class="nav-label">Registered Members</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a href="{% url 'admin_contact_messages' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_contact_messages' %}active{% endif %}" title="Contact Inquiries">
+          <i class="bi bi-chat-left-text-fill"></i>
+          <span class="nav-label">Contact Inquiries</span>
+        </a>
+      </li>
     </ul>
 
     <!-- Sidebar Bottom / Footer: Log Out (Desktop) -->
@@ -449,6 +455,11 @@
         <li class="nav-item">
           <a href="{% url 'admin_registered_users' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_registered_users' %}active{% endif %}">
             <i class="bi bi-people-fill"></i> Registered Members
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'admin_contact_messages' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_contact_messages' %}active{% endif %}">
+            <i class="bi bi-chat-left-text-fill"></i> Contact Inquiries
           </a>
         </li>
       </ul>

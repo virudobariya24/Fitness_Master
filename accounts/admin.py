@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Admin, User
+from .models import Admin, User, ContactMessage
 
 
 @admin.register(Admin)
@@ -24,3 +24,17 @@ class CustomUserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'name', 'email')
     ordering = ('-created_at',)
     readonly_fields = ('created_at',)
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    """
+    Django Admin registration for ContactMessage model.
+    Allows administrators to view, filter, and mark user inquiries as read.
+    """
+    list_display = ('name', 'email', 'phone', 'subject', 'created_at', 'is_read')
+    list_filter = ('is_read', 'created_at')
+    search_fields = ('name', 'email', 'phone', 'subject', 'message')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Avg
 from django.contrib.auth import get_user_model
-from accounts.models import User
+from accounts.models import User, ContactMessage
 from .models import Packages
 from .forms import PackageForm
 
@@ -33,6 +33,9 @@ def admin_dashboard_view(request):
     total_admins = admins.count()
     registered_users = User.objects.all().order_by('-created_at')
     total_registered_users = registered_users.count()
+    recent_inquiries = ContactMessage.objects.all().order_by('-created_at')[:5]
+    total_inquiries = ContactMessage.objects.count()
+    unread_inquiries = ContactMessage.objects.filter(is_read=False).count()
 
     form = PackageForm()
 
@@ -44,6 +47,9 @@ def admin_dashboard_view(request):
         'total_admins': total_admins,
         'registered_users': registered_users[:6],
         'total_registered_users': total_registered_users,
+        'recent_inquiries': recent_inquiries,
+        'total_inquiries': total_inquiries,
+        'unread_inquiries': unread_inquiries,
         'form': form,
     }
     return render(request, 'dashboard/dashboard.html', context)
