@@ -197,15 +197,26 @@ def user_dashboard_view(request):
     """
     User Dashboard for session-authenticated users.
     Displays user account details, active packages catalog with 'View More' links.
+    Validates session state, user ID, and active database credentials.
     """
+    # 1. Validation check for session authentication flag
     if not request.session.get('is_user_authenticated'):
-        messages.warning(request, "Please sign in to access your user account.")
+        messages.warning(request, "Please sign in to access your member dashboard.")
         return redirect('user_login')
 
+    # 2. Validation check for user ID in session
     user_id = request.session.get('user_id')
+    if not user_id:
+        request.session.flush()
+        messages.warning(request, "Session expired or invalid. Please sign in again.")
+        return redirect('user_login')
+
+    # 3. Validation check against database record
     user = User.objects.filter(pk=user_id).first()
     if not user:
-        return redirect('user_logout')
+        request.session.flush()
+        messages.error(request, "User account could not be validated. Please log in again.")
+        return redirect('user_login')
 
     packages = Packages.objects.all().order_by('price')
     return render(request, 'accounts/user_dashboard.html', {
