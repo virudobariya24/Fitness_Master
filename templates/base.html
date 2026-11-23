@@ -403,6 +403,12 @@
           <span class="nav-label">Admin Accounts</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a href="{% url 'admin_registered_users' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_registered_users' %}active{% endif %}" title="Registered Members">
+          <i class="bi bi-people-fill"></i>
+          <span class="nav-label">Registered Members</span>
+        </a>
+      </li>
     </ul>
 
     <!-- Sidebar Bottom / Footer: Log Out (Desktop) -->
@@ -438,6 +444,11 @@
         <li class="nav-item">
           <a href="{% url 'admin_accounts' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_accounts' %}active{% endif %}">
             <i class="bi bi-shield-lock"></i> Admin Accounts
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'admin_registered_users' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_registered_users' %}active{% endif %}">
+            <i class="bi bi-people-fill"></i> Registered Members
           </a>
         </li>
       </ul>

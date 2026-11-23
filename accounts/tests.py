@@ -389,3 +389,65 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertEqual(resp.status_code, 302)
         self.assertRedirects(resp, reverse('user_login'))
 
+    # =========================================================================
+    # NEW REQUIREMENTS: User Panel at Website Root, Dedicated Admin Login & Admin User Data
+    # =========================================================================
+    def test_website_root_redirects_to_user_panel_unauthenticated(self):
+        """When website is run (at /), it directly opens the User Panel (user_login)"""
+        resp = self.client.get('/')
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_login'))
+
+    def test_website_root_redirects_to_user_dashboard_when_session_authenticated(self):
+        """When website is run with active user session, it directly opens User Dashboard"""
+        from accounts.models import User
+        user = User.objects.create(name='Dev Patel', username='devpatel', email='dev@example.com')
+        user.set_password('DevPass123')
+        user.save()
+
+        session = self.client.session
+        session['is_user_authenticated'] = True
+        session['user_id'] = user.id
+        session['user_username'] = user.username
+        session.save()
+
+        resp = self.client.get('/')
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_dashboard'))
+
+    def test_dedicated_admin_login_url_and_design(self):
+        """Dedicated admin login URL (/admin-login/) loads redesigned administrator sign-in page"""
+        resp = self.client.get(reverse('admin_login'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Admin Sign In')
+        self.assertContains(resp, 'Administrator Username or Email')
+        self.assertContains(resp, 'togglePasswordVisibility')
+        self.assertContains(resp, 'Member Sign In')
+
+    def test_admin_registered_users_page_and_dashboard_integration(self):
+        """Admin panel displays registered users data in dashboard and dedicated users page"""
+        from accounts.models import User
+        User.objects.create(name='Riya Shah', username='riyashah', email='riya@example.com', password='hashed')
+
+        self.client.login(username='Viraj', password='Viraj123')
+
+        # 1. Check dedicated Registered Users page
+        resp_users = self.client.get(reverse('admin_registered_users'))
+        self.assertEqual(resp_users.status_code, 200)
+        self.assertContains(resp_users, 'Registered Gym Members')
+        self.assertContains(resp_users, 'Riya Shah')
+        self.assertContains(resp_users, 'riya@example.com')
+
+        # 2. Check Admin Dashboard integration
+        resp_dash = self.client.get(reverse('admin_dashboard'))
+        self.assertEqual(resp_dash.status_code, 200)
+        self.assertContains(resp_dash, 'Registered Members')
+        self.assertContains(resp_dash, 'Riya Shah')
+
+    def test_unauthenticated_cannot_access_registered_users_page(self):
+        """Unauthenticated visitor cannot access admin registered users list"""
+        resp = self.client.get(reverse('admin_registered_users'))
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, f"{reverse('login')}?next={reverse('admin_registered_users')}")
+
+

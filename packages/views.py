@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Avg
 from django.contrib.auth import get_user_model
+from accounts.models import User
 from .models import Packages
 from .forms import PackageForm
 
@@ -30,6 +31,8 @@ def admin_dashboard_view(request):
     avg_price = packages.aggregate(avg=Avg('price'))['avg'] or 0.0
     admins = AdminModel.objects.all().order_by('-date_joined')
     total_admins = admins.count()
+    registered_users = User.objects.all().order_by('-created_at')
+    total_registered_users = registered_users.count()
 
     form = PackageForm()
 
@@ -39,6 +42,8 @@ def admin_dashboard_view(request):
         'avg_price': round(avg_price, 2),
         'admins': admins,
         'total_admins': total_admins,
+        'registered_users': registered_users[:6],
+        'total_registered_users': total_registered_users,
         'form': form,
     }
     return render(request, 'dashboard/dashboard.html', context)

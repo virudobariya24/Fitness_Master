@@ -68,29 +68,29 @@
       </div>
     </div>
 
-    <!-- Card 3: Registered Admins -->
+    <!-- Card 3: Registered Members -->
     <div class="col-sm-6 col-xl-3">
       <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
-          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Registered Admins</small>
-          <h3 class="fw-black text-dark mb-0 mt-1">{{ total_admins }}</h3>
-          <small class="text-primary fw-semibold"><i class="bi bi-shield-fill"></i> Admin Model</small>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Registered Members</small>
+          <h3 class="fw-black text-dark mb-0 mt-1">{{ total_registered_users }}</h3>
+          <small class="text-success fw-semibold"><i class="bi bi-people-fill"></i> User Accounts</small>
         </div>
-        <div class="rounded-3 p-3 bg-info bg-opacity-10 text-info">
-          <i class="bi bi-people-fill fs-3"></i>
+        <div class="rounded-3 p-3 bg-primary bg-opacity-10 text-primary">
+          <i class="bi bi-person-badge-fill fs-3"></i>
         </div>
       </div>
     </div>
 
-    <!-- Card 4: System Security -->
+    <!-- Card 4: Registered Admins -->
     <div class="col-sm-6 col-xl-3">
       <div class="stat-card h-100 d-flex align-items-center justify-content-between">
         <div>
-          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">System Security</small>
-          <h6 class="fw-bold text-dark mb-0 mt-1">PBKDF2 SHA-256</h6>
-          <small class="text-success fw-semibold"><i class="bi bi-shield-check"></i> Hashed Passwords</small>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">System Admins</small>
+          <h3 class="fw-black text-dark mb-0 mt-1">{{ total_admins }}</h3>
+          <small class="text-primary fw-semibold"><i class="bi bi-shield-fill"></i> Admin Model</small>
         </div>
-        <div class="rounded-3 p-3 bg-secondary bg-opacity-10 text-secondary">
+        <div class="rounded-3 p-3 bg-info bg-opacity-10 text-info">
           <i class="bi bi-shield-lock-fill fs-3"></i>
         </div>
       </div>
@@ -430,6 +430,77 @@
                 <span class="badge bg-success-subtle text-success px-2 py-1">
                   <i class="bi bi-check-circle-fill me-1"></i> Active
                 </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       5. REGISTERED MEMBERS (USER ACCOUNTS) TABLE
+       ========================================================================= -->
+  <div class="fm-card mb-4" id="usersSection">
+    <div class="fm-card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div>
+        <h5 class="mb-0 fw-bold"><i class="bi bi-people-fill text-primary me-2"></i>Registered Gym Members (User Accounts)</h5>
+        <small class="text-muted">Users registered in the custom User model and authenticated via Django sessions</small>
+      </div>
+      <div>
+        <a href="{% url 'admin_registered_users' %}" class="btn btn-sm btn-outline-primary fw-bold">
+          <i class="bi bi-people me-1"></i> View All Members ({{ total_registered_users }}) &rarr;
+        </a>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+        <thead class="table-light text-uppercase text-secondary fw-bold" style="font-size: 11px;">
+          <tr>
+            <th class="ps-4 py-3" style="width: 60px;">#</th>
+            <th class="py-3">Member Name</th>
+            <th class="py-3">Username</th>
+            <th class="py-3">Email Address</th>
+            <th class="py-3">Registration Date</th>
+            <th class="text-end pe-4 py-3">Auth System</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in registered_users %}
+            <tr>
+              <td class="ps-4 fw-bold text-muted">{{ forloop.counter }}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 12px;">
+                    {{ u.username|slice:":2"|upper }}
+                  </div>
+                  <div>
+                    <div class="fw-bold text-dark">{{ u.name|default:u.username }}</div>
+                    <small class="text-muted">#MEM-{{ u.id }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-light text-dark border fw-bold px-2.5 py-1">
+                  @{{ u.username }}
+                </span>
+              </td>
+              <td class="fw-semibold text-secondary">{{ u.email }}</td>
+              <td class="text-muted fw-semibold">
+                <i class="bi bi-calendar3 me-1.5 text-secondary"></i>{{ u.created_at|date:"M d, Y" }}
+              </td>
+              <td class="text-end pe-4">
+                <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle fw-bold px-2 py-1">
+                  <i class="bi bi-hdd-network me-1"></i> Django Session
+                </span>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6" class="text-center py-4 text-muted">
+                <i class="bi bi-person-x fs-2 text-secondary opacity-50 d-block mb-1"></i>
+                No members registered yet.
               </td>
             </tr>
           {% endfor %}

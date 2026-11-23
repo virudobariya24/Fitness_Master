@@ -14,6 +14,17 @@ def admin_check(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
 
 
+def user_portal_root_view(request):
+    """
+    Website Root View: Directs visitors directly to the User Panel when website is accessed.
+    - If user has active session, redirects to user_dashboard.
+    - Otherwise, redirects to user_login (Member Portal).
+    """
+    if request.session.get('is_user_authenticated'):
+        return redirect('user_dashboard')
+    return redirect('user_login')
+
+
 @ensure_csrf_cookie
 def admin_login_view(request):
     """
@@ -74,6 +85,31 @@ def admin_accounts_view(request):
         'form': form,
         'total_admins': admins.count(),
         'superusers_count': admins.filter(is_superuser=True).count(),
+    })
+
+
+@login_required(login_url='login')
+@user_passes_test(admin_check, login_url='login')
+def admin_registered_users_view(request):
+    """
+    Admin View for Registered Users (Custom User Model data).
+    Displays registered users/members in the admin panel with search & details.
+    """
+    search_query = request.GET.get('q', '').strip()
+    users_qs = User.objects.all().order_by('-created_at')
+    if search_query:
+        users_qs = users_qs.filter(
+            username__icontains=search_query
+        ) | users_qs.filter(
+            name__icontains=search_query
+        ) | users_qs.filter(
+            email__icontains=search_query
+        )
+
+    return render(request, 'accounts/registered_users_list.html', {
+        'users': users_qs,
+        'total_users': User.objects.count(),
+        'search_query': search_query,
     })
 
 

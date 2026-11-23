@@ -277,9 +277,20 @@
         <i class="fa-solid fa-dumbbell text-primary fs-3"></i>
         <h5 class="mb-0 fw-black text-dark tracking-tight">FITNESS<span class="text-primary">MASTER</span></h5>
       </div>
-      <a href="{% url 'login' %}" class="btn btn-primary btn-sm fw-bold px-3">
-        <i class="bi bi-box-arrow-in-right me-1"></i> Admin Sign In
-      </a>
+      <div class="d-flex align-items-center gap-2">
+        {% if request.session.is_user_authenticated %}
+          <a href="{% url 'user_dashboard' %}" class="btn btn-info btn-sm fw-bold text-dark">
+            <i class="bi bi-person-circle me-1"></i> {{ request.session.user_username }}
+          </a>
+          <a href="{% url 'user_logout' %}" class="btn btn-outline-danger btn-sm fw-bold">Logout</a>
+        {% else %}
+          <a href="{% url 'user_login' %}" class="btn btn-outline-primary btn-sm fw-bold">Member Sign In</a>
+          <a href="{% url 'user_register' %}" class="btn btn-primary btn-sm fw-bold">Register</a>
+        {% endif %}
+        <a href="{% url 'admin_login' %}" class="btn btn-outline-secondary btn-sm fw-semibold" title="Administrator Operations Portal">
+          <i class="bi bi-shield-lock"></i> <span class="d-none d-md-inline">Admin Portal</span>
+        </a>
+      </div>
     </div>
   </header>
 
