@@ -177,7 +177,7 @@ class FitnessMaster6TasksTests(TestCase):
     def test_django_admin_site_accessible(self):
         """Django admin site is accessible for manually adding admin users"""
         self.client.login(username='Viraj', password='Viraj123')
-        resp = self.client.get('/admin/')
+        resp = self.client.get('/django-admin/')
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Admins')
         self.assertContains(resp, 'Packages')
@@ -393,10 +393,24 @@ class FitnessMaster6TasksTests(TestCase):
     # NEW REQUIREMENTS: User Panel at Website Root, Dedicated Admin Login & Admin User Data
     # =========================================================================
     def test_website_root_redirects_to_user_panel_unauthenticated(self):
-        """When website is run (at /), it directly opens the User Panel (user_login)"""
+        """When website is run (at /), it directly opens the User Panel (packages_cards)"""
         resp = self.client.get('/')
         self.assertEqual(resp.status_code, 302)
-        self.assertRedirects(resp, reverse('user_login'))
+        self.assertRedirects(resp, reverse('packages_cards'))
+
+    def test_admin_url_opens_admin_login_when_unauthenticated(self):
+        """Typing .../admin or .../admin/ in browser URL opens our custom Admin Login page"""
+        resp = self.client.get('/admin/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Admin Sign In')
+        self.assertContains(resp, 'Administrator Operations')
+
+    def test_admin_url_opens_admin_dashboard_when_authenticated(self):
+        """Typing .../admin or .../admin/ when authenticated as admin directly opens Admin Dashboard"""
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get('/admin/')
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('admin_dashboard'))
 
     def test_website_root_redirects_to_user_dashboard_when_session_authenticated(self):
         """When website is run with active user session, it directly opens User Dashboard"""

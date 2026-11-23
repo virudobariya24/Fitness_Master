@@ -245,8 +245,8 @@
           <a href="{% url 'user_login' %}" class="btn btn-outline-primary btn-sm fw-bold">User Sign In</a>
           <a href="{% url 'user_register' %}" class="btn btn-primary btn-sm fw-bold">Register</a>
         {% endif %}
-        <a href="{% url 'admin_login' %}" class="btn btn-outline-secondary btn-sm fw-semibold" title="Administrator Operations Portal">
-          <i class="bi bi-shield-lock"></i> <span class="d-none d-md-inline">Admin</span>
+        <a href="{% url 'admin_gateway' %}" class="btn btn-outline-secondary btn-sm fw-semibold" title="Administrator Operations Portal (/admin)">
+          <i class="bi bi-shield-lock"></i> <span class="d-none d-md-inline">Admin (/admin)</span>
         </a>
       </div>
     </div>
@@ -343,8 +343,8 @@
   <footer class="bg-white border-top py-3 text-center text-muted small">
     <span>Fitness Master &copy; 2026. All rights reserved.</span>
     <span class="mx-2">&bull;</span>
-    <a href="{% url 'admin_login' %}" class="text-decoration-none text-muted">
-      <i class="bi bi-shield-lock me-1"></i>Staff / Admin Portal
+    <a href="{% url 'admin_gateway' %}" class="text-decoration-none text-muted">
+      <i class="bi bi-shield-lock me-1"></i>Staff / Admin Portal (/admin)
     </a>
   </footer>
 

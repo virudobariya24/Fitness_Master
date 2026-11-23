@@ -4,10 +4,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # Task (2): Django Admin (allows manually adding admin users)
-    path('admin/', admin.site.urls),
+    # Task (2): Django Admin (accessible at /django-admin/ for manually adding admin users)
+    path('django-admin/', admin.site.urls),
 
-    # Task (1): Admin Authentication (Login & Logout)
+    # Task (1): Admin & User Authentication, Root User Panel, and Admin Gateway (/admin/)
     path('', include('accounts.urls')),
 
     # Task (4), (5), (6): Bootstrap Admin Dashboard & Packages Management

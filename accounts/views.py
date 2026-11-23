@@ -16,13 +16,24 @@ def admin_check(user):
 
 def user_portal_root_view(request):
     """
-    Website Root View: Directs visitors directly to the User Panel when website is accessed.
+    Website Root View: Directs visitors directly to the User Panel when website is accessed directly.
     - If user has active session, redirects to user_dashboard.
-    - Otherwise, redirects to user_login (Member Portal).
+    - Otherwise, redirects to packages_cards (Public User Packages Catalog with 'View More' buttons).
     """
     if request.session.get('is_user_authenticated'):
         return redirect('user_dashboard')
-    return redirect('user_login')
+    return redirect('packages_cards')
+
+
+def admin_gateway_view(request):
+    """
+    Admin Gateway View: Triggered when user enters .../admin or .../admin/ in the URL.
+    - If admin is already authenticated: directly opens Admin Dashboard (admin_dashboard).
+    - If admin is not authenticated or submitting login form: opens custom Admin Login page.
+    """
+    if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
+        return redirect('admin_dashboard')
+    return admin_login_view(request)
 
 
 @ensure_csrf_cookie

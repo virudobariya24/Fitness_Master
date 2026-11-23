@@ -2,10 +2,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Website Root: Directly opens User Panel
+    # Website Root: Directly opens User Panel (Packages catalog / User Dashboard)
     path('', views.user_portal_root_view, name='root'),
+    path('user/', views.user_portal_root_view, name='user_root'),
 
-    # Admin Portal Authentication (Separate & Dedicated)
+    # Admin Panel Gateway: Triggered when typing .../admin or .../admin/
+    path('admin/', views.admin_gateway_view, name='admin_gateway'),
     path('admin-login/', views.admin_login_view, name='admin_login'),
     path('login/', views.admin_login_view, name='login'),
     path('logout/', views.admin_logout_view, name='logout'),

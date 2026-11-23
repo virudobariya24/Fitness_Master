@@ -59,7 +59,7 @@
       <!-- Card Form Body -->
       <div class="card-body p-4 p-sm-4.5 pt-3">
 
-        <form method="post" action="{% url 'admin_login' %}" novalidate id="adminLoginForm">
+        <form method="post" action="" novalidate id="adminLoginForm">
           {% csrf_token %}
 
           {% if form.non_field_errors %}
