@@ -75,7 +75,7 @@
               </li>
               <li>
                 <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="#memberProfileSection">
-                  <i class="bi bi-person-circle text-primary"></i> My Member Profile
+                  <i class="bi bi-person-circle text-primary"></i> My Profile
                 </a>
               </li>
               <li>
@@ -83,13 +83,6 @@
                   <i class="bi bi-box-seam text-info"></i> Browse Packages
                 </a>
               </li>
-              {% if request.user.is_authenticated and request.user.is_staff %}
-                <li>
-                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-warning" href="{% url 'admin_dashboard' %}">
-                    <i class="bi bi-shield-lock-fill"></i> Staff / Admin Dashboard
-                  </a>
-                </li>
-              {% endif %}
               <li><hr class="dropdown-divider my-1"></li>
               <li>
                 <a class="dropdown-item rounded-3 py-2 fw-bold text-danger d-flex align-items-center gap-2 small" href="{% url 'user_logout' %}">

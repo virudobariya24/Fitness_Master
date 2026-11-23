@@ -4,6 +4,28 @@
 {% block title %}Administrator Sign In | Fitness Master{% endblock %}
 
 {% block auth_content %}
+<style>
+  .input-group .form-control {
+    border-left: 0;
+  }
+  .input-group .form-control:focus {
+    border-color: #0ea5e9;
+    box-shadow: none;
+  }
+  .input-group:focus-within {
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+    border-radius: 0.5rem;
+  }
+  .input-group:focus-within .input-group-text,
+  .input-group:focus-within .form-control,
+  .input-group:focus-within .btn {
+    border-color: #0ea5e9;
+  }
+  .form-control::placeholder {
+    color: #94a3b8;
+    font-size: 0.92rem;
+  }
+</style>
 <div class="min-vh-100 d-flex align-items-center justify-content-center p-3 py-5 position-relative overflow-hidden" style="background: radial-gradient(circle at 50% 10%, #1e293b 0%, #0f172a 60%, #020617 100%);">
 
   <!-- Subtle ambient decorative glow rings (pure CSS) -->

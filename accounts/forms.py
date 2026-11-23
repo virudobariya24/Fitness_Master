@@ -10,7 +10,7 @@ class AdminLoginForm(forms.Form):
     username = forms.CharField(
         max_length=150,
         widget=forms.TextInput(attrs={
-            'class': 'form-control form-control-lg',
+            'class': 'form-control py-2.5',
             'placeholder': 'Enter admin username or email',
             'autofocus': True,
             'id': 'adminUsername',
@@ -19,7 +19,7 @@ class AdminLoginForm(forms.Form):
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'class': 'form-control form-control-lg',
+            'class': 'form-control py-2.5',
             'placeholder': 'Enter admin password',
             'id': 'adminPassword',
             'required': True
@@ -220,7 +220,7 @@ class UserLoginForm(forms.Form):
     username = forms.CharField(
         max_length=150,
         widget=forms.TextInput(attrs={
-            'class': 'form-control form-control-lg',
+            'class': 'form-control py-2.5',
             'placeholder': 'Enter your username or email',
             'id': 'userLoginUsername',
             'required': True,
@@ -229,7 +229,7 @@ class UserLoginForm(forms.Form):
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
-            'class': 'form-control form-control-lg',
+            'class': 'form-control py-2.5',
             'placeholder': 'Enter your password',
             'id': 'userLoginPassword',
             'required': True
