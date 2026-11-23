@@ -8,6 +8,7 @@ urlpatterns = [
 
     # Admin Panel Gateway: Triggered when typing .../admin or .../admin/
     path('admin/', views.admin_gateway_view, name='admin_gateway'),
+    path('admin', views.admin_gateway_view, name='admin_gateway_no_slash'),
     path('admin-login/', views.admin_login_view, name='admin_login'),
     path('login/', views.admin_login_view, name='login'),
     path('logout/', views.admin_logout_view, name='logout'),

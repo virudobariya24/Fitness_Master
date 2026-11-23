@@ -32,6 +32,7 @@ def admin_gateway_view(request):
     - If admin is not authenticated or submitting login form: opens custom Admin Login page.
     """
     if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
+        request.session.pop('is_user_authenticated', None)
         return redirect('admin_dashboard')
     return admin_login_view(request)
 
@@ -43,6 +44,7 @@ def admin_login_view(request):
     Redirects to admin dashboard upon successful authentication.
     """
     if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
+        request.session.pop('is_user_authenticated', None)
         return redirect('admin_dashboard')
 
     if request.method == 'POST':
@@ -50,6 +52,11 @@ def admin_login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            # Clear any conflicting member session flag so admin panel opens cleanly
+            request.session.pop('is_user_authenticated', None)
+            request.session.pop('user_id', None)
+            request.session.pop('user_username', None)
+            request.session.pop('user_email', None)
             messages.success(request, f"Welcome back, Administrator {user.username}!")
             return redirect('admin_dashboard')
         else:

@@ -367,7 +367,7 @@
 </head>
 <body>
 
-{% if request.user.is_authenticated and request.user.is_staff and not is_user_page and not is_auth_page and not request.session.is_user_authenticated and request.GET.portal != 'user' and request.resolver_match.url_name not in 'about_us contact_us user_login user_register user_register_alias user_dashboard user_root admin_login admin_login_slash login admin_gateway' %}
+{% if request.user.is_authenticated and request.user.is_staff and not is_user_page and not is_auth_page and request.GET.portal != 'user' and request.resolver_match.url_name not in 'about_us contact_us user_login user_register user_register_alias user_dashboard user_root root admin_login admin_login_slash login admin_gateway admin_gateway_no_slash' %}
 <div class="d-flex w-100 min-vh-100 position-relative">
 
   <!-- Desktop Sidebar -->
