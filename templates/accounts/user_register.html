@@ -1,32 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}User Registration | Fitness Master{% endblock %}
+{% block title %}Member Registration | Fitness Master{% endblock %}
 
 {% block auth_content %}
-<div class="min-vh-100 d-flex align-items-center justify-content-center p-3 py-5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
-  <div class="w-100" style="max-width: 520px;">
+<div class="min-vh-100 d-flex align-items-center justify-content-center p-3 py-5 position-relative overflow-hidden" style="background: radial-gradient(circle at 50% 15%, #1e293b 0%, #0f172a 65%, #020617 100%);">
+
+  <!-- Ambient background glow rings -->
+  <div class="position-absolute top-0 start-50 translate-middle-x rounded-circle pointer-events-none" style="width: 650px; height: 350px; background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0) 70%); filter: blur(45px); z-index: 0;"></div>
+
+  <div class="w-100 position-relative" style="max-width: 620px; z-index: 1;">
 
     <!-- Brand Header -->
     <div class="text-center mb-4">
-      <div class="d-inline-flex align-items-center justify-content-center rounded-4 shadow-lg mb-3" style="width: 58px; height: 58px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
-        <i class="fa-solid fa-user-plus text-white fs-3"></i>
+      <div class="d-inline-flex align-items-center justify-content-center rounded-4 shadow-lg mb-3" style="width: 62px; height: 62px; background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3) !important;">
+        <i class="fa-solid fa-user-plus text-white fs-2"></i>
       </div>
-      <h3 class="fw-black text-white tracking-tight mb-1">
+      <h2 class="fw-black text-white tracking-tight mb-1" style="letter-spacing: 0.5px;">
         FITNESS<span class="text-info">MASTER</span>
-      </h3>
-      <p class="text-secondary small fw-bold text-uppercase mb-0" style="letter-spacing: 1px;">
-        Member Account Registration
-      </p>
+      </h2>
+      <div class="d-inline-flex align-items-center gap-1.5 px-3 py-1 rounded-pill bg-white bg-opacity-10 border border-white border-opacity-10 text-light" style="font-size: 11px;">
+        <span class="badge rounded-circle p-1 bg-success d-inline-block" style="width: 7px; height: 7px;"></span>
+        <span class="fw-bold text-uppercase" style="letter-spacing: 0.75px;">New Member Registration &bull; Instant Access</span>
+      </div>
     </div>
 
     <!-- Flash Alert Messages -->
     {% if messages %}
       <div class="mb-3">
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5" role="alert">
-            <i class="bi bi-info-circle-fill"></i>
-            <div>{{ message }}</div>
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 rounded-3" role="alert">
+            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-info{% endif %} fs-5"></i>
+            <div class="fw-semibold">{{ message }}</div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         {% endfor %}
@@ -35,111 +40,142 @@
 
     <!-- Registration Card -->
     <div class="card shadow-lg border-0 rounded-4 overflow-hidden bg-white">
-      <div class="card-body p-4 p-sm-5">
-        
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <div>
-            <h4 class="card-title fw-bold text-dark mb-1">Create Account</h4>
-            <p class="text-muted small mb-0">Join Fitness Master to explore memberships</p>
-          </div>
-          <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
-            <i class="bi bi-person-badge me-1"></i>New Member
+      
+      <!-- Card Header Banner -->
+      <div class="p-4 p-sm-4.5 pb-0 bg-white">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h4 class="card-title fw-black text-dark mb-0">
+            <i class="bi bi-person-lines-fill text-primary me-2"></i>Create Member Account
+          </h4>
+          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-2.5 py-1 rounded-pill" style="font-size: 10.5px;">
+            <i class="bi bi-stars me-1"></i>Free Sign Up
           </span>
         </div>
+        <p class="text-muted small mb-0">
+          Join Fitness Master to explore memberships, view package privileges, and manage your gym profile.
+        </p>
+      </div>
 
-        <form method="post" action="{% url 'user_register' %}" novalidate>
+      <!-- Card Form Body -->
+      <div class="card-body p-4 p-sm-4.5 pt-3.5">
+        
+        <form method="post" action="{% url 'user_register' %}" novalidate id="userRegisterForm">
           {% csrf_token %}
 
           {% if form.non_field_errors %}
-            <div class="alert alert-danger py-2.5 small fw-semibold mb-3">
-              {% for error in form.non_field_errors %}
-                <div><i class="bi bi-exclamation-triangle-fill me-1"></i>{{ error }}</div>
-              {% endfor %}
+            <div class="alert alert-danger py-2.5 small fw-semibold mb-3 rounded-3 d-flex align-items-center gap-2">
+              <i class="bi bi-exclamation-triangle-fill text-danger fs-5 flex-shrink-0"></i>
+              <div>{{ form.non_field_errors.0 }}</div>
             </div>
           {% endif %}
 
-          <!-- Full Name (Optional) -->
-          <div class="mb-3">
-            <label for="regName" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 11px;">Full Name</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0">
-                <i class="bi bi-card-heading"></i>
-              </span>
-              {{ form.name }}
+          <!-- Row 1: Full Name & Username -->
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-6">
+              <label for="regName" class="form-label small fw-bold text-uppercase text-secondary mb-1.5" style="font-size: 11px;">
+                Full Name <span class="text-muted fw-normal text-capitalize">(Optional)</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0">
+                  <i class="bi bi-card-heading text-primary"></i>
+                </span>
+                {{ form.name }}
+              </div>
+              {% if form.name.errors %}
+                <div class="text-danger small mt-1 fw-semibold">{{ form.name.errors.0 }}</div>
+              {% endif %}
             </div>
-            {% if form.name.errors %}
-              <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
-            {% endif %}
+
+            <div class="col-12 col-md-6">
+              <label for="regUsername" class="form-label small fw-bold text-uppercase text-secondary mb-1.5" style="font-size: 11px;">
+                Username <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0">
+                  <i class="bi bi-person-fill text-primary"></i>
+                </span>
+                {{ form.username }}
+              </div>
+              {% if form.username.errors %}
+                <div class="text-danger small mt-1 fw-semibold">{{ form.username.errors.0 }}</div>
+              {% endif %}
+            </div>
           </div>
 
-          <!-- Username (Required) -->
+          <!-- Row 2: Email Address -->
           <div class="mb-3">
-            <label for="regUsername" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 11px;">
-              Username <span class="text-danger">*</span>
-            </label>
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0">
-                <i class="bi bi-person-fill"></i>
-              </span>
-              {{ form.username }}
-            </div>
-            {% if form.username.errors %}
-              <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
-            {% endif %}
-          </div>
-
-          <!-- Email (Required) -->
-          <div class="mb-3">
-            <label for="regEmail" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 11px;">
+            <label for="regEmail" class="form-label small fw-bold text-uppercase text-secondary mb-1.5" style="font-size: 11px;">
               Email Address <span class="text-danger">*</span>
             </label>
             <div class="input-group">
               <span class="input-group-text bg-light text-muted border-end-0">
-                <i class="bi bi-envelope-fill"></i>
+                <i class="bi bi-envelope-fill text-primary"></i>
               </span>
               {{ form.email }}
             </div>
             {% if form.email.errors %}
-              <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+              <div class="text-danger small mt-1 fw-semibold">{{ form.email.errors.0 }}</div>
             {% endif %}
           </div>
 
-          <!-- Password (Required) -->
-          <div class="mb-3">
-            <label for="regPassword" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 11px;">
-              Password <span class="text-danger">*</span>
-            </label>
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0">
-                <i class="bi bi-lock-fill"></i>
-              </span>
-              {{ form.password }}
+          <!-- Row 3: Password & Confirm Password -->
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-6">
+              <label for="regPassword" class="form-label small fw-bold text-uppercase text-secondary mb-1.5" style="font-size: 11px;">
+                Password <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0">
+                  <i class="bi bi-lock-fill text-primary"></i>
+                </span>
+                {{ form.password }}
+                <button class="btn btn-outline-secondary border-start-0 bg-light text-muted" type="button" id="toggleRegPasswordVisibility" title="Show or hide password">
+                  <i class="bi bi-eye" id="toggleRegPasswordIcon"></i>
+                </button>
+              </div>
+              {% if form.password.errors %}
+                <div class="text-danger small mt-1 fw-semibold">{{ form.password.errors.0 }}</div>
+              {% endif %}
             </div>
-            <small class="text-muted" style="font-size: 11px;">Encrypted securely using PBKDF2 hashing algorithm.</small>
-            {% if form.password.errors %}
-              <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
-            {% endif %}
+
+            <div class="col-12 col-md-6">
+              <label for="regConfirmPassword" class="form-label small fw-bold text-uppercase text-secondary mb-1.5" style="font-size: 11px;">
+                Confirm Password <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted border-end-0">
+                  <i class="bi bi-shield-lock-fill text-primary"></i>
+                </span>
+                {{ form.confirm_password }}
+                <button class="btn btn-outline-secondary border-start-0 bg-light text-muted" type="button" id="toggleRegConfirmPasswordVisibility" title="Show or hide password">
+                  <i class="bi bi-eye" id="toggleRegConfirmPasswordIcon"></i>
+                </button>
+              </div>
+              {% if form.confirm_password.errors %}
+                <div class="text-danger small mt-1 fw-semibold">{{ form.confirm_password.errors.0 }}</div>
+              {% endif %}
+            </div>
           </div>
 
-          <!-- Confirm Password (Required) -->
-          <div class="mb-4">
-            <label for="regConfirmPassword" class="form-label small fw-bold text-uppercase text-secondary" style="font-size: 11px;">
-              Confirm Password <span class="text-danger">*</span>
+          <!-- Security Encryption Note -->
+          <div class="p-2.5 bg-light rounded-3 border mb-3.5 d-flex align-items-center gap-2">
+            <i class="bi bi-shield-check text-success fs-5 flex-shrink-0"></i>
+            <small class="text-muted fw-semibold" style="font-size: 11px;">
+              Credentials are encrypted with <strong>PBKDF2 SHA-256</strong> algorithm. Your password is never stored as plain text.
+            </small>
+          </div>
+
+          <!-- Terms & Agreement Checkbox -->
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="regTerms" required checked>
+            <label class="form-check-label small text-muted fw-semibold" for="regTerms" style="font-size: 12px;">
+              I agree to the Fitness Master <a href="{% url 'packages_cards' %}" class="text-decoration-none text-primary">Membership Guidelines</a> &amp; Terms of Service
             </label>
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0">
-                <i class="bi bi-shield-lock-fill"></i>
-              </span>
-              {{ form.confirm_password }}
-            </div>
-            {% if form.confirm_password.errors %}
-              <div class="text-danger small mt-1">{{ form.confirm_password.errors.0 }}</div>
-            {% endif %}
           </div>
 
           <!-- Register Submit Button -->
-          <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow-sm py-2.5" style="background-color: #0284c7; border-color: #0284c7;">
-            <i class="bi bi-person-check-fill"></i> Complete Registration
+          <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow py-2.5 rounded-3" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); border: none;">
+            <i class="bi bi-person-check-fill"></i> Complete Registration &amp; Create Account
           </button>
 
         </form>
@@ -147,16 +183,16 @@
       </div>
       
       <!-- Card Footer -->
-      <div class="card-footer bg-light border-top text-center py-3">
-        <p class="small text-muted mb-1">
-          Already registered? <a href="{% url 'user_login' %}" class="fw-bold text-decoration-none text-primary">Sign in here</a>
+      <div class="card-footer bg-light border-top text-center py-3.5 px-4">
+        <p class="small text-muted mb-2.5">
+          Already registered? <a href="{% url 'user_login' %}" class="fw-bold text-decoration-none text-primary">Sign in to Member Portal &rarr;</a>
         </p>
-        <div class="mt-2 pt-2 border-top">
-          <a href="{% url 'admin_gateway' %}" class="small text-muted text-decoration-none">
-            <i class="bi bi-shield-lock me-1"></i>Administrator Login Portal (/admin)
+        <div class="pt-2 border-top d-flex flex-wrap align-items-center justify-content-center gap-2">
+          <a href="{% url 'admin_gateway' %}" class="small text-muted text-decoration-none fw-semibold">
+            <i class="bi bi-shield-lock me-1"></i>Staff / Admin Portal (/admin)
           </a>
-          <span class="mx-2 text-muted">&bull;</span>
-          <a href="{% url 'packages_cards' %}" class="small text-muted text-decoration-none">
+          <span class="text-muted opacity-50">&bull;</span>
+          <a href="{% url 'packages_cards' %}" class="small text-muted text-decoration-none fw-semibold">
             <i class="bi bi-grid-fill me-1"></i>Browse Packages
           </a>
         </div>
@@ -166,4 +202,32 @@
 
   </div>
 </div>
+
+<!-- Password Visibility Toggle JavaScript for Registration -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function setupPasswordToggle(buttonId, inputId, iconId) {
+      const toggleBtn = document.getElementById(buttonId);
+      const pwdInput = document.getElementById(inputId);
+      const toggleIcon = document.getElementById(iconId);
+
+      if (toggleBtn && pwdInput && toggleIcon) {
+        toggleBtn.addEventListener('click', function() {
+          if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            toggleIcon.classList.remove('bi-eye');
+            toggleIcon.classList.add('bi-eye-slash');
+          } else {
+            pwdInput.type = 'password';
+            toggleIcon.classList.remove('bi-eye-slash');
+            toggleIcon.classList.add('bi-eye');
+          }
+        });
+      }
+    }
+
+    setupPasswordToggle('toggleRegPasswordVisibility', 'regPassword', 'toggleRegPasswordIcon');
+    setupPasswordToggle('toggleRegConfirmPasswordVisibility', 'regConfirmPassword', 'toggleRegConfirmPasswordIcon');
+  });
+</script>
 {% endblock %}
