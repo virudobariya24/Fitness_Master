@@ -57,7 +57,7 @@ def admin_login_view(request):
     else:
         form = AdminLoginForm()
 
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/login.html', {'form': form, 'is_auth_page': True})
 
 
 def admin_logout_view(request):
@@ -145,7 +145,7 @@ def user_register_view(request):
     else:
         form = UserRegistrationForm()
 
-    return render(request, 'accounts/user_register.html', {'form': form})
+    return render(request, 'accounts/user_register.html', {'form': form, 'is_user_page': True})
 
 
 @ensure_csrf_cookie
@@ -175,7 +175,7 @@ def user_login_view(request):
     else:
         form = UserLoginForm()
 
-    return render(request, 'accounts/user_login.html', {'form': form})
+    return render(request, 'accounts/user_login.html', {'form': form, 'is_user_page': True})
 
 
 def user_logout_view(request):
@@ -211,4 +211,5 @@ def user_dashboard_view(request):
     return render(request, 'accounts/user_dashboard.html', {
         'user': user,
         'packages': packages,
+        'is_user_page': True,
     })

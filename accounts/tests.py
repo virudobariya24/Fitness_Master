@@ -464,4 +464,29 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertEqual(resp.status_code, 302)
         self.assertRedirects(resp, f"{reverse('login')}?next={reverse('admin_registered_users')}")
 
+    def test_user_login_page_does_not_show_admin_sidebar_when_admin_logged_in(self):
+        """When admin is logged into Django auth, visiting /user/login/ MUST render user login form, NOT admin sidebar"""
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get(reverse('user_login'))
+        self.assertEqual(resp.status_code, 200)
+        # Verify user login form is rendered
+        self.assertContains(resp, 'Member Sign In')
+        self.assertContains(resp, 'Sign In to Member Portal')
+        # Verify Admin sidebar and dashboard elements are NOT rendered
+        self.assertNotContains(resp, 'id="adminDesktopSidebar"')
+        self.assertNotContains(resp, 'Admin Dashboard Overview')
+        self.assertNotContains(resp, 'Admin Authenticated')
+
+    def test_user_register_page_does_not_show_admin_sidebar_when_admin_logged_in(self):
+        """When admin is logged into Django auth, visiting /register/ MUST render registration form, NOT admin sidebar"""
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get(reverse('user_register'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Create Account')
+        self.assertContains(resp, 'Complete Registration')
+        self.assertNotContains(resp, 'id="adminDesktopSidebar"')
+        self.assertNotContains(resp, 'Admin Authenticated')
+
+
+
 
