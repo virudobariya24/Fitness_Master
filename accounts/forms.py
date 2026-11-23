@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
+from .models import User
 
 AdminModel = get_user_model()
 
@@ -121,3 +122,139 @@ class AdminCreationForm(forms.ModelForm):
         if commit:
             admin_user.save()
         return admin_user
+
+
+class UserRegistrationForm(forms.ModelForm):
+    """
+    Task (2): User Registration Form with fields: username, email, and password.
+    Saves new users into the custom User model with PBKDF2 hashed passwords.
+    """
+    name = forms.CharField(
+        max_length=150,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your full name (optional)',
+            'id': 'regName'
+        })
+    )
+    username = forms.CharField(
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Choose a unique username',
+            'id': 'regUsername',
+            'required': True
+        })
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'name@example.com',
+            'id': 'regEmail',
+            'required': True
+        })
+    )
+    password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Create a strong password',
+            'id': 'regPassword',
+            'required': True
+        }),
+        help_text="Password will be encrypted using PBKDF2 algorithm."
+    )
+    confirm_password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Re-enter your password',
+            'id': 'regConfirmPassword',
+            'required': True
+        })
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'name', 'email', 'password']
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        if User.objects.filter(username__iexact=username).exists():
+            raise forms.ValidationError("This username is already taken. Please choose another username.")
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip().lower()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("An account with this email address already exists.")
+        return email
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', "Passwords do not match. Please re-enter identical passwords.")
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if not user.name:
+            user.name = user.username
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user
+
+
+class UserLoginForm(forms.Form):
+    """
+    Task (3): User Login Form for authentication using Django sessions.
+    Validates credentials against custom User model.
+    """
+    username = forms.CharField(
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control form-control-lg',
+            'placeholder': 'Enter your username or email',
+            'id': 'userLoginUsername',
+            'required': True,
+            'autofocus': True
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control form-control-lg',
+            'placeholder': 'Enter your password',
+            'id': 'userLoginPassword',
+            'required': True
+        })
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.user_cache = None
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username', '').strip()
+        password = cleaned_data.get('password', '')
+
+        if username and password:
+            user = User.objects.filter(username__iexact=username).first()
+            if not user:
+                user = User.objects.filter(email__iexact=username).first()
+
+            if not user or not user.check_password(password):
+                raise forms.ValidationError("Invalid username or password. Please try again.")
+
+            self.user_cache = user
+        return cleaned_data
+
+    def get_user(self):
+        return self.user_cache

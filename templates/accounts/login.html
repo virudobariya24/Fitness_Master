@@ -88,9 +88,14 @@
       
       <!-- Card Footer -->
       <div class="card-footer bg-light border-top text-center py-3">
-        <small class="text-muted fw-semibold">
-          Fitness Master Administrator Operations Portal
-        </small>
+        <p class="small text-muted mb-2">
+          Looking for Member Portal? <a href="{% url 'user_login' %}" class="fw-bold text-decoration-none text-primary">Member Sign In</a> or <a href="{% url 'user_register' %}" class="fw-bold text-decoration-none text-primary">Register</a>
+        </p>
+        <div class="pt-2 border-top">
+          <small class="text-muted fw-semibold">
+            Fitness Master Administrator Operations Portal
+          </small>
+        </div>
       </div>
 
     </div>

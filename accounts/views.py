@@ -3,7 +3,9 @@ from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.views.decorators.csrf import ensure_csrf_cookie
-from .forms import AdminLoginForm, AdminCreationForm
+from .models import User
+from .forms import AdminLoginForm, AdminCreationForm, UserRegistrationForm, UserLoginForm
+from packages.models import Packages
 
 AdminModel = get_user_model()
 
@@ -72,4 +74,94 @@ def admin_accounts_view(request):
         'form': form,
         'total_admins': admins.count(),
         'superusers_count': admins.filter(is_superuser=True).count(),
+    })
+
+
+@ensure_csrf_cookie
+def user_register_view(request):
+    """
+    Task (2): User Registration View.
+    Renders registration form with fields: username, email, and password.
+    Saves validated users into the custom User model with hashed passwords.
+    """
+    if request.session.get('is_user_authenticated'):
+        return redirect('user_dashboard')
+
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            messages.success(request, f"Registration successful for '{new_user.username}'! You can now sign in.")
+            return redirect('user_login')
+        else:
+            messages.error(request, "Registration failed. Please check the errors below.")
+    else:
+        form = UserRegistrationForm()
+
+    return render(request, 'accounts/user_register.html', {'form': form})
+
+
+@ensure_csrf_cookie
+def user_login_view(request):
+    """
+    Task (3): User Login View using Django Sessions.
+    Authenticates against custom User model and stores user session in request.session.
+    """
+    if request.session.get('is_user_authenticated'):
+        return redirect('user_dashboard')
+
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            # Set Django Session Keys for User Login (Task 3)
+            request.session['user_id'] = user.id
+            request.session['user_username'] = user.username
+            request.session['user_name'] = user.name or user.username
+            request.session['user_email'] = user.email
+            request.session['is_user_authenticated'] = True
+            request.session.modified = True
+            messages.success(request, f"Welcome back, {user.name or user.username}!")
+            return redirect('user_dashboard')
+        else:
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = UserLoginForm()
+
+    return render(request, 'accounts/user_login.html', {'form': form})
+
+
+def user_logout_view(request):
+    """
+    Task (3): User Logout View using Django Sessions.
+    Terminates user session and clears all session data.
+    """
+    request.session.pop('user_id', None)
+    request.session.pop('user_username', None)
+    request.session.pop('user_name', None)
+    request.session.pop('user_email', None)
+    request.session.pop('is_user_authenticated', None)
+    request.session.modified = True
+    messages.info(request, "You have been logged out successfully from your user account.")
+    return redirect('user_login')
+
+
+def user_dashboard_view(request):
+    """
+    User Dashboard for session-authenticated users.
+    Displays user account details, active packages catalog with 'View More' links.
+    """
+    if not request.session.get('is_user_authenticated'):
+        messages.warning(request, "Please sign in to access your user account.")
+        return redirect('user_login')
+
+    user_id = request.session.get('user_id')
+    user = User.objects.filter(pk=user_id).first()
+    if not user:
+        return redirect('user_logout')
+
+    packages = Packages.objects.all().order_by('price')
+    return render(request, 'accounts/user_dashboard.html', {
+        'user': user,
+        'packages': packages,
     })

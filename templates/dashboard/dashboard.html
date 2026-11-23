@@ -197,10 +197,13 @@
 
                   <!-- Box Footer Actions -->
                   <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between gap-2">
-                    <a href="{% url 'package_edit' pkg.id %}" class="btn btn-outline-primary btn-sm fw-bold flex-grow-1 py-1.5">
-                      <i class="bi bi-pencil-square me-1"></i> Edit Plan
+                    <a href="{% url 'package_detail' pkg.id %}" class="btn btn-primary btn-sm fw-bold flex-grow-1 py-1.5 shadow-sm">
+                      <i class="bi bi-eye-fill me-1"></i> View More
                     </a>
-                    <button type="button" class="btn btn-outline-danger btn-sm py-1.5 px-3" data-bs-toggle="modal" data-bs-target="#deletePackageModalCardsDash{{ pkg.id }}" title="Delete Package">
+                    <a href="{% url 'package_edit' pkg.id %}" class="btn btn-outline-secondary btn-sm py-1.5 px-2.5" title="Edit Plan">
+                      <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <button type="button" class="btn btn-outline-danger btn-sm py-1.5 px-2.5" data-bs-toggle="modal" data-bs-target="#deletePackageModalCardsDash{{ pkg.id }}" title="Delete Package">
                       <i class="bi bi-trash3"></i>
                     </button>
                   </div>
@@ -309,6 +312,9 @@
                   </td>
                   <td class="text-end pe-4">
                     <div class="btn-group btn-group-sm">
+                      <a href="{% url 'package_detail' pkg.id %}" class="btn btn-outline-secondary" title="View More Details">
+                        <i class="bi bi-eye text-info"></i>
+                      </a>
                       <a href="{% url 'package_edit' pkg.id %}" class="btn btn-outline-secondary" title="Edit Package">
                         <i class="bi bi-pencil-square text-primary"></i>
                       </a>

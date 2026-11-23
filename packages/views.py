@@ -91,6 +91,21 @@ def packages_cards_view(request):
     })
 
 
+def package_detail_view(request, pk):
+    """
+    Task (1): Detailed view page for a specific package.
+    Retrieves package by primary key and renders package_detail.html
+    displaying all 9 fields, Indian Rupee pricing, duration, and enrollment actions.
+    Accessible to both authenticated admins, session-authenticated users, and visitors.
+    """
+    package = get_object_or_404(Packages, pk=pk)
+    related_packages = Packages.objects.exclude(pk=pk).order_by('price')[:2]
+    return render(request, 'packages/package_detail.html', {
+        'package': package,
+        'related_packages': related_packages,
+    })
+
+
 @login_required(login_url='login')
 @user_passes_test(admin_check, login_url='login')
 def package_add_view(request):

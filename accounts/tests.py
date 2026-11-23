@@ -238,3 +238,154 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertContains(resp, 'Fitness Master Packages')
         self.assertContains(resp, 'Gold Pro Membership')
         self.assertContains(resp, '₹79.99')
+
+    # =========================================================================
+    # NEW TASK 1: "View More" Button on Each Card & Detailed View Page
+    # =========================================================================
+    def test_package_detail_view_authenticated(self):
+        """Package detailed view page displays full specifications for authenticated admin"""
+        self.client.login(username='Viraj', password='Viraj123')
+        detail_url = reverse('package_detail', args=[self.package.pk])
+        resp = self.client.get(detail_url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Gold Pro Membership')
+        self.assertContains(resp, '₹79.99')
+        self.assertContains(resp, '24/7 Access')
+        self.assertContains(resp, 'Unlimited Protein Shakes')
+        self.assertContains(resp, 'Dedicated Certified Trainer')
+        self.assertContains(resp, 'Cardio')
+        self.assertContains(resp, 'Edit Plan')
+
+    def test_package_detail_view_unauthenticated(self):
+        """Package detailed view page displays full specifications for visitor / session user"""
+        detail_url = reverse('package_detail', args=[self.package.pk])
+        resp = self.client.get(detail_url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Gold Pro Membership')
+        self.assertContains(resp, '₹79.99')
+        self.assertContains(resp, 'Plan Specifications')
+        self.assertContains(resp, '24/7 Access')
+
+    def test_cards_and_dashboard_contain_view_more_buttons(self):
+        """Verify 'View More' buttons linking to package_detail exist on package cards and dashboard"""
+        self.client.login(username='Viraj', password='Viraj123')
+        detail_url = reverse('package_detail', args=[self.package.pk])
+
+        # 1. Packages Cards Page
+        resp_cards = self.client.get(reverse('packages_cards'))
+        self.assertContains(resp_cards, detail_url)
+        self.assertContains(resp_cards, 'View More')
+
+        # 2. Dashboard Page
+        resp_dash = self.client.get(reverse('admin_dashboard'))
+        self.assertContains(resp_dash, detail_url)
+        self.assertContains(resp_dash, 'View More')
+
+        # 3. Dedicated Packages List Page
+        resp_list = self.client.get(reverse('packages_list'))
+        self.assertContains(resp_list, detail_url)
+        self.assertContains(resp_list, 'View More')
+
+    # =========================================================================
+    # NEW TASK 2: Custom User Model with Name, Email, Password & Registration
+    # =========================================================================
+    def test_custom_user_model_creation_and_hashing(self):
+        """Custom User model saves name, email, username and securely hashes password"""
+        from accounts.models import User
+        user = User.objects.create(
+            name='Aarav Patel',
+            username='aarav',
+            email='aarav@example.com'
+        )
+        user.set_password('SecretUserPass123')
+        user.save()
+
+        saved_user = User.objects.get(username='aarav')
+        self.assertEqual(saved_user.name, 'Aarav Patel')
+        self.assertEqual(saved_user.email, 'aarav@example.com')
+        self.assertNotEqual(saved_user.password, 'SecretUserPass123')
+        self.assertTrue(saved_user.check_password('SecretUserPass123'))
+        self.assertFalse(saved_user.check_password('WrongPass'))
+
+    def test_user_registration_view_success(self):
+        """User registration form successfully creates user in custom User model"""
+        from accounts.models import User
+        resp = self.client.post(reverse('user_register'), {
+            'name': 'Pooja Sharma',
+            'username': 'poojafit',
+            'email': 'pooja@fitnessmaster.com',
+            'password': 'PoojaPassword123',
+            'confirm_password': 'PoojaPassword123',
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_login'))
+        self.assertTrue(User.objects.filter(username='poojafit').exists())
+
+        new_user = User.objects.get(username='poojafit')
+        self.assertEqual(new_user.email, 'pooja@fitnessmaster.com')
+        self.assertTrue(new_user.check_password('PoojaPassword123'))
+
+    def test_user_registration_duplicate_username_fails(self):
+        """Registration with existing username returns validation error"""
+        from accounts.models import User
+        User.objects.create(username='existinguser', email='exist@example.com', password='hashedpassword')
+
+        resp = self.client.post(reverse('user_register'), {
+            'username': 'existinguser',
+            'email': 'different@example.com',
+            'password': 'Password123',
+            'confirm_password': 'Password123',
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'This username is already taken')
+
+    # =========================================================================
+    # NEW TASK 3: User Login / Logout Functionality Using Django Sessions
+    # =========================================================================
+    def test_user_session_login_and_logout(self):
+        """User can log in using Django sessions and log out successfully"""
+        from accounts.models import User
+        user = User.objects.create(
+            name='Kavya Joshi',
+            username='kavyaj',
+            email='kavya@example.com'
+        )
+        user.set_password('KavyaPass456')
+        user.save()
+
+        # 1. Login with valid credentials
+        resp_login = self.client.post(reverse('user_login'), {
+            'username': 'kavyaj',
+            'password': 'KavyaPass456'
+        })
+        self.assertEqual(resp_login.status_code, 302)
+        self.assertRedirects(resp_login, reverse('user_dashboard'))
+
+        # Check Django session keys
+        session = self.client.session
+        self.assertTrue(session.get('is_user_authenticated'))
+        self.assertEqual(session.get('user_id'), user.id)
+        self.assertEqual(session.get('user_username'), 'kavyaj')
+
+        # 2. Access User Dashboard with session
+        resp_dash = self.client.get(reverse('user_dashboard'))
+        self.assertEqual(resp_dash.status_code, 200)
+        self.assertContains(resp_dash, 'Kavya Joshi')
+        self.assertContains(resp_dash, 'Gold Pro Membership')
+        self.assertContains(resp_dash, 'View More Details')
+
+        # 3. Logout terminates session
+        resp_logout = self.client.get(reverse('user_logout'))
+        self.assertEqual(resp_logout.status_code, 302)
+        self.assertRedirects(resp_logout, reverse('user_login'))
+
+        session = self.client.session
+        self.assertIsNone(session.get('is_user_authenticated'))
+        self.assertIsNone(session.get('user_id'))
+
+    def test_user_dashboard_unauthenticated_session_redirects(self):
+        """User dashboard requires active Django session; redirects unauthenticated visitors"""
+        resp = self.client.get(reverse('user_dashboard'))
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_login'))
+
