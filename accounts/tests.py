@@ -397,7 +397,7 @@ class FitnessMaster6TasksTests(TestCase):
         """When website is run (at /), it directly opens the User Panel / Dashboard"""
         resp = self.client.get('/')
         self.assertEqual(resp.status_code, 302)
-        self.assertRedirects(resp, reverse('user_dashboard'))
+        self.assertRedirects(resp, reverse('user_dashboard'), target_status_code=302)
 
     def test_admin_url_opens_admin_login_when_unauthenticated(self):
         """Typing .../admin or .../admin/ in browser URL opens our custom Admin Login page"""
