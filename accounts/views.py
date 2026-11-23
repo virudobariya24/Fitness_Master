@@ -16,13 +16,11 @@ def admin_check(user):
 
 def user_portal_root_view(request):
     """
-    Website Root View: Directs visitors directly to the User Panel when website is accessed directly.
-    - If user has active session, redirects to user_dashboard.
-    - Otherwise, redirects to packages_cards (Public User Packages Catalog with 'View More' buttons).
+    Website Root View: Directs visitors directly to the User Dashboard when website is accessed directly (127.0.0.1:8000/).
+    - If user has active session, directly opens User Dashboard.
+    - If user is not authenticated, redirects to user_dashboard which prompts sign in.
     """
-    if request.session.get('is_user_authenticated'):
-        return redirect('user_dashboard')
-    return redirect('packages_cards')
+    return redirect('user_dashboard')
 
 
 def admin_gateway_view(request):
@@ -32,7 +30,6 @@ def admin_gateway_view(request):
     - If admin is not authenticated or submitting login form: opens custom Admin Login page.
     """
     if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
-        request.session.pop('is_user_authenticated', None)
         return redirect('admin_dashboard')
     return admin_login_view(request)
 
@@ -174,6 +171,7 @@ def user_login_view(request):
             request.session['user_name'] = user.name or user.username
             request.session['user_email'] = user.email
             request.session['is_user_authenticated'] = True
+            request.session.set_expiry(1209600)  # Persistent session for 14 days
             request.session.modified = True
             messages.success(request, f"Welcome back, {user.name or user.username}!")
             return redirect('user_dashboard')
@@ -206,24 +204,25 @@ def user_dashboard_view(request):
     Displays user account details, active packages catalog with 'View More' links.
     Validates session state, user ID, and active database credentials.
     """
-    # 1. Validation check for session authentication flag
-    if not request.session.get('is_user_authenticated'):
+    # 1. Validation check for session authentication flag and user ID
+    is_authenticated = request.session.get('is_user_authenticated')
+    user_id = request.session.get('user_id')
+
+    if not is_authenticated or not user_id:
         messages.warning(request, "Please sign in to access your member dashboard.")
         return redirect('user_login')
 
-    # 2. Validation check for user ID in session
-    user_id = request.session.get('user_id')
-    if not user_id:
-        request.session.flush()
-        messages.warning(request, "Session expired or invalid. Please sign in again.")
-        return redirect('user_login')
-
-    # 3. Validation check against database record
+    # 2. Validation check against database record
     user = User.objects.filter(pk=user_id).first()
     if not user:
-        request.session.flush()
+        request.session.pop('is_user_authenticated', None)
+        request.session.pop('user_id', None)
+        request.session.modified = True
         messages.error(request, "User account could not be validated. Please log in again.")
         return redirect('user_login')
+
+    # 3. Keep session active and persistent across refreshes
+    request.session.modified = True
 
     packages = Packages.objects.all().order_by('price')
     return render(request, 'accounts/user_dashboard.html', {

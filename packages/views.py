@@ -26,10 +26,6 @@ def admin_dashboard_view(request):
     - Admin users list with link to Django Admin for manual admin addition (Task 2)
     - Form to add new package
     """
-    # Ensure active admin session is not masked by old user portal session flag
-    if 'is_user_authenticated' in request.session:
-        request.session.pop('is_user_authenticated', None)
-
     packages = Packages.objects.all().order_by('price')
     total_packages = packages.count()
     avg_price = packages.aggregate(avg=Avg('price'))['avg'] or 0.0
