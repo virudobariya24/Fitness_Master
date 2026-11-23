@@ -88,11 +88,14 @@ def packages_cards_view(request):
     avg_price = packages.aggregate(avg=Avg('price'))['avg'] or 0.0
     form = PackageForm()
 
+    is_user_portal = bool(request.session.get('is_user_authenticated') or request.GET.get('portal') == 'user')
+
     return render(request, 'packages/packages_cards.html', {
         'packages': packages,
         'total_packages': total_packages,
         'avg_price': round(avg_price, 2),
         'form': form,
+        'is_user_page': is_user_portal,
     })
 
 
@@ -105,9 +108,11 @@ def package_detail_view(request, pk):
     """
     package = get_object_or_404(Packages, pk=pk)
     related_packages = Packages.objects.exclude(pk=pk).order_by('price')[:2]
+    is_user_portal = bool(request.session.get('is_user_authenticated') or request.GET.get('portal') == 'user')
     return render(request, 'packages/package_detail.html', {
         'package': package,
         'related_packages': related_packages,
+        'is_user_page': is_user_portal,
     })
 
 

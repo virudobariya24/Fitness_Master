@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | Fitness Master{% endblock %}
+
+{% block auth_content %}
+<div class="min-vh-100 d-flex flex-column bg-light">
+
+  <!-- =========================================================================
+       GLOBAL RESPONSIVE NAVBAR
+       ========================================================================= -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top py-2.5">
+    <div class="container">
+      
+      <!-- Brand Logo -->
+      <a href="{% if request.session.is_user_authenticated %}{% url 'user_dashboard' %}{% else %}{% url 'packages_cards' %}{% endif %}" class="navbar-brand d-flex align-items-center gap-2 me-lg-4 text-decoration-none">
+        <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+          <i class="fa-solid fa-dumbbell fs-5"></i>
+        </div>
+        <span class="fw-black text-dark tracking-wide fs-5">FITNESS<span class="text-info">MASTER</span></span>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="navbar-toggler border-0 shadow-none p-1.5" type="button" data-bs-toggle="collapse" data-bs-target="#aboutGlobalNavbar" aria-controls="aboutGlobalNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Collapse Links & Profile -->
+      <div class="collapse navbar-collapse" id="aboutGlobalNavbar">
+        
+        <!-- Navigation Links -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 pt-2 pt-lg-0">
+          {% if request.session.is_user_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_dashboard' %}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}">
+              <i class="bi bi-grid-fill text-muted"></i> Packages Catalog
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active fw-bold text-primary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10" href="{% url 'about_us' %}">
+              <i class="bi bi-info-circle-fill"></i> About Us
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'contact_us' %}">
+              <i class="bi bi-telephone-fill text-muted"></i> Contact Us
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right Side Actions -->
+        <div class="d-flex flex-wrap align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0">
+          {% if request.session.is_user_authenticated %}
+            <!-- Member Profile Dropdown -->
+            <div class="dropdown">
+              <button class="btn btn-light border bg-white rounded-pill px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm dropdown-toggle text-dark fw-bold" type="button" id="aboutProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 13px;">
+                <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 11px;">
+                  {{ request.session.user_username|slice:":2"|upper }}
+                </div>
+                <span class="text-truncate" style="max-width: 140px;">{{ request.session.user_username }}</span>
+              </button>
+
+              <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2" aria-labelledby="aboutProfileDropdown" style="min-width: 250px; border: 1px solid #e2e8f0 !important;">
+                <li class="px-3 py-2.5 border-bottom bg-light rounded-3 mb-1">
+                  <div class="d-flex align-items-center justify-content-between mb-1">
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Authenticated Member</small>
+                    <span class="badge bg-success text-white px-2 py-0.5 rounded-pill" style="font-size: 9.5px;">Active</span>
+                  </div>
+                  <strong class="text-dark d-block text-truncate fs-6">{{ request.session.user_username }}</strong>
+                </li>
+                <li>
+                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_dashboard' %}">
+                    <i class="bi bi-speedometer2 text-primary"></i> Member Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'packages_cards' %}">
+                    <i class="bi bi-box-seam text-info"></i> Packages Catalog
+                  </a>
+                </li>
+                {% if request.user.is_authenticated and request.user.is_staff %}
+                  <li>
+                    <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-warning" href="{% url 'admin_dashboard' %}">
+                      <i class="bi bi-shield-lock-fill"></i> Staff / Admin Portal
+                    </a>
+                  </li>
+                {% endif %}
+                <li><hr class="dropdown-divider my-1"></li>
+                <li>
+                  <a class="dropdown-item rounded-3 py-2 fw-bold text-danger d-flex align-items-center gap-2 small" href="{% url 'user_logout' %}">
+                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                  </a>
+                </li>
+              </ul>
+            </div>
+          {% else %}
+            <a href="{% url 'user_login' %}" class="btn btn-outline-primary btn-sm fw-bold px-3 py-1.5 rounded-pill">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Member Sign In
+            </a>
+            <a href="{% url 'user_register' %}" class="btn btn-primary btn-sm fw-bold px-3 py-1.5 rounded-pill shadow-sm" style="background-color: #0284c7; border-color: #0284c7;">
+              Register
+            </a>
+            <a href="{% url 'admin_gateway' %}" class="btn btn-outline-secondary btn-sm fw-semibold rounded-pill px-2.5 py-1.5" title="Administrator Operations Portal (/admin)">
+              <i class="bi bi-shield-lock"></i> <span class="d-none d-xl-inline">Admin</span>
+            </a>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- =========================================================================
+       HERO BANNER
+       ========================================================================= -->
+  <div class="py-5 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+    <div class="container py-4">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white bg-opacity-10 border border-white border-opacity-10 mb-3">
+            <span class="badge rounded-circle p-1 bg-info d-inline-block" style="width: 8px; height: 8px;"></span>
+            <span class="text-info fw-bold small text-uppercase" style="letter-spacing: 0.5px;">About Fitness Master</span>
+          </div>
+          <h1 class="display-5 fw-black text-white mb-3">
+            Empowering Your Health, Strength &amp; Fitness Journey
+          </h1>
+          <p class="lead text-light text-opacity-75 mb-0" style="max-width: 650px;">
+            We are dedicated to helping members achieve their personal best with premier gym equipment, certified personal instructors, and transparent Indian Rupee (₹) membership plans.
+          </p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="{% url 'packages_cards' %}" class="btn btn-info fw-bold px-4 py-2.5 shadow-sm text-dark rounded-3">
+            <i class="bi bi-box-seam me-1.5"></i> Explore Our Packages &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       STATS COUNTERS ROW
+       ========================================================================= -->
+  <div class="container mt-n4 position-relative" style="z-index: 2;">
+    <div class="row g-3">
+      <div class="col-6 col-lg-3">
+        <div class="card border-0 rounded-4 shadow-sm bg-white p-3 p-lg-4 text-center h-100" style="border: 1px solid #e2e8f0 !important;">
+          <h2 class="fw-black text-primary mb-1">5,000+</h2>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Active Gym Members</small>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="card border-0 rounded-4 shadow-sm bg-white p-3 p-lg-4 text-center h-100" style="border: 1px solid #e2e8f0 !important;">
+          <h2 class="fw-black text-success mb-1">50+</h2>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Certified Trainers</small>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="card border-0 rounded-4 shadow-sm bg-white p-3 p-lg-4 text-center h-100" style="border: 1px solid #e2e8f0 !important;">
+          <h2 class="fw-black text-info mb-1">120+</h2>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Modern Machines &amp; Rigs</small>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="card border-0 rounded-4 shadow-sm bg-white p-3 p-lg-4 text-center h-100" style="border: 1px solid #e2e8f0 !important;">
+          <h2 class="fw-black text-warning mb-1">10+</h2>
+          <small class="text-muted fw-bold text-uppercase" style="font-size: 11px;">Years of Excellence</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MAIN ABOUT CONTENT
+       ========================================================================= -->
+  <div class="container py-5 flex-grow-1">
+    
+    <!-- Story & Mission Row -->
+    <div class="row g-4 align-items-center mb-5">
+      <div class="col-lg-6">
+        <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase px-3 py-1.5 rounded-pill mb-2">Our Mission</span>
+        <h2 class="fw-black text-dark mb-3">Creating a Healthier, Stronger Community</h2>
+        <p class="text-muted" style="line-height: 1.7;">
+          Founded with a passion for holistic health and peak physical fitness, <strong>Fitness Master</strong> is built on the belief that everyone deserves access to world-class coaching, immaculate workout spaces, and personalized fitness programs.
+        </p>
+        <p class="text-muted" style="line-height: 1.7;">
+          Whether you are a beginner taking your first steps toward fitness or an elite athlete training for competitive sports, our versatile membership plans give you the flexibility, access hours, and instructor support you need to succeed.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-check-circle-fill text-success fs-5"></i>
+            <span class="fw-semibold text-dark small">No Hidden Charges (₹ Pricing)</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-check-circle-fill text-success fs-5"></i>
+            <span class="fw-semibold text-dark small">Clean &amp; Sanitized Facilities</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-check-circle-fill text-success fs-5"></i>
+            <span class="fw-semibold text-dark small">Personal Training Mentorship</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card border-0 rounded-4 shadow-sm p-4 p-lg-5 bg-white" style="border: 1px solid #e2e8f0 !important;">
+          <h4 class="fw-bold text-dark mb-3">
+            <i class="bi bi-award-fill text-warning me-2"></i>Our Core Values
+          </h4>
+          <div class="d-flex flex-column gap-3">
+            <div class="d-flex gap-3">
+              <div class="rounded-3 p-2.5 bg-primary bg-opacity-10 text-primary flex-shrink-0" style="width: 44px; height: 44px; display: grid; place-items: center;">
+                <i class="bi bi-heart-pulse-fill fs-5"></i>
+              </div>
+              <div>
+                <strong class="text-dark d-block">Member-First Wellness</strong>
+                <small class="text-muted">Programs designed around individual health goals, injury prevention, and sustainable progress.</small>
+              </div>
+            </div>
+
+            <div class="d-flex gap-3">
+              <div class="rounded-3 p-2.5 bg-success bg-opacity-10 text-success flex-shrink-0" style="width: 44px; height: 44px; display: grid; place-items: center;">
+                <i class="bi bi-lightning-charge-fill fs-5"></i>
+              </div>
+              <div>
+                <strong class="text-dark d-block">Elite Equipment &amp; Amenities</strong>
+                <small class="text-muted">High-performance cardio zones, Olympic lifting platforms, recovery lounges, and filtered hydration stations.</small>
+              </div>
+            </div>
+
+            <div class="d-flex gap-3">
+              <div class="rounded-3 p-2.5 bg-info bg-opacity-10 text-info flex-shrink-0" style="width: 44px; height: 44px; display: grid; place-items: center;">
+                <i class="bi bi-people-fill fs-5"></i>
+              </div>
+              <div>
+                <strong class="text-dark d-block">Inclusive &amp; Motivating Community</strong>
+                <small class="text-muted">A supportive atmosphere with high-energy group classes, yoga, HIIT, and Zumba sessions.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="card border-0 rounded-4 text-white p-4 p-lg-5 text-center shadow-sm" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+      <h3 class="fw-black mb-2">Ready to Start Your Fitness Journey?</h3>
+      <p class="text-white text-opacity-90 mb-4 mx-auto" style="max-width: 580px;">
+        Choose from our Silver, Gold, or Platinum packages and take the first step towards a healthier, more confident you today.
+      </p>
+      <div class="d-flex flex-wrap justify-content-center gap-2">
+        <a href="{% url 'packages_cards' %}" class="btn btn-light text-dark fw-bold px-4 py-2.5 rounded-3 shadow-sm">
+          <i class="bi bi-grid-fill me-1"></i> View Membership Packages
+        </a>
+        <a href="{% url 'contact_us' %}" class="btn btn-outline-light fw-bold px-4 py-2.5 rounded-3">
+          <i class="bi bi-telephone-fill me-1"></i> Contact Our Team
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
+    <span>Fitness Master &copy; 2026 &bull; All Rights Reserved.</span>
+    <span class="mx-2">&bull;</span>
+    <a href="{% url 'admin_gateway' %}" class="text-decoration-none text-muted">
+      <i class="bi bi-shield-lock me-1"></i>Staff / Admin Portal (/admin)
+    </a>
+  </footer>
+
+</div>
+{% endblock %}

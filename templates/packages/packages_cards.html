@@ -270,29 +270,113 @@
      ========================================================================= -->
 <div class="min-vh-100 d-flex flex-column" style="background-color: #f8fafc;">
   
-  <!-- Public Top Bar -->
-  <header class="bg-white border-bottom py-3 px-4 shadow-sm sticky-top">
-    <div class="container d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center gap-2">
-        <i class="fa-solid fa-dumbbell text-primary fs-3"></i>
-        <h5 class="mb-0 fw-black text-dark tracking-tight">FITNESS<span class="text-primary">MASTER</span></h5>
-      </div>
-      <div class="d-flex align-items-center gap-2">
-        {% if request.session.is_user_authenticated %}
-          <a href="{% url 'user_dashboard' %}" class="btn btn-info btn-sm fw-bold text-dark">
-            <i class="bi bi-person-circle me-1"></i> {{ request.session.user_username }}
-          </a>
-          <a href="{% url 'user_logout' %}" class="btn btn-outline-danger btn-sm fw-bold">Logout</a>
-        {% else %}
-          <a href="{% url 'user_login' %}" class="btn btn-outline-primary btn-sm fw-bold">Member Sign In</a>
-          <a href="{% url 'user_register' %}" class="btn btn-primary btn-sm fw-bold">Register</a>
-        {% endif %}
-        <a href="{% url 'admin_gateway' %}" class="btn btn-outline-secondary btn-sm fw-semibold" title="Administrator Operations Portal (/admin)">
-          <i class="bi bi-shield-lock"></i> <span class="d-none d-md-inline">Admin (/admin)</span>
-        </a>
+  <!-- Public / Member Top Bar with Full Responsive Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top py-2.5">
+    <div class="container">
+      
+      <!-- Brand Logo -->
+      <a href="{% if request.session.is_user_authenticated %}{% url 'user_dashboard' %}{% else %}{% url 'packages_cards' %}{% endif %}" class="navbar-brand d-flex align-items-center gap-2 me-lg-4 text-decoration-none">
+        <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+          <i class="fa-solid fa-dumbbell fs-5"></i>
+        </div>
+        <span class="fw-black text-dark tracking-wide fs-5">FITNESS<span class="text-info">MASTER</span></span>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="navbar-toggler border-0 shadow-none p-1.5" type="button" data-bs-toggle="collapse" data-bs-target="#packagesGlobalNavbar" aria-controls="packagesGlobalNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Collapse Links & Profile -->
+      <div class="collapse navbar-collapse" id="packagesGlobalNavbar">
+        
+        <!-- Navigation Links -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 pt-2 pt-lg-0">
+          {% if request.session.is_user_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_dashboard' %}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link active fw-bold text-primary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10" href="{% url 'packages_cards' %}">
+              <i class="bi bi-grid-fill"></i> Packages Catalog
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'about_us' %}">
+              <i class="bi bi-info-circle-fill text-muted"></i> About Us
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'contact_us' %}">
+              <i class="bi bi-telephone-fill text-muted"></i> Contact Us
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right Side Actions -->
+        <div class="d-flex flex-wrap align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0">
+          {% if request.session.is_user_authenticated %}
+            <!-- Member Profile Dropdown -->
+            <div class="dropdown">
+              <button class="btn btn-light border bg-white rounded-pill px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm dropdown-toggle text-dark fw-bold" type="button" id="pkgProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 13px;">
+                <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 11px;">
+                  {{ request.session.user_username|slice:":2"|upper }}
+                </div>
+                <span class="text-truncate" style="max-width: 140px;">{{ request.session.user_username }}</span>
+              </button>
+
+              <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2" aria-labelledby="pkgProfileDropdown" style="min-width: 250px; border: 1px solid #e2e8f0 !important;">
+                <li class="px-3 py-2.5 border-bottom bg-light rounded-3 mb-1">
+                  <div class="d-flex align-items-center justify-content-between mb-1">
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Authenticated Member</small>
+                    <span class="badge bg-success text-white px-2 py-0.5 rounded-pill" style="font-size: 9.5px;">Active</span>
+                  </div>
+                  <strong class="text-dark d-block text-truncate fs-6">{{ request.session.user_username }}</strong>
+                </li>
+                <li>
+                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_dashboard' %}">
+                    <i class="bi bi-speedometer2 text-primary"></i> Member Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'packages_cards' %}">
+                    <i class="bi bi-box-seam text-info"></i> Packages Catalog
+                  </a>
+                </li>
+                {% if request.user.is_authenticated and request.user.is_staff %}
+                  <li>
+                    <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-warning" href="{% url 'admin_dashboard' %}">
+                      <i class="bi bi-shield-lock-fill"></i> Staff / Admin Portal
+                    </a>
+                  </li>
+                {% endif %}
+                <li><hr class="dropdown-divider my-1"></li>
+                <li>
+                  <a class="dropdown-item rounded-3 py-2 fw-bold text-danger d-flex align-items-center gap-2 small" href="{% url 'user_logout' %}">
+                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                  </a>
+                </li>
+              </ul>
+            </div>
+          {% else %}
+            <a href="{% url 'user_login' %}" class="btn btn-outline-primary btn-sm fw-bold px-3 py-1.5 rounded-pill">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Member Sign In
+            </a>
+            <a href="{% url 'user_register' %}" class="btn btn-primary btn-sm fw-bold px-3 py-1.5 rounded-pill shadow-sm" style="background-color: #0284c7; border-color: #0284c7;">
+              Register
+            </a>
+            <a href="{% url 'admin_gateway' %}" class="btn btn-outline-secondary btn-sm fw-semibold rounded-pill px-2.5 py-1.5" title="Administrator Operations Portal (/admin)">
+              <i class="bi bi-shield-lock"></i> <span class="d-none d-md-inline">Admin (/admin)</span>
+            </a>
+          {% endif %}
+        </div>
+
       </div>
     </div>
-  </header>
+  </nav>
 
   <!-- Hero Header -->
   <div class="py-5 text-center text-white" style="background: linear-gradient(135deg, #0f172a, #1e293b);">

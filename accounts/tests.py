@@ -487,6 +487,45 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertNotContains(resp, 'id="adminDesktopSidebar"')
         self.assertNotContains(resp, 'Admin Authenticated')
 
+    def test_packages_cards_does_not_show_admin_sidebar_when_admin_logged_in(self):
+        """When admin is logged in, clicking Packages Catalog (/packages/cards/?portal=user) opens user-facing catalog, NOT admin sidebar"""
+        self.client.login(username='Viraj', password='Viraj123')
+        resp = self.client.get(reverse('packages_cards') + '?portal=user')
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Fitness Master Packages')
+        self.assertContains(resp, 'Transparent Membership Plans')
+        self.assertNotContains(resp, 'id="adminDesktopSidebar"')
+        self.assertNotContains(resp, 'Admin Authenticated')
+
+    def test_about_us_page_view(self):
+        """About Us page loads successfully with responsive navigation and company details"""
+        resp = self.client.get(reverse('about_us'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'About Fitness Master')
+        self.assertContains(resp, 'Packages Catalog')
+        self.assertContains(resp, 'Contact Us')
+        self.assertNotContains(resp, 'id="adminDesktopSidebar"')
+
+    def test_contact_us_page_get_and_post(self):
+        """Contact Us page loads form on GET and handles message submission on POST"""
+        # GET request
+        resp = self.client.get(reverse('contact_us'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Get in Touch with Fitness Master')
+        self.assertContains(resp, 'Send Us a Message')
+        self.assertNotContains(resp, 'id="adminDesktopSidebar"')
+
+        # POST request with valid data
+        resp_post = self.client.post(reverse('contact_us'), {
+            'name': 'Aarav Mehta',
+            'email': 'aarav@example.com',
+            'subject': 'Membership Inquiry',
+            'message': 'I would like to inquire about personal training in Gold plan.'
+        })
+        self.assertEqual(resp_post.status_code, 302)
+        self.assertRedirects(resp_post, reverse('contact_us'))
+
+
 
 
 

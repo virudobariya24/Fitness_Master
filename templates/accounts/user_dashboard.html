@@ -36,8 +36,18 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}?portal=user">
               <i class="bi bi-grid-fill text-muted"></i> Packages Catalog
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'about_us' %}">
+              <i class="bi bi-info-circle-fill text-muted"></i> About Us
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'contact_us' %}">
+              <i class="bi bi-telephone-fill text-muted"></i> Contact Us
             </a>
           </li>
         </ul>
@@ -69,7 +79,7 @@
                 </a>
               </li>
               <li>
-                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'packages_cards' %}">
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'packages_cards' %}?portal=user">
                   <i class="bi bi-box-seam text-info"></i> Browse Packages
                 </a>
               </li>
@@ -116,7 +126,7 @@
           </p>
         </div>
         <div class="col-lg-4 text-lg-end">
-          <a href="{% url 'packages_cards' %}" class="btn btn-info fw-bold px-3.5 py-2.5 shadow-sm text-dark rounded-3">
+          <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-info fw-bold px-3.5 py-2.5 shadow-sm text-dark rounded-3">
             <i class="bi bi-grid-fill me-1.5"></i> All Packages View &rarr;
           </a>
         </div>

@@ -224,3 +224,35 @@ def user_dashboard_view(request):
         'packages': packages,
         'is_user_page': True,
     })
+
+
+def about_us_view(request):
+    """
+    Public and Member About Us page.
+    Renders gym story, facilities, stats, trainers, and fitness mission.
+    """
+    return render(request, 'pages/about_us.html', {
+        'is_user_page': True,
+    })
+
+
+def contact_us_view(request):
+    """
+    Public and Member Contact Us page.
+    Renders contact info, map preview, operating hours, and interactive message form.
+    """
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        subject = request.POST.get('subject', '').strip()
+        message = request.POST.get('message', '').strip()
+
+        if name and email and message:
+            messages.success(request, f"Thank you, {name}! Your message has been sent successfully. Our team will get back to you shortly.")
+            return redirect('contact_us')
+        else:
+            messages.error(request, "Please fill in all required fields (Name, Email, and Message).")
+
+    return render(request, 'pages/contact_us.html', {
+        'is_user_page': True,
+    })
