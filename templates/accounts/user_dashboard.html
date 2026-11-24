@@ -150,66 +150,6 @@
       </div>
     {% endif %}
 
-    <!-- Member Profile Information Card with Verification Badges -->
-    <div class="card border-0 rounded-4 shadow-sm bg-white mb-4 overflow-hidden" id="memberProfileSection" style="border: 1px solid #e2e8f0 !important;">
-      <div class="card-body p-4">
-        <div class="row g-3 align-items-center">
-          
-          <div class="col-12 col-sm-6 col-lg-3">
-            <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 11px;">Validated Member</small>
-            <div class="d-flex align-items-center gap-2.5 mt-1">
-              <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px; font-size: 14px;">
-                {{ user.username|slice:":2"|upper }}
-              </div>
-              <div class="text-truncate">
-                <strong class="text-dark d-block fs-6 text-truncate">{{ user.name|default:user.username }}</strong>
-                <span class="text-muted small">@{{ user.username }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-sm-6 col-lg-3">
-            <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 11px;">Registered Email</small>
-            <div class="d-flex align-items-center gap-2 mt-1">
-              <i class="bi bi-envelope-check-fill fs-4 text-info flex-shrink-0"></i>
-              <div class="text-truncate">
-                <strong class="text-dark d-block text-truncate">{{ user.email }}</strong>
-                <small class="text-success fw-semibold"><i class="bi bi-check-circle-fill"></i> Verified</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-sm-6 col-lg-3">
-            <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 11px;">Account Status</small>
-            <div class="d-flex align-items-center gap-2 mt-1">
-              <i class="bi bi-shield-fill-check fs-4 text-success flex-shrink-0"></i>
-              <div>
-                <strong class="text-dark d-block">Active Session</strong>
-                <small class="text-muted">Django Authenticated</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-sm-6 col-lg-3">
-            <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 11px;">Member Since</small>
-            <div class="d-flex align-items-center justify-content-between mt-1">
-              <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-calendar2-check-fill fs-4 text-primary flex-shrink-0"></i>
-                <div>
-                  <strong class="text-dark d-block">{{ user.created_at|date:"M d, Y" }}</strong>
-                  <small class="text-muted">Registered Member</small>
-                </div>
-              </div>
-              <a href="{% url 'user_profile' %}" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 py-1 fw-bold" style="font-size: 11px;">
-                Manage &rarr;
-              </a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
     <!-- Section Heading: Available Packages -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
       <div>
