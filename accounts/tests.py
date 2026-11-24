@@ -2,8 +2,10 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from django.utils import timezone
+from datetime import timedelta
 from packages.models import Packages
-from accounts.models import ContactMessage, User
+from accounts.models import ContactMessage, User, PasswordResetOTP
 
 AdminModel = get_user_model()
 
@@ -617,6 +619,189 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertContains(resp, 'User Contact Inquiries')
         self.assertContains(resp, 'Sneha Shah')
         self.assertContains(resp, 'View All Inquiries')
+
+    # =========================================================================
+    # PASSWORD RESET VIA EMAIL OTP TESTS
+    # =========================================================================
+    def test_forgot_password_page_renders_cleanly(self):
+        """Forgot password page renders with email form and Bootstrap layout"""
+        resp = self.client.get(reverse('user_forgot_password'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Forgot Password')
+        self.assertContains(resp, 'Send Verification OTP')
+        self.assertContains(resp, 'Registered Email Address')
+
+    def test_forgot_password_submission_with_registered_email(self):
+        """Submitting registered email generates 6-digit OTP and redirects to verify OTP"""
+        member = User(username='aaryadev', email='aaryadev@example.com')
+        member.set_password('SecretPass123')
+        member.save()
+
+        resp = self.client.post(reverse('user_forgot_password'), {
+            'email': 'aaryadev@example.com'
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_verify_otp'))
+
+        # Check OTP record created in database
+        otp_record = PasswordResetOTP.objects.filter(email='aaryadev@example.com').first()
+        self.assertIsNotNone(otp_record)
+        self.assertEqual(len(otp_record.otp), 6)
+        self.assertTrue(otp_record.otp.isdigit())
+        self.assertFalse(otp_record.is_verified)
+        self.assertFalse(otp_record.is_used)
+
+        # Check session contains reset_email
+        session = self.client.session
+        self.assertEqual(session.get('reset_email'), 'aaryadev@example.com')
+
+    def test_forgot_password_submission_with_unregistered_email_fails(self):
+        """Submitting an unregistered email shows validation error"""
+        resp = self.client.post(reverse('user_forgot_password'), {
+            'email': 'notfound@example.com'
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'No registered member account was found')
+
+    def test_verify_otp_page_requires_reset_email_in_session(self):
+        """Direct access to verify OTP page without email in session redirects to forgot password"""
+        resp = self.client.get(reverse('user_verify_otp'))
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_forgot_password'))
+
+    def test_verify_otp_with_valid_code_succeeds(self):
+        """Entering correct 6-digit OTP verifies the record and redirects to set new password"""
+        member = User(username='rahulv', email='rahulv@example.com')
+        member.set_password('OldPassword123')
+        member.save()
+
+        # Set session
+        session = self.client.session
+        session['reset_email'] = 'rahulv@example.com'
+        session.save()
+
+        otp_record = PasswordResetOTP.objects.create(email='rahulv@example.com', otp='654321')
+
+        resp = self.client.post(reverse('user_verify_otp'), {
+            'otp': '654321'
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_reset_password'))
+
+        otp_record.refresh_from_db()
+        self.assertTrue(otp_record.is_verified)
+        self.assertTrue(self.client.session.get('otp_verified'))
+
+    def test_verify_otp_with_incorrect_code_fails(self):
+        """Entering incorrect OTP shows error message and does not verify"""
+        session = self.client.session
+        session['reset_email'] = 'rahulv@example.com'
+        session.save()
+
+        PasswordResetOTP.objects.create(email='rahulv@example.com', otp='654321')
+
+        resp = self.client.post(reverse('user_verify_otp'), {
+            'otp': '999999'
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Invalid or expired OTP code')
+
+    def test_verify_otp_with_expired_code_fails(self):
+        """OTP older than 10 minutes is treated as invalid/expired"""
+        session = self.client.session
+        session['reset_email'] = 'rahulv@example.com'
+        session.save()
+
+        otp_record = PasswordResetOTP.objects.create(email='rahulv@example.com', otp='112233')
+        # Simulate creation 15 minutes ago
+        PasswordResetOTP.objects.filter(pk=otp_record.pk).update(
+            created_at=timezone.now() - timedelta(minutes=15)
+        )
+
+        resp = self.client.post(reverse('user_verify_otp'), {
+            'otp': '112233'
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Invalid or expired OTP code')
+
+    def test_resend_otp_generates_fresh_code(self):
+        """Resend OTP creates a new OTP in database and redirects back to verify OTP"""
+        session = self.client.session
+        session['reset_email'] = 'rahulv@example.com'
+        session.save()
+
+        PasswordResetOTP.objects.create(email='rahulv@example.com', otp='111111')
+
+        resp = self.client.get(reverse('user_resend_otp'))
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_verify_otp'))
+
+        # Previous OTP is now marked used
+        old_otp = PasswordResetOTP.objects.filter(otp='111111').first()
+        self.assertTrue(old_otp.is_used)
+
+        # A new unused OTP exists
+        new_otp = PasswordResetOTP.objects.filter(email='rahulv@example.com', is_used=False).first()
+        self.assertIsNotNone(new_otp)
+        self.assertNotEqual(new_otp.otp, '111111')
+
+    def test_reset_password_updates_user_password_and_allows_login(self):
+        """Resetting password updates user's hashed password and permits subsequent sign-in"""
+        member = User(username='manavpatel', email='manav@example.com')
+        member.set_password('InitialOldPass1')
+        member.save()
+
+        # Session with verified state
+        session = self.client.session
+        session['reset_email'] = 'manav@example.com'
+        session['otp_verified'] = True
+        session.save()
+
+        PasswordResetOTP.objects.create(
+            email='manav@example.com',
+            otp='778899',
+            is_verified=True,
+            is_used=False
+        )
+
+        resp = self.client.post(reverse('user_reset_password'), {
+            'new_password': 'BrandNewPass2026',
+            'confirm_password': 'BrandNewPass2026',
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_login'))
+
+        # Check password updated in DB
+        member.refresh_from_db()
+        self.assertTrue(member.check_password('BrandNewPass2026'))
+        self.assertFalse(member.check_password('InitialOldPass1'))
+
+        # Check OTP marked used
+        self.assertFalse(PasswordResetOTP.objects.filter(email='manav@example.com', is_used=False).exists())
+
+        # Test member can now log in with the new password
+        login_resp = self.client.post(reverse('user_login'), {
+            'username': 'manavpatel',
+            'password': 'BrandNewPass2026'
+        })
+        self.assertEqual(login_resp.status_code, 302)
+        self.assertRedirects(login_resp, reverse('user_dashboard'))
+        self.assertEqual(self.client.session.get('user_id'), member.id)
+
+    def test_reset_password_fails_if_passwords_do_not_match(self):
+        """Password reset fails if confirmation password differs"""
+        session = self.client.session
+        session['reset_email'] = 'manav@example.com'
+        session['otp_verified'] = True
+        session.save()
+
+        resp = self.client.post(reverse('user_reset_password'), {
+            'new_password': 'NewPassword123',
+            'confirm_password': 'DifferentPassword456',
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Passwords do not match')
+
 
 
 

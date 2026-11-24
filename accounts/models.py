@@ -78,3 +78,30 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.subject} ({self.created_at.strftime('%b %d, %Y')})"
+
+
+class PasswordResetOTP(models.Model):
+    """
+    Model to store and validate 6-digit OTPs for member password resets.
+    Valid for 10 minutes from creation.
+    """
+    email = models.EmailField(verbose_name="Registered Email")
+    otp = models.CharField(max_length=6, verbose_name="6-Digit OTP")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Generated At")
+    is_verified = models.BooleanField(default=False, verbose_name="Is Verified")
+    is_used = models.BooleanField(default=False, verbose_name="Is Used")
+
+    class Meta:
+        verbose_name = 'Password Reset OTP'
+        verbose_name_plural = 'Password Reset OTPs'
+        ordering = ['-created_at']
+
+    def is_valid(self):
+        """Returns True if OTP is unused and was created within the last 10 minutes."""
+        from django.utils import timezone
+        from datetime import timedelta
+        return not self.is_used and (timezone.now() - self.created_at) <= timedelta(minutes=10)
+
+    def __str__(self):
+        return f"OTP for {self.email} ({self.otp}) - Used: {self.is_used}"
+

@@ -1,10 +1,21 @@
+import random
+from django.conf import settings
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.views.decorators.csrf import ensure_csrf_cookie
-from .models import User, ContactMessage
-from .forms import AdminLoginForm, AdminCreationForm, UserRegistrationForm, UserLoginForm
+from .models import User, ContactMessage, PasswordResetOTP
+from .forms import (
+    AdminLoginForm,
+    AdminCreationForm,
+    UserRegistrationForm,
+    UserLoginForm,
+    ForgotPasswordForm,
+    VerifyOTPForm,
+    ResetPasswordForm,
+)
 from packages.models import Packages
 
 AdminModel = get_user_model()
@@ -333,3 +344,240 @@ def admin_contact_delete_view(request, pk):
     contact_msg.delete()
     messages.success(request, f"Contact message from {sender_name} was deleted successfully.")
     return redirect('admin_contact_messages')
+
+
+# =============================================================================
+# PASSWORD RESET VIA EMAIL OTP (Tasks: Forgot Password, OTP, Reset Password)
+# =============================================================================
+
+def send_otp_email(email, otp):
+    """
+    Sends a 6-digit OTP code to user's registered email using Gmail SMTP.
+    Falls back gracefully to printing to console/logs if SMTP or network is restricted.
+    """
+    subject = "Fitness Master - Password Reset Verification Code"
+    plain_message = (
+        f"Hello,\n\n"
+        f"You recently requested to reset your password for your Fitness Master member account.\n\n"
+        f"Your 6-Digit One-Time Password (OTP) is: {otp}\n\n"
+        f"This code will expire in 10 minutes.\n"
+        f"If you did not request this password reset, please disregard this email.\n\n"
+        f"Warm regards,\n"
+        f"Fitness Master Support Team"
+    )
+    html_message = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="display: inline-block; background: #0ea5e9; color: #ffffff; width: 48px; height: 48px; border-radius: 10px; line-height: 48px; font-size: 22px; font-weight: bold;">FM</div>
+            <h2 style="color: #0f172a; margin: 10px 0 0 0; font-size: 20px; font-weight: 800; letter-spacing: 0.5px;">FITNESS <span style="color: #0ea5e9;">MASTER</span></h2>
+            <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0;">Member Account Security</p>
+        </div>
+        <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 16px 0;" />
+        <p style="color: #334155; font-size: 14px; line-height: 1.6;">Hello,</p>
+        <p style="color: #334155; font-size: 14px; line-height: 1.6;">You have requested to reset your password for your Fitness Master account. Use the one-time verification code below to proceed:</p>
+        <div style="text-align: center; margin: 28px 0;">
+            <div style="display: inline-block; background: #f0fdf4; border: 2px dashed #22c55e; border-radius: 10px; padding: 14px 28px; font-size: 28px; font-weight: 800; letter-spacing: 6px; color: #15803d;">
+                {otp}
+            </div>
+        </div>
+        <p style="color: #64748b; font-size: 12px; line-height: 1.5; text-align: center;">
+            <strong style="color: #ef4444;">Note:</strong> This OTP is valid for <strong>10 minutes</strong> only. Do not share this code with anyone.
+        </p>
+        <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 20px 0;" />
+        <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">
+            If you did not make this request, you can safely ignore this message.<br />
+            Fitness Master Gym & Fitness Club &bull; All Rights Reserved.
+        </p>
+    </div>
+    """
+
+    try:
+        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'Fitness Master <virajdobariya4@gmail.com>')
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=from_email,
+            recipient_list=[email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        print(f"===> [SUCCESS] OTP email successfully dispatched via SMTP to: {email}")
+        return True
+    except Exception as e:
+        print(f"===> [OTP CONSOLE FALLBACK] SMTP dispatch to {email} encountered: {e}")
+        print(f"===> [CONSOLE BACKEND OTP]: {otp} for email: {email}")
+        return False
+
+
+@ensure_csrf_cookie
+def user_forgot_password_view(request):
+    """
+    Task (2): User Forgot Password View.
+    Allows registered members to request a 6-digit OTP sent to their email.
+    """
+    if request.session.get('is_user_authenticated'):
+        return redirect('user_dashboard')
+
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            otp = f"{random.randint(100000, 999999)}"
+
+            # Invalidate older unused OTPs for this email
+            PasswordResetOTP.objects.filter(email__iexact=email, is_used=False).update(is_used=True)
+
+            # Create new OTP record
+            PasswordResetOTP.objects.create(email=email, otp=otp)
+
+            # Send OTP via email (Gmail SMTP with console fallback)
+            send_otp_email(email, otp)
+
+            # Save state in session
+            request.session['reset_email'] = email
+            request.session['otp_verified'] = False
+            request.session.modified = True
+
+            messages.success(request, f"A 6-digit verification code (OTP) has been sent to {email}. Please check your inbox.")
+            return redirect('user_verify_otp')
+        else:
+            messages.error(request, "Please check the email address entered below.")
+    else:
+        form = ForgotPasswordForm()
+
+    return render(request, 'accounts/user_forgot_password.html', {
+        'form': form,
+        'is_user_page': True,
+    })
+
+
+@ensure_csrf_cookie
+def user_verify_otp_view(request):
+    """
+    Task (3): User OTP Verification View.
+    Validates 6-digit OTP against database and 10-minute expiry window.
+    """
+    if request.session.get('is_user_authenticated'):
+        return redirect('user_dashboard')
+
+    email = request.session.get('reset_email')
+    if not email:
+        messages.warning(request, "Please enter your registered email address first.")
+        return redirect('user_forgot_password')
+
+    # Mask email for safe UI display (e.g. vi***4@gmail.com)
+    parts = email.split('@')
+    masked_email = email
+    if len(parts) == 2:
+        uname, domain = parts
+        if len(uname) <= 2:
+            masked_uname = uname[0] + '*'
+        else:
+            masked_uname = uname[:2] + '*' * (len(uname) - 3) + uname[-1]
+        masked_email = f"{masked_uname}@{domain}"
+
+    if request.method == 'POST':
+        form = VerifyOTPForm(request.POST)
+        if form.is_valid():
+            entered_otp = form.cleaned_data['otp']
+            otp_record = PasswordResetOTP.objects.filter(
+                email__iexact=email,
+                is_used=False
+            ).order_by('-created_at').first()
+
+            if otp_record and otp_record.is_valid() and otp_record.otp == entered_otp:
+                otp_record.is_verified = True
+                otp_record.save()
+
+                request.session['otp_verified'] = True
+                request.session.modified = True
+
+                messages.success(request, "OTP verified successfully! Please enter your new password.")
+                return redirect('user_reset_password')
+            else:
+                messages.error(request, "Invalid or expired OTP code. Please enter the correct code or request a new one.")
+        else:
+            messages.error(request, "Please enter a valid 6-digit numeric OTP.")
+    else:
+        form = VerifyOTPForm()
+
+    return render(request, 'accounts/user_verify_otp.html', {
+        'form': form,
+        'email': email,
+        'masked_email': masked_email,
+        'is_user_page': True,
+    })
+
+
+def user_resend_otp_view(request):
+    """
+    Resends a fresh 6-digit OTP to the email stored in session.
+    """
+    email = request.session.get('reset_email')
+    if not email:
+        messages.warning(request, "Please enter your registered email address first.")
+        return redirect('user_forgot_password')
+
+    otp = f"{random.randint(100000, 999999)}"
+    PasswordResetOTP.objects.filter(email__iexact=email, is_used=False).update(is_used=True)
+    PasswordResetOTP.objects.create(email=email, otp=otp)
+    send_otp_email(email, otp)
+
+    messages.info(request, f"A new 6-digit OTP code has been sent to {email}.")
+    return redirect('user_verify_otp')
+
+
+@ensure_csrf_cookie
+def user_reset_password_view(request):
+    """
+    Task (3): User Password Reset View.
+    Allows user to set a new password after verifying the OTP.
+    """
+    if request.session.get('is_user_authenticated'):
+        return redirect('user_dashboard')
+
+    email = request.session.get('reset_email')
+    otp_verified = request.session.get('otp_verified')
+
+    if not email or not otp_verified:
+        messages.warning(request, "Please complete OTP verification before resetting your password.")
+        return redirect('user_forgot_password')
+
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password']
+            user = User.objects.filter(email__iexact=email).first()
+
+            if user:
+                user.set_password(new_password)
+                user.save()
+
+                # Mark OTP record as used
+                PasswordResetOTP.objects.filter(
+                    email__iexact=email,
+                    is_verified=True,
+                    is_used=False
+                ).update(is_used=True)
+
+                # Clear reset session state
+                request.session.pop('reset_email', None)
+                request.session.pop('otp_verified', None)
+                request.session.modified = True
+
+                messages.success(request, "Your password has been reset successfully! You can now sign in with your new password.")
+                return redirect('user_login')
+            else:
+                messages.error(request, "Registered user account could not be found.")
+                return redirect('user_forgot_password')
+        else:
+            messages.error(request, "Please ensure passwords match and meet minimum requirements.")
+    else:
+        form = ResetPasswordForm()
+
+    return render(request, 'accounts/user_reset_password.html', {
+        'form': form,
+        'email': email,
+        'is_user_page': True,
+    })
+

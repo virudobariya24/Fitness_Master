@@ -25,6 +25,12 @@ urlpatterns = [
     path('user/logout/', views.user_logout_view, name='user_logout'),
     path('user/dashboard/', views.user_dashboard_view, name='user_dashboard'),
 
+    # Password Reset via Email OTP (Task: Forgot Password & OTP flow)
+    path('user/forgot-password/', views.user_forgot_password_view, name='user_forgot_password'),
+    path('user/verify-otp/', views.user_verify_otp_view, name='user_verify_otp'),
+    path('user/resend-otp/', views.user_resend_otp_view, name='user_resend_otp'),
+    path('user/reset-password/', views.user_reset_password_view, name='user_reset_password'),
+
     # Public & Member Information Pages
     path('about/', views.about_us_view, name='about_us'),
     path('contact/', views.contact_us_view, name='contact_us'),

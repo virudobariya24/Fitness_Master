@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Admin, User, ContactMessage
+from .models import Admin, User, ContactMessage, PasswordResetOTP
 
 
 @admin.register(Admin)
@@ -37,4 +37,18 @@ class ContactMessageAdmin(admin.ModelAdmin):
     search_fields = ('name', 'email', 'phone', 'subject', 'message')
     ordering = ('-created_at',)
     readonly_fields = ('created_at',)
+
+
+@admin.register(PasswordResetOTP)
+class PasswordResetOTPAdmin(admin.ModelAdmin):
+    """
+    Django Admin registration for PasswordResetOTP model.
+    Allows administrators to audit password reset attempts and OTP validity.
+    """
+    list_display = ('email', 'otp', 'created_at', 'is_verified', 'is_used')
+    list_filter = ('is_verified', 'is_used', 'created_at')
+    search_fields = ('email', 'otp')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+
 
