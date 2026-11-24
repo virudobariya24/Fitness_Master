@@ -5,45 +5,104 @@
 
 {% block auth_content %}
 <style>
-  .input-group .form-control {
-    border-left: 0;
+  .auth-card {
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.4), 0 10px 25px -10px rgba(14, 165, 233, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #ffffff;
+    overflow: hidden;
   }
-  .input-group .form-control:focus {
+  .input-group-modern {
+    border-radius: 0.75rem;
+    transition: all 0.2s ease-in-out;
+    border: 1.5px solid #e2e8f0;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+  }
+  .input-group-modern:focus-within {
     border-color: #0ea5e9;
+    background: #ffffff;
+    box-shadow: 0 0 0 3.5px rgba(14, 165, 233, 0.18);
+  }
+  .input-group-modern .input-group-text {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    padding: 0.75rem 0.85rem;
+    font-size: 1.05rem;
+  }
+  .input-group-modern:focus-within .input-group-text {
+    color: #0ea5e9;
+  }
+  .input-group-modern .form-control {
+    border: none;
+    background: transparent;
+    padding: 0.75rem 0.5rem 0.75rem 0;
+    font-size: 0.95rem;
+    color: #0f172a;
+  }
+  .input-group-modern .form-control:focus {
     box-shadow: none;
+    background: transparent;
+    outline: none;
   }
-  .input-group:focus-within {
-    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
-    border-radius: 0.5rem;
-  }
-  .input-group:focus-within .input-group-text,
-  .input-group:focus-within .form-control,
-  .input-group:focus-within .btn {
-    border-color: #0ea5e9;
-  }
-  .form-control::placeholder {
+  .input-group-modern .form-control::placeholder {
     color: #94a3b8;
     font-size: 0.92rem;
   }
+  .input-group-modern .btn-eye-toggle {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    padding: 0.75rem 0.9rem;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+  .input-group-modern .btn-eye-toggle:hover {
+    color: #0ea5e9;
+  }
+  .btn-sign-in {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.8rem 1.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+    box-shadow: 0 10px 20px -5px rgba(14, 165, 233, 0.45);
+    transition: all 0.2s ease;
+  }
+  .btn-sign-in:hover {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    color: #ffffff;
+    transform: translateY(-1.5px);
+    box-shadow: 0 14px 26px -5px rgba(14, 165, 233, 0.55);
+  }
+  .btn-sign-in:active {
+    transform: translateY(0);
+  }
 </style>
-<div class="min-vh-100 d-flex align-items-center justify-content-center p-3 py-5 position-relative overflow-hidden" style="background: radial-gradient(circle at 50% 15%, #1e293b 0%, #0f172a 65%, #020617 100%);">
+
+<div class="min-vh-100 d-flex align-items-center justify-content-center p-3 py-4 py-sm-5 position-relative overflow-hidden" style="background: radial-gradient(circle at 50% 15%, #1e293b 0%, #0f172a 65%, #020617 100%);">
 
   <!-- Ambient background glow rings -->
   <div class="position-absolute top-0 start-50 translate-middle-x rounded-circle pointer-events-none" style="width: 580px; height: 320px; background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0) 70%); filter: blur(40px); z-index: 0;"></div>
 
-  <div class="w-100 position-relative" style="max-width: 460px; z-index: 1;">
+  <div class="w-100 position-relative" style="max-width: 440px; z-index: 1;">
 
     <!-- Brand Header -->
-    <div class="text-center mb-4">
-      <div class="d-inline-flex align-items-center justify-content-center rounded-4 shadow-lg mb-3" style="width: 62px; height: 62px; background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3) !important;">
-        <i class="fa-solid fa-dumbbell text-white fs-2"></i>
+    <div class="text-center mb-3 mb-sm-4">
+      <div class="d-inline-flex align-items-center justify-content-center rounded-4 shadow-lg mb-2 mb-sm-3" style="width: 60px; height: 60px; background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.35) !important;">
+        <i class="fa-solid fa-dumbbell text-white fs-3"></i>
       </div>
       <h2 class="fw-black text-white tracking-tight mb-1" style="letter-spacing: 0.5px;">
         FITNESS<span class="text-info">MASTER</span>
       </h2>
       <div class="d-inline-flex align-items-center gap-1.5 px-3 py-1 rounded-pill bg-white bg-opacity-10 border border-white border-opacity-10 text-light" style="font-size: 11px;">
         <span class="badge rounded-circle p-1 bg-success d-inline-block" style="width: 7px; height: 7px;"></span>
-        <span class="fw-bold text-uppercase" style="letter-spacing: 0.75px;">Gym Member Portal &bull; Session Authentication</span>
+        <span class="fw-bold text-uppercase" style="letter-spacing: 0.75px;">Member Portal</span>
       </div>
     </div>
 
@@ -51,8 +110,8 @@
     {% if messages %}
       <div class="mb-3">
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 rounded-3" role="alert">
-            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-info{% endif %} fs-5"></i>
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 px-3 rounded-3" role="alert">
+            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-info{% endif %} fs-5 flex-shrink-0"></i>
             <div class="fw-semibold">{{ message }}</div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
@@ -61,92 +120,84 @@
     {% endif %}
 
     <!-- Member Login Card -->
-    <div class="card shadow-lg border-0 rounded-4 overflow-hidden bg-white">
+    <div class="card auth-card">
       
       <!-- Card Header Banner -->
-      <div class="p-4 pb-0 bg-white">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <h4 class="card-title fw-black text-dark mb-0">
+      <div class="p-4 pb-2 bg-white">
+        <div class="d-flex align-items-center justify-content-between mb-1.5">
+          <h4 class="card-title fw-black text-dark mb-0 fs-5">
             <i class="bi bi-box-arrow-in-right text-primary me-2"></i>Member Sign In
           </h4>
           <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-2.5 py-1 rounded-pill" style="font-size: 10.5px;">
             <i class="bi bi-person-fill me-1"></i>Member
           </span>
         </div>
-        <p class="text-muted small mb-0">
-          Sign in to your member account to browse available fitness packages and manage your membership.
+        <p class="text-muted small mb-0" style="font-size: 12.5px; line-height: 1.45;">
+          Sign in to your member account to browse fitness packages and manage your membership.
         </p>
       </div>
 
       <!-- Card Form Body -->
-      <div class="card-body p-4 pt-3.5">
+      <div class="card-body p-4 pt-2 pb-4">
         
         <form method="post" action="{% url 'user_login' %}" novalidate id="userLoginForm">
           {% csrf_token %}
 
           {% if form.non_field_errors %}
-            <div class="alert alert-danger py-2.5 small fw-semibold mb-3 rounded-3 d-flex align-items-center gap-2">
+            <div class="alert alert-danger py-2.5 px-3 small fw-semibold mb-3 rounded-3 d-flex align-items-center gap-2">
               <i class="bi bi-exclamation-triangle-fill text-danger fs-5 flex-shrink-0"></i>
               <div>{{ form.non_field_errors.0 }}</div>
             </div>
           {% endif %}
 
           <!-- Username or Email Field -->
-          <div class="mb-3.5">
-            <label for="userLoginUsername" class="form-label small fw-bold text-uppercase text-secondary mb-1.5" style="font-size: 11px;">
+          <div class="mb-3">
+            <label for="userLoginUsername" class="form-label text-secondary" style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
               Username or Registered Email <span class="text-danger">*</span>
             </label>
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0">
-                <i class="bi bi-person-fill text-primary"></i>
+            <div class="input-group-modern">
+              <span class="input-group-text">
+                <i class="bi bi-person-fill"></i>
               </span>
-              {{ form.username }}
+              <input type="text" name="username" class="form-control" id="userLoginUsername" placeholder="Enter your username or email" value="{{ form.username.value|default:'' }}" required autofocus autocomplete="username">
             </div>
             {% if form.username.errors %}
-              <div class="text-danger small mt-1 fw-semibold">{{ form.username.errors.0 }}</div>
+              <div class="text-danger small mt-1.5 fw-semibold d-flex align-items-center gap-1">
+                <i class="bi bi-exclamation-circle-fill"></i> {{ form.username.errors.0 }}
+              </div>
             {% endif %}
           </div>
 
-          <!-- Password Field with Show/Hide Toggle -->
-          <div class="mb-3.5">
+          <!-- Password Field with Show/Hide Toggle & Forgot Password Link -->
+          <div class="mb-4">
             <div class="d-flex align-items-center justify-content-between mb-1.5">
-              <label for="userLoginPassword" class="form-label small fw-bold text-uppercase text-secondary mb-0" style="font-size: 11px;">
+              <label for="userLoginPassword" class="form-label text-secondary mb-0" style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
                 Password <span class="text-danger">*</span>
               </label>
-              <a href="{% url 'user_forgot_password' %}" class="small text-decoration-none fw-bold text-primary" style="font-size: 11.5px;">
+              <a href="{% url 'user_forgot_password' %}" class="small text-decoration-none fw-bold text-primary" style="font-size: 12px;">
                 Forgot Password?
               </a>
             </div>
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0">
-                <i class="bi bi-lock-fill text-primary"></i>
+            <div class="input-group-modern">
+              <span class="input-group-text">
+                <i class="bi bi-lock-fill"></i>
               </span>
-              {{ form.password }}
-              <button class="btn btn-outline-secondary border-start-0 bg-light text-muted" type="button" id="toggleUserPasswordVisibility" title="Show or hide password">
+              <input type="password" name="password" class="form-control" id="userLoginPassword" placeholder="Enter your password" required autocomplete="current-password">
+              <button class="btn-eye-toggle" type="button" id="toggleUserPasswordVisibility" title="Show or hide password" aria-label="Toggle password visibility">
                 <i class="bi bi-eye" id="toggleUserPasswordIcon"></i>
               </button>
             </div>
             {% if form.password.errors %}
-              <div class="text-danger small mt-1 fw-semibold">{{ form.password.errors.0 }}</div>
+              <div class="text-danger small mt-1.5 fw-semibold d-flex align-items-center gap-1">
+                <i class="bi bi-exclamation-circle-fill"></i> {{ form.password.errors.0 }}
+              </div>
             {% endif %}
           </div>
 
-          <!-- Session Options Row -->
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="userRememberMe" checked>
-              <label class="form-check-label small text-muted fw-semibold" for="userRememberMe" style="font-size: 12px;">
-                Remember active session
-              </label>
-            </div>
-            <span class="badge bg-light text-secondary border small fw-normal py-1 px-2" style="font-size: 11px;">
-              <i class="bi bi-shield-check text-success me-1"></i>PBKDF2 Protected
-            </span>
-          </div>
-
           <!-- Submit Button -->
-          <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold d-flex align-items-center justify-content-center gap-2 shadow py-2.5 rounded-3" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); border: none;">
-            <i class="bi bi-box-arrow-in-right"></i> Sign In to Member Portal
+          <button type="submit" class="btn btn-sign-in w-100 d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-box-arrow-in-right fs-5"></i>
+            <span>Sign In to Member Portal</span>
           </button>
 
         </form>
@@ -154,19 +205,10 @@
       </div>
       
       <!-- Card Footer -->
-      <div class="card-footer bg-light border-top text-center py-3.5 px-4">
-        <p class="small text-muted mb-2.5">
-          New to Fitness Master? <a href="{% url 'user_register' %}" class="fw-bold text-decoration-none text-primary">Create a Member Account &rarr;</a>
+      <div class="card-footer bg-light bg-opacity-75 border-top text-center py-3 px-4">
+        <p class="small text-muted mb-0">
+          New to Fitness Master? <a href="{% url 'user_register' %}" class="fw-bold text-decoration-none text-primary ms-1">Create a Member Account &rarr;</a>
         </p>
-        <div class="pt-2 border-top d-flex flex-wrap align-items-center justify-content-center gap-2">
-          <a href="{% url 'admin_gateway' %}" class="small text-muted text-decoration-none fw-semibold">
-            <i class="bi bi-shield-lock me-1"></i>Staff / Admin Portal (/admin)
-          </a>
-          <span class="text-muted opacity-50">&bull;</span>
-          <a href="{% url 'packages_cards' %}" class="small text-muted text-decoration-none fw-semibold">
-            <i class="bi bi-grid-fill me-1"></i>Browse Packages
-          </a>
-        </div>
       </div>
 
     </div>

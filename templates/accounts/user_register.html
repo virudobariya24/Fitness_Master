@@ -183,19 +183,10 @@
       </div>
       
       <!-- Card Footer -->
-      <div class="card-footer bg-light border-top text-center py-3.5 px-4">
-        <p class="small text-muted mb-2.5">
-          Already registered? <a href="{% url 'user_login' %}" class="fw-bold text-decoration-none text-primary">Sign in to Member Portal &rarr;</a>
+      <div class="card-footer bg-light bg-opacity-75 border-top text-center py-3 px-4">
+        <p class="small text-muted mb-0">
+          Already registered? <a href="{% url 'user_login' %}" class="fw-bold text-decoration-none text-primary ms-1">Sign in to Member Portal &rarr;</a>
         </p>
-        <div class="pt-2 border-top d-flex flex-wrap align-items-center justify-content-center gap-2">
-          <a href="{% url 'admin_gateway' %}" class="small text-muted text-decoration-none fw-semibold">
-            <i class="bi bi-shield-lock me-1"></i>Staff / Admin Portal (/admin)
-          </a>
-          <span class="text-muted opacity-50">&bull;</span>
-          <a href="{% url 'packages_cards' %}" class="small text-muted text-decoration-none fw-semibold">
-            <i class="bi bi-grid-fill me-1"></i>Browse Packages
-          </a>
-        </div>
       </div>
 
     </div>
