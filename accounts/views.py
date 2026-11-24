@@ -15,6 +15,8 @@ from .forms import (
     ForgotPasswordForm,
     VerifyOTPForm,
     ResetPasswordForm,
+    UserProfileUpdateForm,
+    UserChangePasswordForm,
 )
 from packages.models import Packages
 
@@ -239,6 +241,68 @@ def user_dashboard_view(request):
     return render(request, 'accounts/user_dashboard.html', {
         'user': user,
         'packages': packages,
+        'is_user_page': True,
+    })
+
+
+@ensure_csrf_cookie
+def user_profile_view(request):
+    """
+    Dedicated User Profile View for session-authenticated gym members.
+    - Displays member account information, registration date, and security status.
+    - Supports updating profile details (Name, Username, Email).
+    - Supports changing account password securely with current password validation.
+    """
+    is_authenticated = request.session.get('is_user_authenticated')
+    user_id = request.session.get('user_id')
+
+    if not is_authenticated or not user_id:
+        messages.warning(request, "Please sign in to access your member profile.")
+        return redirect('user_login')
+
+    user = User.objects.filter(pk=user_id).first()
+    if not user:
+        request.session.pop('is_user_authenticated', None)
+        request.session.pop('user_id', None)
+        request.session.modified = True
+        messages.error(request, "User account could not be validated. Please log in again.")
+        return redirect('user_login')
+
+    request.session.modified = True
+
+    profile_form = UserProfileUpdateForm(instance=user, user=user)
+    password_form = UserChangePasswordForm(user=user)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'update_profile':
+            profile_form = UserProfileUpdateForm(request.POST, instance=user, user=user)
+            if profile_form.is_valid():
+                updated_user = profile_form.save()
+                # Update session variables
+                request.session['user_username'] = updated_user.username
+                request.session['user_name'] = updated_user.name or updated_user.username
+                request.session['user_email'] = updated_user.email
+                request.session.modified = True
+                messages.success(request, "Your profile details have been updated successfully!")
+                return redirect('user_profile')
+            else:
+                messages.error(request, "Please correct the errors in your profile details.")
+        elif action == 'change_password':
+            password_form = UserChangePasswordForm(request.POST, user=user)
+            if password_form.is_valid():
+                new_pwd = password_form.cleaned_data['new_password']
+                user.set_password(new_pwd)
+                user.save()
+                messages.success(request, "Your password has been changed successfully!")
+                return redirect('user_profile')
+            else:
+                messages.error(request, "Failed to change password. Please check the errors below.")
+
+    return render(request, 'accounts/user_profile.html', {
+        'user': user,
+        'profile_form': profile_form,
+        'password_form': password_form,
         'is_user_page': True,
     })
 

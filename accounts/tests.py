@@ -802,6 +802,115 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Passwords do not match')
 
+    # =========================================================================
+    # DEDICATED USER PROFILE TESTS
+    # =========================================================================
+    def test_user_profile_requires_session_authentication(self):
+        """Unauthenticated visitor is redirected to user login page"""
+        resp = self.client.get(reverse('user_profile'))
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_login'))
+
+    def test_user_profile_page_renders_with_member_details(self):
+        """Authenticated member can view their dedicated profile page"""
+        member = User(name='Rohan Dave', username='rohandave', email='rohan@fitnessmaster.com')
+        member.set_password('RohanPass123')
+        member.save()
+
+        # Log in member via session
+        session = self.client.session
+        session['user_id'] = member.id
+        session['user_username'] = member.username
+        session['user_name'] = member.name
+        session['user_email'] = member.email
+        session['is_user_authenticated'] = True
+        session.save()
+
+        resp = self.client.get(reverse('user_profile'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'My Profile')
+        self.assertContains(resp, 'Rohan Dave')
+        self.assertContains(resp, 'rohan@fitnessmaster.com')
+        self.assertContains(resp, 'Edit Profile Details')
+        self.assertContains(resp, 'Change Password')
+
+    def test_user_profile_update_details_successfully(self):
+        """Member can update their full name, username, and email from profile page"""
+        member = User(name='Ketan Patel', username='ketanp', email='ketan@example.com')
+        member.set_password('KetanPass123')
+        member.save()
+
+        session = self.client.session
+        session['user_id'] = member.id
+        session['user_username'] = member.username
+        session['user_name'] = member.name
+        session['user_email'] = member.email
+        session['is_user_authenticated'] = True
+        session.save()
+
+        resp = self.client.post(reverse('user_profile'), {
+            'action': 'update_profile',
+            'name': 'Ketan K. Patel',
+            'username': 'ketan_updated',
+            'email': 'ketan_new@example.com',
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_profile'))
+
+        member.refresh_from_db()
+        self.assertEqual(member.name, 'Ketan K. Patel')
+        self.assertEqual(member.username, 'ketan_updated')
+        self.assertEqual(member.email, 'ketan_new@example.com')
+
+    def test_user_profile_change_password_with_valid_current_password(self):
+        """Member can update their password after verifying current password"""
+        member = User(username='simran', email='simran@example.com')
+        member.set_password('CurrentPass123')
+        member.save()
+
+        session = self.client.session
+        session['user_id'] = member.id
+        session['user_username'] = member.username
+        session['is_user_authenticated'] = True
+        session.save()
+
+        resp = self.client.post(reverse('user_profile'), {
+            'action': 'change_password',
+            'current_password': 'CurrentPass123',
+            'new_password': 'BrandNewPassword456',
+            'confirm_new_password': 'BrandNewPassword456',
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertRedirects(resp, reverse('user_profile'))
+
+        member.refresh_from_db()
+        self.assertTrue(member.check_password('BrandNewPassword456'))
+        self.assertFalse(member.check_password('CurrentPass123'))
+
+    def test_user_profile_change_password_fails_with_wrong_current_password(self):
+        """Entering incorrect current password prevents password update"""
+        member = User(username='simran2', email='simran2@example.com')
+        member.set_password('CurrentPass123')
+        member.save()
+
+        session = self.client.session
+        session['user_id'] = member.id
+        session['user_username'] = member.username
+        session['is_user_authenticated'] = True
+        session.save()
+
+        resp = self.client.post(reverse('user_profile'), {
+            'action': 'change_password',
+            'current_password': 'IncorrectCurrentPass',
+            'new_password': 'BrandNewPassword456',
+            'confirm_new_password': 'BrandNewPassword456',
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Incorrect current password')
+        member.refresh_from_db()
+        self.assertTrue(member.check_password('CurrentPass123'))
+
+
 
 
 

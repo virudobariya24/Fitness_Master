@@ -351,3 +351,123 @@ class ResetPasswordForm(forms.Form):
             self.add_error('confirm_password', "Passwords do not match. Please re-enter identical passwords.")
         return cleaned_data
 
+
+class UserProfileUpdateForm(forms.ModelForm):
+    """
+    Form for gym members to update their profile details:
+    Full Name, Username, and Email Address.
+    """
+    name = forms.CharField(
+        max_length=150,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control py-2.5',
+            'placeholder': 'Enter your full name',
+            'id': 'profileName'
+        }),
+        label="Full Name"
+    )
+    username = forms.CharField(
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control py-2.5',
+            'placeholder': 'Enter unique username',
+            'id': 'profileUsername',
+            'required': True
+        }),
+        label="Username"
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control py-2.5',
+            'placeholder': 'name@example.com',
+            'id': 'profileEmail',
+            'required': True
+        }),
+        label="Email Address"
+    )
+
+    class Meta:
+        model = User
+        fields = ['name', 'username', 'email']
+
+    def __init__(self, *args, user=None, **kwargs):
+        self.current_user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        qs = User.objects.filter(username__iexact=username)
+        if self.current_user:
+            qs = qs.exclude(pk=self.current_user.pk)
+        if qs.exists():
+            raise forms.ValidationError("This username is already taken. Please choose another username.")
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip().lower()
+        qs = User.objects.filter(email__iexact=email)
+        if self.current_user:
+            qs = qs.exclude(pk=self.current_user.pk)
+        if qs.exists():
+            raise forms.ValidationError("An account with this email address already exists.")
+        return email
+
+
+class UserChangePasswordForm(forms.Form):
+    """
+    Form for gym members to update their password from their profile page.
+    Requires current password verification and new password confirmation.
+    """
+    current_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control py-2.5',
+            'placeholder': 'Enter current password',
+            'id': 'currentPassword',
+            'required': True
+        }),
+        label="Current Password"
+    )
+    new_password = forms.CharField(
+        min_length=6,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control py-2.5',
+            'placeholder': 'Enter new password (min. 6 characters)',
+            'id': 'newPassword',
+            'required': True
+        }),
+        label="New Password",
+        help_text="Password must contain at least 6 characters."
+    )
+    confirm_new_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control py-2.5',
+            'placeholder': 'Re-enter new password to confirm',
+            'id': 'confirmNewPassword',
+            'required': True
+        }),
+        label="Confirm New Password"
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        self.current_user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_current_password(self):
+        current_password = self.cleaned_data.get('current_password')
+        if self.current_user and not self.current_user.check_password(current_password):
+            raise forms.ValidationError("Incorrect current password. Please try again.")
+        return current_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password = cleaned_data.get('new_password')
+        confirm_new_password = cleaned_data.get('confirm_new_password')
+
+        if new_password and confirm_new_password and new_password != confirm_new_password:
+            self.add_error('confirm_new_password', "New passwords do not match. Please re-enter identical passwords.")
+        return cleaned_data
+
+

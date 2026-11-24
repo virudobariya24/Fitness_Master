@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile | Fitness Master{% endblock %}
+
+{% block auth_content %}
+<div class="min-vh-100 d-flex flex-column bg-light">
+
+  <!-- =========================================================================
+       MEMBER TOP NAVIGATION BAR
+       ========================================================================= -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top py-2">
+    <div class="container">
+      
+      <!-- Brand Logo -->
+      <a href="{% url 'user_dashboard' %}" class="navbar-brand d-flex align-items-center gap-2 me-lg-4 text-decoration-none">
+        <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+          <i class="fa-solid fa-dumbbell fs-5"></i>
+        </div>
+        <span class="fw-black text-dark tracking-wide fs-5">FITNESS<span class="text-info">MASTER</span></span>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="navbar-toggler border-0 shadow-none p-1.5" type="button" data-bs-toggle="collapse" data-bs-target="#userProfileNavbar" aria-controls="userProfileNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Content -->
+      <div class="collapse navbar-collapse" id="userProfileNavbar">
+        
+        <!-- Left Navigation Links -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 pt-2 pt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_dashboard' %}">
+              <i class="bi bi-speedometer2 text-muted"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active fw-bold text-primary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10" href="{% url 'user_profile' %}">
+              <i class="bi bi-person-circle"></i> Profile
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}?portal=user">
+              <i class="bi bi-grid-fill text-muted"></i> Packages Catalog
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'about_us' %}">
+              <i class="bi bi-info-circle-fill text-muted"></i> About Us
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'contact_us' %}">
+              <i class="bi bi-telephone-fill text-muted"></i> Contact Us
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right Side: Member Profile Dropdown -->
+        <div class="d-flex flex-wrap align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0">
+          <div class="dropdown">
+            <button class="btn btn-light border bg-white rounded-pill px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm dropdown-toggle text-dark fw-bold" type="button" id="userProfilePageDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 13px;">
+              <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 11px;">
+                {{ user.username|slice:":2"|upper }}
+              </div>
+              <span class="text-truncate" style="max-width: 140px;">{{ user.name|default:user.username }}</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2" aria-labelledby="userProfilePageDropdown" style="min-width: 260px; border: 1px solid #e2e8f0 !important;">
+              <li class="px-3 py-2.5 border-bottom bg-light rounded-3 mb-1">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                  <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Authenticated Member</small>
+                  <span class="badge bg-success text-white px-2 py-0.5 rounded-pill" style="font-size: 9.5px;">Active</span>
+                </div>
+                <strong class="text-dark d-block text-truncate fs-6">{{ user.name|default:user.username }}</strong>
+                <small class="text-muted d-block text-truncate" style="font-size: 11.5px;"><i class="bi bi-envelope me-1"></i>{{ user.email }}</small>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-primary bg-primary bg-opacity-10" href="{% url 'user_profile' %}">
+                  <i class="bi bi-person-circle"></i> My Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_dashboard' %}">
+                  <i class="bi bi-speedometer2 text-info"></i> Member Dashboard
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'packages_cards' %}?portal=user">
+                  <i class="bi bi-box-seam text-secondary"></i> Browse Packages
+                </a>
+              </li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-bold text-danger d-flex align-items-center gap-2 small" href="{% url 'user_logout' %}">
+                  <i class="bi bi-box-arrow-right"></i> Sign Out
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- =========================================================================
+       HERO PROFILE HEADER BANNER
+       ========================================================================= -->
+  <div class="text-white py-4 py-lg-5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+    <div class="container">
+      
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small mb-0">
+          <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}" class="text-info text-decoration-none">Dashboard</a></li>
+          <li class="breadcrumb-item active text-light text-opacity-75" aria-current="page">Member Profile</li>
+        </ol>
+      </nav>
+
+      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="rounded-4 bg-primary text-white fw-bold d-flex align-items-center justify-content-center shadow-lg border border-white border-opacity-25" style="width: 72px; height: 72px; font-size: 26px; background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;">
+            {{ user.username|slice:":2"|upper }}
+          </div>
+          <div>
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+              <h1 class="h3 fw-black text-white mb-0">{{ user.name|default:user.username }}</h1>
+              <span class="badge bg-success bg-opacity-25 text-success border border-success-subtle px-2.5 py-1 rounded-pill small">
+                <i class="bi bi-check-circle-fill me-1"></i>Active Member
+              </span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-2 text-light text-opacity-75 small">
+              <span><i class="bi bi-at me-0.5"></i>{{ user.username }}</span>
+              <span>&bull;</span>
+              <span><i class="bi bi-envelope me-1"></i>{{ user.email }}</span>
+              <span>&bull;</span>
+              <span class="badge bg-white bg-opacity-10 text-light border border-white border-opacity-10 fw-normal">
+                #MEM-{{ user.id|stringformat:"04d" }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <a href="{% url 'user_dashboard' %}" class="btn btn-outline-light rounded-3 px-3 py-2 small fw-semibold">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MAIN PROFILE CONTENT
+       ========================================================================= -->
+  <div class="container py-4 py-lg-5 flex-grow-1">
+
+    <!-- Flash Alert Messages -->
+    {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 px-3 rounded-3" role="alert">
+            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% elif message.tags == 'danger' or message.tags == 'error' %}bi-exclamation-triangle-fill text-danger{% else %}bi-info-circle-fill text-info{% endif %} fs-5 flex-shrink-0"></i>
+            <div class="fw-semibold">{{ message }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="row g-4">
+
+      <!-- LEFT COLUMN: MEMBER CARD & OVERVIEW -->
+      <div class="col-12 col-lg-4">
+        
+        <!-- Account Overview Card -->
+        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden mb-4" style="border: 1px solid #e2e8f0 !important;">
+          <div class="card-header bg-white border-bottom p-3.5 pb-3">
+            <h5 class="fw-bold text-dark mb-0 fs-6">
+              <i class="bi bi-person-badge-fill text-primary me-2"></i>Account Overview
+            </h5>
+          </div>
+          <div class="card-body p-4 text-center">
+            
+            <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center text-white fw-bold mb-3 shadow" style="width: 80px; height: 80px; font-size: 30px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+              {{ user.username|slice:":2"|upper }}
+            </div>
+            
+            <h5 class="fw-black text-dark mb-1">{{ user.name|default:user.username }}</h5>
+            <p class="text-muted small mb-3">@{{ user.username }}</p>
+
+            <div class="p-3 bg-light rounded-3 text-start mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                <span class="text-muted small">Member ID:</span>
+                <span class="fw-bold text-dark font-monospace small">#MEM-{{ user.id|stringformat:"04d" }}</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                <span class="text-muted small">Status:</span>
+                <span class="badge bg-success text-white small px-2 py-0.5 rounded-pill">Active</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                <span class="text-muted small">Account Type:</span>
+                <span class="fw-semibold text-primary small">Gym Member</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted small">Joined Date:</span>
+                <span class="fw-semibold text-dark small">{{ user.created_at|date:"M d, Y" }}</span>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-outline-primary rounded-3 btn-sm fw-semibold">
+                <i class="bi bi-box-seam me-1"></i> Browse Gym Packages
+              </a>
+              <a href="{% url 'user_logout' %}" class="btn btn-outline-danger rounded-3 btn-sm fw-semibold">
+                <i class="bi bi-box-arrow-right me-1"></i> Sign Out
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Security Badge Card -->
+        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+          <div class="card-header bg-white border-bottom p-3.5 pb-3">
+            <h5 class="fw-bold text-dark mb-0 fs-6">
+              <i class="bi bi-shield-check text-success me-2"></i>Security &amp; Session
+            </h5>
+          </div>
+          <div class="card-body p-3.5">
+            <div class="d-flex align-items-start gap-2.5 mb-3">
+              <i class="bi bi-lock-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+              <div>
+                <strong class="d-block text-dark small">Password Protection</strong>
+                <small class="text-muted">Encrypted using PBKDF2 SHA-256 algorithm.</small>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-2.5">
+              <i class="bi bi-clock-history text-primary fs-5 flex-shrink-0 mt-0.5"></i>
+              <div>
+                <strong class="d-block text-dark small">Persistent Session</strong>
+                <small class="text-muted">Keeps you signed in smoothly across visits.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: EDIT PROFILE & CHANGE PASSWORD FORMS -->
+      <div class="col-12 col-lg-8">
+        
+        <!-- CARD 1: EDIT PROFILE FORM -->
+        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden mb-4" style="border: 1px solid #e2e8f0 !important;">
+          <div class="card-header bg-white border-bottom p-4 pb-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <h5 class="fw-bold text-dark mb-1 fs-5">
+                  <i class="bi bi-pencil-square text-primary me-2"></i>Edit Profile Details
+                </h5>
+                <p class="text-muted small mb-0">Update your name, username, and email address below.</p>
+              </div>
+              <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-2.5 py-1 rounded-pill small">
+                Profile
+              </span>
+            </div>
+          </div>
+          
+          <div class="card-body p-4">
+            <form method="post" action="{% url 'user_profile' %}" novalidate id="editProfileForm">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="update_profile">
+
+              {% if profile_form.non_field_errors %}
+                <div class="alert alert-danger py-2.5 px-3 small fw-semibold mb-3 rounded-3 d-flex align-items-center gap-2">
+                  <i class="bi bi-exclamation-triangle-fill text-danger fs-5 flex-shrink-0"></i>
+                  <div>{{ profile_form.non_field_errors.0 }}</div>
+                </div>
+              {% endif %}
+
+              <div class="row g-3">
+                
+                <!-- Full Name -->
+                <div class="col-12">
+                  <label for="profileName" class="form-label small fw-bold text-secondary text-uppercase" style="font-size: 11px;">
+                    Full Name <span class="text-muted fw-normal text-capitalize">(Optional)</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                      <i class="bi bi-person-badge text-primary"></i>
+                    </span>
+                    {{ profile_form.name }}
+                  </div>
+                  {% if profile_form.name.errors %}
+                    <div class="text-danger small mt-1 fw-semibold">{{ profile_form.name.errors.0 }}</div>
+                  {% endif %}
+                </div>
+
+                <!-- Username -->
+                <div class="col-12 col-md-6">
+                  <label for="profileUsername" class="form-label small fw-bold text-secondary text-uppercase" style="font-size: 11px;">
+                    Username <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                      <i class="bi bi-at text-primary"></i>
+                    </span>
+                    {{ profile_form.username }}
+                  </div>
+                  {% if profile_form.username.errors %}
+                    <div class="text-danger small mt-1 fw-semibold">{{ profile_form.username.errors.0 }}</div>
+                  {% endif %}
+                </div>
+
+                <!-- Email Address -->
+                <div class="col-12 col-md-6">
+                  <label for="profileEmail" class="form-label small fw-bold text-secondary text-uppercase" style="font-size: 11px;">
+                    Email Address <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                      <i class="bi bi-envelope text-primary"></i>
+                    </span>
+                    {{ profile_form.email }}
+                  </div>
+                  {% if profile_form.email.errors %}
+                    <div class="text-danger small mt-1 fw-semibold">{{ profile_form.email.errors.0 }}</div>
+                  {% endif %}
+                </div>
+
+              </div>
+
+              <div class="d-flex justify-content-end mt-4 pt-2">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 fw-bold shadow-sm d-flex align-items-center gap-2" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); border: none;">
+                  <i class="bi bi-check-lg fs-5"></i> Save Profile Changes
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- CARD 2: CHANGE PASSWORD FORM -->
+        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+          <div class="card-header bg-white border-bottom p-4 pb-3">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <h5 class="fw-bold text-dark mb-1 fs-5">
+                  <i class="bi bi-shield-lock text-primary me-2"></i>Change Password
+                </h5>
+                <p class="text-muted small mb-0">Update your account login password with verification.</p>
+              </div>
+              <span class="badge bg-warning bg-opacity-10 text-warning border border-warning-subtle px-2.5 py-1 rounded-pill small">
+                Security
+              </span>
+            </div>
+          </div>
+          
+          <div class="card-body p-4">
+            <form method="post" action="{% url 'user_profile' %}" novalidate id="changePasswordForm">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="change_password">
+
+              {% if password_form.non_field_errors %}
+                <div class="alert alert-danger py-2.5 px-3 small fw-semibold mb-3 rounded-3 d-flex align-items-center gap-2">
+                  <i class="bi bi-exclamation-triangle-fill text-danger fs-5 flex-shrink-0"></i>
+                  <div>{{ password_form.non_field_errors.0 }}</div>
+                </div>
+              {% endif %}
+
+              <!-- Current Password -->
+              <div class="mb-3">
+                <label for="currentPassword" class="form-label small fw-bold text-secondary text-uppercase" style="font-size: 11px;">
+                  Current Password <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0 text-muted">
+                    <i class="bi bi-lock text-primary"></i>
+                  </span>
+                  {{ password_form.current_password }}
+                  <button class="btn btn-outline-secondary border-start-0 bg-light text-muted" type="button" id="toggleCurrentPwdBtn">
+                    <i class="bi bi-eye" id="toggleCurrentPwdIcon"></i>
+                  </button>
+                </div>
+                {% if password_form.current_password.errors %}
+                  <div class="text-danger small mt-1 fw-semibold">{{ password_form.current_password.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="row g-3">
+                
+                <!-- New Password -->
+                <div class="col-12 col-md-6">
+                  <label for="newPassword" class="form-label small fw-bold text-secondary text-uppercase" style="font-size: 11px;">
+                    New Password <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                      <i class="bi bi-key text-primary"></i>
+                    </span>
+                    {{ password_form.new_password }}
+                    <button class="btn btn-outline-secondary border-start-0 bg-light text-muted" type="button" id="toggleNewPwdBtn">
+                      <i class="bi bi-eye" id="toggleNewPwdIcon"></i>
+                    </button>
+                  </div>
+                  {% if password_form.new_password.errors %}
+                    <div class="text-danger small mt-1 fw-semibold">{{ password_form.new_password.errors.0 }}</div>
+                  {% endif %}
+                  <small class="text-muted" style="font-size: 11px;">Min. 6 characters.</small>
+                </div>
+
+                <!-- Confirm New Password -->
+                <div class="col-12 col-md-6">
+                  <label for="confirmNewPassword" class="form-label small fw-bold text-secondary text-uppercase" style="font-size: 11px;">
+                    Confirm New Password <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted">
+                      <i class="bi bi-key-fill text-primary"></i>
+                    </span>
+                    {{ password_form.confirm_new_password }}
+                    <button class="btn btn-outline-secondary border-start-0 bg-light text-muted" type="button" id="toggleConfirmPwdBtn">
+                      <i class="bi bi-eye" id="toggleConfirmPwdIcon"></i>
+                    </button>
+                  </div>
+                  {% if password_form.confirm_new_password.errors %}
+                    <div class="text-danger small mt-1 fw-semibold">{{ password_form.confirm_new_password.errors.0 }}</div>
+                  {% endif %}
+                </div>
+
+              </div>
+
+              <div class="d-flex justify-content-end mt-4 pt-2">
+                <button type="submit" class="btn btn-warning text-dark px-4 py-2 rounded-3 fw-bold shadow-sm d-flex align-items-center gap-2">
+                  <i class="bi bi-shield-lock fs-5"></i> Update Password
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Password Visibility Toggle JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function setupPasswordToggle(btnId, inputId, iconId) {
+      const btn = document.getElementById(btnId);
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (btn && input && icon) {
+        btn.addEventListener('click', function() {
+          if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+          } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+          }
+        });
+      }
+    }
+    setupPasswordToggle('toggleCurrentPwdBtn', 'currentPassword', 'toggleCurrentPwdIcon');
+    setupPasswordToggle('toggleNewPwdBtn', 'newPassword', 'toggleNewPwdIcon');
+    setupPasswordToggle('toggleConfirmPwdBtn', 'confirmNewPassword', 'toggleConfirmPwdIcon');
+  });
+</script>
+{% endblock %}

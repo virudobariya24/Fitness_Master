@@ -18,12 +18,14 @@ urlpatterns = [
     path('contact-inquiries/<int:pk>/toggle-read/', views.admin_contact_toggle_read_view, name='admin_contact_toggle_read'),
     path('contact-inquiries/<int:pk>/delete/', views.admin_contact_delete_view, name='admin_contact_delete'),
 
-    # User Panel (Registration, Session Login & Logout, Member Dashboard)
+    # User Panel (Registration, Session Login & Logout, Member Dashboard, User Profile)
     path('register/', views.user_register_view, name='user_register'),
     path('user/register/', views.user_register_view, name='user_register_alias'),
     path('user/login/', views.user_login_view, name='user_login'),
     path('user/logout/', views.user_logout_view, name='user_logout'),
     path('user/dashboard/', views.user_dashboard_view, name='user_dashboard'),
+    path('user/profile/', views.user_profile_view, name='user_profile'),
+    path('profile/', views.user_profile_view, name='user_profile_alias'),
 
     # Password Reset via Email OTP (Task: Forgot Password & OTP flow)
     path('user/forgot-password/', views.user_forgot_password_view, name='user_forgot_password'),
