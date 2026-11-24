@@ -122,25 +122,25 @@
               <!-- Box Specifications (All 9 Model Fields) -->
               <div class="p-4 flex-grow-1 d-flex flex-column">
                 <ul class="list-unstyled mb-4 small flex-grow-1">
-                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
-                    <span class="text-muted"><i class="bi bi-clock-fill text-primary me-2"></i>Access Hours</span>
-                    <strong class="text-dark">{{ pkg.access_hours }}</strong>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between gap-2">
+                    <span class="text-muted text-nowrap flex-shrink-0"><i class="bi bi-clock-fill text-primary me-2"></i>Access Hours</span>
+                    <strong class="text-dark text-end small" style="max-width: 58%;">{{ pkg.access_hours }}</strong>
                   </li>
-                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
-                    <span class="text-muted"><i class="bi bi-calendar2-check-fill text-success me-2"></i>Classes / Week</span>
-                    <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold">{{ pkg.classes_per_week }}</span>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between gap-2">
+                    <span class="text-muted text-nowrap flex-shrink-0"><i class="bi bi-calendar2-check-fill text-success me-2"></i>Classes / Week</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold text-wrap text-end px-2.5 py-1.5" style="max-width: 60%; line-height: 1.35; font-size: 11px;">{{ pkg.classes_per_week }}</span>
                   </li>
-                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
-                    <span class="text-muted"><i class="bi bi-hourglass-split text-info me-2"></i>Duration</span>
-                    <strong class="text-dark">{{ pkg.duration }}</strong>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between gap-2">
+                    <span class="text-muted text-nowrap flex-shrink-0"><i class="bi bi-hourglass-split text-info me-2"></i>Duration</span>
+                    <strong class="text-dark text-end small">{{ pkg.duration }}</strong>
                   </li>
-                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
-                    <span class="text-muted"><i class="bi bi-cup-straw text-primary me-2"></i>Drinking Package</span>
-                    <span class="text-dark fw-semibold text-end" style="max-width: 55%;">{{ pkg.drinking_package }}</span>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between gap-2">
+                    <span class="text-muted text-nowrap flex-shrink-0"><i class="bi bi-cup-straw text-primary me-2"></i>Drinking Package</span>
+                    <span class="text-dark fw-semibold text-end small" style="max-width: 58%;">{{ pkg.drinking_package }}</span>
                   </li>
-                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between">
-                    <span class="text-muted"><i class="bi bi-person-badge-fill text-warning me-2"></i>Personal Trainer</span>
-                    <span class="text-dark fw-semibold text-end" style="max-width: 55%;">{{ pkg.personal_instructor }}</span>
+                  <li class="py-2.5 border-bottom d-flex align-items-center justify-content-between gap-2">
+                    <span class="text-muted text-nowrap flex-shrink-0"><i class="bi bi-person-badge-fill text-warning me-2"></i>Personal Trainer</span>
+                    <span class="text-dark fw-semibold text-end small" style="max-width: 58%;">{{ pkg.personal_instructor }}</span>
                   </li>
                   <li class="pt-3">
                     <span class="text-muted d-block mb-1.5"><i class="bi bi-tools text-secondary me-2"></i>Instruments & Equipment</span>
