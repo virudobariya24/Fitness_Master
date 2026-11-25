@@ -291,27 +291,37 @@
       <div class="collapse navbar-collapse" id="packagesGlobalNavbar">
         
         <!-- Navigation Links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 pt-2 pt-lg-0">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center gap-1 gap-lg-1.5 pt-2 pt-lg-0">
           {% if request.session.is_user_authenticated %}
             <li class="nav-item">
-              <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_dashboard' %}">
-                <i class="bi bi-speedometer2"></i> Dashboard
+              <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'user_dashboard' %}">
+                <i class="bi bi-speedometer2 text-muted"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'user_profile' %}">
+                <i class="bi bi-person-circle text-muted"></i>
+                <span>Profile</span>
               </a>
             </li>
           {% endif %}
           <li class="nav-item">
-            <a class="nav-link active fw-bold text-primary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10" href="{% url 'packages_cards' %}">
-              <i class="bi bi-grid-fill"></i> Packages Catalog
+            <a class="nav-link active fw-bold text-primary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10 text-nowrap" href="{% url 'packages_cards' %}">
+              <i class="bi bi-grid-fill"></i>
+              <span>Packages Catalog</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'about_us' %}">
-              <i class="bi bi-info-circle-fill text-muted"></i> About Us
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'about_us' %}">
+              <i class="bi bi-info-circle-fill text-muted"></i>
+              <span>About Us</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'contact_us' %}">
-              <i class="bi bi-telephone-fill text-muted"></i> Contact Us
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'contact_us' %}">
+              <i class="bi bi-telephone-fill text-muted"></i>
+              <span>Contact Us</span>
             </a>
           </li>
         </ul>
@@ -337,8 +347,13 @@
                   <strong class="text-dark d-block text-truncate fs-6">{{ request.session.user_username }}</strong>
                 </li>
                 <li>
-                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_dashboard' %}#memberProfileSection">
+                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_profile' %}">
                     <i class="bi bi-person-circle text-primary"></i> My Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-success" href="{% url 'user_orders' %}">
+                    <i class="bi bi-receipt"></i> My Bookings &amp; Orders
                   </a>
                 </li>
                 <li>

@@ -29,35 +29,35 @@
       <div class="collapse navbar-collapse" id="userProfileNavbar">
         
         <!-- Left Navigation Links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 pt-2 pt-lg-0">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center gap-1 gap-lg-1.5 pt-2 pt-lg-0">
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_dashboard' %}">
-              <i class="bi bi-speedometer2 text-muted"></i> Dashboard
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'user_dashboard' %}">
+              <i class="bi bi-speedometer2 text-muted"></i>
+              <span>Dashboard</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active fw-bold text-primary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10" href="{% url 'user_profile' %}">
-              <i class="bi bi-person-circle"></i> Profile
+            <a class="nav-link active fw-bold text-primary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10 text-nowrap" href="{% url 'user_profile' %}">
+              <i class="bi bi-person-circle"></i>
+              <span>Profile</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_orders' %}">
-              <i class="bi bi-receipt text-muted"></i> My Bookings
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'packages_cards' %}?portal=user">
+              <i class="bi bi-grid-fill text-muted"></i>
+              <span>Packages Catalog</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}?portal=user">
-              <i class="bi bi-grid-fill text-muted"></i> Packages Catalog
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'about_us' %}">
+              <i class="bi bi-info-circle-fill text-muted"></i>
+              <span>About Us</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'about_us' %}">
-              <i class="bi bi-info-circle-fill text-muted"></i> About Us
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'contact_us' %}">
-              <i class="bi bi-telephone-fill text-muted"></i> Contact Us
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'contact_us' %}">
+              <i class="bi bi-telephone-fill text-muted"></i>
+              <span>Contact Us</span>
             </a>
           </li>
         </ul>
