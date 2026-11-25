@@ -108,75 +108,273 @@
   </nav>
 
   <!-- =========================================================================
-       HERO WELCOME BANNER WITH FITNESS IMAGE & VALIDATION DETAILS
+       FULL-WIDTH AUTO-SCROLLING FITNESS HERO CAROUSEL (3-4 IMAGES, 3s INTERVAL)
        ========================================================================= -->
-  <div class="text-white py-4 py-lg-5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
-    <div class="container">
-      <div class="row align-items-center g-4">
-        
-        <!-- Left Column: Welcome Details & Quick Actions -->
-        <div class="col-lg-7">
-          <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white bg-opacity-10 border border-white border-opacity-10 mb-2.5">
-            <span class="badge rounded-circle p-1 bg-info d-inline-block" style="width: 8px; height: 8px;"></span>
-            <span class="text-info fw-bold small"><i class="bi bi-person-fill me-1"></i>Member Portal</span>
-            <span class="text-light opacity-50">&bull;</span>
-            <span class="text-light small fw-medium">ID #MEM-{{ user.id|stringformat:"04d" }}</span>
-          </div>
+  <section class="position-relative overflow-hidden bg-dark">
+    <div id="fitnessHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">
+      
+      <!-- Carousel Indicators -->
+      <div class="carousel-indicators mb-3 mb-md-4">
+        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="0" class="active rounded-pill" aria-current="true" aria-label="Slide 1: Strength & Free Weights" style="width: 36px; height: 5px;"></button>
+        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="1" class="rounded-pill" aria-label="Slide 2: Cardio Theater" style="width: 36px; height: 5px;"></button>
+        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="2" class="rounded-pill" aria-label="Slide 3: Functional & CrossFit Turf" style="width: 36px; height: 5px;"></button>
+        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="3" class="rounded-pill" aria-label="Slide 4: Wellness, Yoga & Spa" style="width: 36px; height: 5px;"></button>
+      </div>
 
-          <h1 class="display-6 fw-black text-white mb-2">
-            Welcome back, <span class="text-info">{{ user.name|default:user.username }}</span>!
-          </h1>
-          <p class="text-light text-opacity-75 mb-3" style="font-size: 0.95rem;">
-            Explore our curated fitness plans below. Transform your body with state-of-the-art gym equipment, certified trainers, and personalized coaching.
-          </p>
+      <!-- Carousel Slides Container -->
+      <div class="carousel-inner">
 
-          <!-- Quick Feature Highlights -->
-          <div class="d-flex flex-wrap gap-2 mb-3">
-            <span class="badge bg-white bg-opacity-10 text-light border border-white border-opacity-10 px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
-              <i class="fa-solid fa-dumbbell text-info me-1"></i> Modern Gym Equipment
-            </span>
-            <span class="badge bg-white bg-opacity-10 text-light border border-white border-opacity-10 px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
-              <i class="bi bi-person-badge-fill text-warning me-1"></i> Certified Coaches
-            </span>
-            <span class="badge bg-white bg-opacity-10 text-light border border-white border-opacity-10 px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
-              <i class="bi bi-clock-fill text-success me-1"></i> 24/7 Access Hours
-            </span>
-          </div>
-
-          <!-- Quick Action Buttons -->
-          <div class="d-flex flex-wrap gap-2">
-            <a href="{% url 'user_orders' %}" class="btn btn-outline-light fw-bold px-3.5 py-2 rounded-3">
-              <i class="bi bi-receipt me-1"></i> My Bookings
-            </a>
-            <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-info fw-bold px-3.5 py-2 shadow-sm text-dark rounded-3">
-              <i class="bi bi-grid-fill me-1"></i> Browse All Packages &rarr;
-            </a>
+        <!-- Slide 1: Modern Strength & Free Weights Arena -->
+        <div class="carousel-item active" style="min-height: 380px; max-height: 560px;">
+          <div class="position-relative w-100 h-100" style="background-color: #0f172a;">
+            <img src="{% static 'images/fitness_carousel_1.jpg' %}" class="d-block w-100 object-fit-cover" alt="Elite Strength Training Gym" style="min-height: 380px; max-height: 560px; object-fit: cover; filter: brightness(0.72);">
+            <div class="position-absolute inset-0 d-flex align-items-center top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.3) 100%);">
+              <div class="container py-4 py-lg-5">
+                <div class="row">
+                  <div class="col-12 col-md-10 col-lg-8">
+                    <span class="badge bg-info text-dark fw-bold px-3 py-1.5 rounded-pill mb-2.5 text-uppercase shadow-sm" style="font-size: 11px; letter-spacing: 0.5px;">
+                      <i class="fa-solid fa-dumbbell me-1.5"></i> Elite Iron &amp; Strength Arena
+                    </span>
+                    <h1 class="display-5 fw-black text-white mb-2.5 lh-sm">
+                      Unleash Your <span class="text-info">Maximum Power</span> &amp; Athletic Performance
+                    </h1>
+                    <p class="lead text-light text-opacity-85 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px;">
+                      Train on Olympic competition platforms, precision barbell stations, and biomechanical machines engineered to sculpt lean muscle.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2.5">
+                      <a href="#packages-section" class="btn btn-info text-dark fw-black px-4 py-2.5 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-box-seam-fill"></i> View Gym Packages &darr;
+                      </a>
+                      <a href="{% url 'user_orders' %}" class="btn btn-outline-light fw-bold px-3.5 py-2.5 rounded-pill d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-receipt"></i> My Bookings
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Right Column: Fitness Related Photo Showcase -->
-        <div class="col-lg-5">
-          <div class="position-relative rounded-4 overflow-hidden shadow-lg border border-white border-opacity-15" style="box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6) !important;">
-            <img src="{% static 'images/fitness_hero.jpg' %}" alt="Fitness Master Gym Facility &amp; Training Equipment" class="img-fluid w-100" style="object-fit: cover; max-height: 260px; min-height: 200px; display: block; filter: brightness(0.95);">
-            <div class="position-absolute bottom-0 start-0 end-0 p-3" style="background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 70%, transparent 100%);">
-              <div class="d-flex align-items-center justify-content-between">
-                <div>
-                  <span class="badge bg-info text-dark fw-bold px-2.5 py-1 rounded-pill mb-1" style="font-size: 10px;">
-                    <i class="fa-solid fa-dumbbell me-1"></i> State-of-the-Art Club
-                  </span>
-                  <small class="d-block text-white fw-semibold" style="font-size: 12px;">Strength, Cardio &amp; Functional Training</small>
+        <!-- Slide 2: High-Energy Cardio Theater -->
+        <div class="carousel-item" style="min-height: 380px; max-height: 560px;">
+          <div class="position-relative w-100 h-100" style="background-color: #0f172a;">
+            <img src="{% static 'images/fitness_carousel_2.jpg' %}" class="d-block w-100 object-fit-cover" alt="Cardio &amp; Endurance Theater" style="min-height: 380px; max-height: 560px; object-fit: cover; filter: brightness(0.72);">
+            <div class="position-absolute inset-0 d-flex align-items-center top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.3) 100%);">
+              <div class="container py-4 py-lg-5">
+                <div class="row">
+                  <div class="col-12 col-md-10 col-lg-8">
+                    <span class="badge bg-warning text-dark fw-bold px-3 py-1.5 rounded-pill mb-2.5 text-uppercase shadow-sm" style="font-size: 11px; letter-spacing: 0.5px;">
+                      <i class="bi bi-speedometer2 me-1.5"></i> 24/7 Cardio &amp; Endurance Theater
+                    </span>
+                    <h2 class="display-5 fw-black text-white mb-2.5 lh-sm">
+                      Ignite Your <span class="text-warning">Stamina &amp; Heart</span> Health
+                    </h2>
+                    <p class="lead text-light text-opacity-85 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px;">
+                      Supercharge endurance with high-tech digital touchscreen treadmills, air-resistance rowers, and dynamic spin bikes with live telemetry.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2.5">
+                      <a href="#packages-section" class="btn btn-warning text-dark fw-black px-4 py-2.5 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-lightning-charge-fill"></i> Choose Your Plan &darr;
+                      </a>
+                      <a href="#schedule-section" class="btn btn-outline-light fw-bold px-3.5 py-2.5 rounded-pill d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-calendar-week"></i> Class Schedule
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <span class="badge bg-success text-white px-2.5 py-1 rounded-pill fw-bold small" style="font-size: 10.5px;">
-                  <i class="bi bi-check-circle-fill me-1"></i> Active Club
-                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Functional & CrossFit Turf Arena -->
+        <div class="carousel-item" style="min-height: 380px; max-height: 560px;">
+          <div class="position-relative w-100 h-100" style="background-color: #0f172a;">
+            <img src="{% static 'images/fitness_carousel_3.jpg' %}" class="d-block w-100 object-fit-cover" alt="Functional &amp; CrossFit Turf Arena" style="min-height: 380px; max-height: 560px; object-fit: cover; filter: brightness(0.72);">
+            <div class="position-absolute inset-0 d-flex align-items-center top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.3) 100%);">
+              <div class="container py-4 py-lg-5">
+                <div class="row">
+                  <div class="col-12 col-md-10 col-lg-8">
+                    <span class="badge bg-danger text-white fw-bold px-3 py-1.5 rounded-pill mb-2.5 text-uppercase shadow-sm" style="font-size: 11px; letter-spacing: 0.5px;">
+                      <i class="bi bi-fire me-1.5"></i> High-Intensity Functional Turf
+                    </span>
+                    <h2 class="display-5 fw-black text-white mb-2.5 lh-sm">
+                      Battle Ropes, <span class="text-danger">AstroTurf</span> &amp; HIIT Sprints
+                    </h2>
+                    <p class="lead text-light text-opacity-85 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px;">
+                      Push past your limits with indoor sled tracks, cast-iron kettlebells, plyometric boxes, and certified CrossFit instructors.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2.5">
+                      <a href="#packages-section" class="btn btn-danger fw-black px-4 py-2.5 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-box-seam"></i> Unlock VIP Membership &darr;
+                      </a>
+                      <a href="#amenities-section" class="btn btn-outline-light fw-bold px-3.5 py-2.5 rounded-pill d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-stars"></i> Gym Facilities
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Luxury Wellness, Yoga & Post-Workout Spa -->
+        <div class="carousel-item" style="min-height: 380px; max-height: 560px;">
+          <div class="position-relative w-100 h-100" style="background-color: #0f172a;">
+            <img src="{% static 'images/fitness_carousel_4.jpg' %}" class="d-block w-100 object-fit-cover" alt="Luxury Wellness, Yoga &amp; Spa" style="min-height: 380px; max-height: 560px; object-fit: cover; filter: brightness(0.72);">
+            <div class="position-absolute inset-0 d-flex align-items-center top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.3) 100%);">
+              <div class="container py-4 py-lg-5">
+                <div class="row">
+                  <div class="col-12 col-md-10 col-lg-8">
+                    <span class="badge bg-success text-white fw-bold px-3 py-1.5 rounded-pill mb-2.5 text-uppercase shadow-sm" style="font-size: 11px; letter-spacing: 0.5px;">
+                      <i class="bi bi-flower1 me-1.5"></i> Recovery Lounge, Yoga &amp; Sauna
+                    </span>
+                    <h2 class="display-5 fw-black text-white mb-2.5 lh-sm">
+                      Balance, Mobility &amp; <span class="text-success">Rapid Recovery</span>
+                    </h2>
+                    <p class="lead text-light text-opacity-85 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px;">
+                      Recover faster with therapeutic steam rooms, Finnish dry saunas, guided yoga flows, and freshly blended organic protein shakes.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2.5">
+                      <a href="#packages-section" class="btn btn-success fw-black px-4 py-2.5 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-check2-circle"></i> Browse All Plans &darr;
+                      </a>
+                      <a href="{% url 'contact_us' %}" class="btn btn-outline-light fw-bold px-3.5 py-2.5 rounded-pill d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-telephone-outbound"></i> Contact Coaches
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
       </div>
+
+      <!-- Carousel Previous & Next Controls (Glassmorphism Styled) -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide="prev" aria-label="Previous Slide" style="width: 50px; opacity: 0.85;">
+        <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-dark bg-opacity-60 text-white shadow" style="width: 44px; height: 44px;">
+          <i class="bi bi-chevron-left fs-5"></i>
+        </span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide="next" aria-label="Next Slide" style="width: 50px; opacity: 0.85;">
+        <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-dark bg-opacity-60 text-white shadow" style="width: 44px; height: 44px;">
+          <i class="bi bi-chevron-right fs-5"></i>
+        </span>
+      </button>
+
+      <!-- Carousel Floating Auto-Scroll Status Pill -->
+      <div class="position-absolute bottom-0 end-0 p-3 d-none d-md-block" style="z-index: 10;">
+        <span class="badge bg-dark bg-opacity-75 text-light border border-white border-opacity-20 px-2.5 py-1.5 rounded-pill small">
+          <i class="bi bi-play-circle-fill text-info me-1"></i> Auto-scrolls every 3s
+        </span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       VALIDATED MEMBER SESSION BAR & QUICK ACCESS STRIP
+       ========================================================================= -->
+  <div class="border-bottom bg-white py-3 shadow-sm">
+    <div class="container">
+      <div class="row align-items-center g-3">
+        
+        <!-- Left: Member Greeting & Active Badge -->
+        <div class="col-lg-7">
+          <div class="d-flex flex-wrap align-items-center gap-2.5">
+            <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 15px;">
+              {{ user.username|slice:":2"|upper }}
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <h5 class="fw-black text-dark mb-0">Welcome back, {{ user.name|default:user.username }}!</h5>
+                <span class="badge bg-success bg-opacity-15 text-success border border-success-subtle rounded-pill fw-bold" style="font-size: 11px;">
+                  <i class="bi bi-check-circle-fill me-1"></i>Active Member
+                </span>
+                <span class="badge bg-light text-secondary border rounded-pill" style="font-size: 11px;">
+                  ID #MEM-{{ user.id|stringformat:"04d" }}
+                </span>
+              </div>
+              <small class="text-muted d-block" style="font-size: 12.5px;">
+                Registered Email: <strong>{{ user.email }}</strong> &bull; Access your workout plans and active bookings below.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Fast Actions -->
+        <div class="col-lg-5 text-lg-end">
+          <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-lg-end">
+            <a href="{% url 'user_orders' %}" class="btn btn-outline-secondary btn-sm fw-bold px-3 py-1.5 rounded-pill">
+              <i class="bi bi-receipt me-1"></i> My Bookings
+            </a>
+            <a href="{% url 'user_profile' %}" class="btn btn-outline-primary btn-sm fw-bold px-3 py-1.5 rounded-pill">
+              <i class="bi bi-person-circle me-1"></i> My Profile
+            </a>
+            <a href="#packages-section" class="btn btn-primary btn-sm fw-bold px-3.5 py-1.5 rounded-pill shadow-sm">
+              <i class="bi bi-box-seam me-1"></i> Packages &darr;
+            </a>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
+
+  <!-- =========================================================================
+       COMMUNITY METRIC COUNTERS / LIVE STATS (4-CARD GRID)
+       ========================================================================= -->
+  <section class="py-4 bg-white border-bottom">
+    <div class="container">
+      <div class="row g-3 text-center">
+        
+        <div class="col-6 col-lg-3">
+          <div class="p-3 rounded-4 bg-light border border-light-subtle h-100">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary mb-2" style="width: 44px; height: 44px;">
+              <i class="bi bi-people-fill fs-5"></i>
+            </div>
+            <h3 class="fw-black text-dark mb-0">1,850+</h3>
+            <span class="text-muted small fw-semibold">Active Gym Members</span>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <div class="p-3 rounded-4 bg-light border border-light-subtle h-100">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-15 text-warning mb-2" style="width: 44px; height: 44px;">
+              <i class="bi bi-person-badge-fill fs-5"></i>
+            </div>
+            <h3 class="fw-black text-dark mb-0">45+</h3>
+            <span class="text-muted small fw-semibold">Certified Master Trainers</span>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <div class="p-3 rounded-4 bg-light border border-light-subtle h-100">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-15 text-success mb-2" style="width: 44px; height: 44px;">
+              <i class="bi bi-calendar2-check-fill fs-5"></i>
+            </div>
+            <h3 class="fw-black text-dark mb-0">35+</h3>
+            <span class="text-muted small fw-semibold">Weekly Group Classes</span>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <div class="p-3 rounded-4 bg-light border border-light-subtle h-100">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger mb-2" style="width: 44px; height: 44px;">
+              <i class="bi bi-heart-pulse-fill fs-5"></i>
+            </div>
+            <h3 class="fw-black text-dark mb-0">99.4%</h3>
+            <span class="text-muted small fw-semibold">Transformation Success</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
 
   <!-- =========================================================================
        MAIN CONTENT CONTAINER
@@ -196,150 +394,581 @@
       </div>
     {% endif %}
 
-    <!-- Section Heading: Available Packages -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-      <div>
-        <h4 class="fw-black text-dark mb-1">
-          <i class="bi bi-box-seam text-primary me-2"></i>Available Gym Packages
-        </h4>
-        <p class="text-muted small mb-0">Browse packages and click "View More" for complete features</p>
+    <!-- =========================================================================
+         SECTION: AVAILABLE GYM PACKAGES
+         ========================================================================= -->
+    <div id="packages-section" class="pt-2 mb-5">
+      
+      <!-- Section Heading -->
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+        <div>
+          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-3 py-1 rounded-pill mb-1 d-inline-block" style="font-size: 11px;">
+            <i class="bi bi-stars me-1"></i> MEMBERSHIP OPTIONS
+          </span>
+          <h3 class="fw-black text-dark mb-1">
+            <i class="bi bi-box-seam text-primary me-2"></i>Available Gym Packages
+          </h3>
+          <p class="text-muted small mb-0">Browse packages and click "View More" for complete features, terms, and direct booking.</p>
+        </div>
+        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-3 py-1.5 rounded-pill">
+          {{ packages.count }} Active Plan{{ packages.count|pluralize }}
+        </span>
       </div>
-      <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-3 py-1.5 rounded-pill">
-        {{ packages.count }} Active Plan{{ packages.count|pluralize }}
-      </span>
+
+      <!-- Packages Cards Grid -->
+      <div class="row g-4 mb-4">
+        {% for package in packages %}
+          <div class="col-12 col-md-6 col-xl-4 d-flex">
+            <div class="card h-100 w-100 border-0 rounded-4 shadow-sm bg-white overflow-hidden d-flex flex-column transition-hover" style="border: 1px solid #e2e8f0 !important;">
+              
+              <!-- Card Header: Title & Duration Badge with Tier Accent -->
+              <div class="p-3.5 border-bottom d-flex align-items-center justify-content-between" style="background-color: #f8fafc;">
+                <div>
+                  <span class="badge {% if forloop.counter == 1 %}bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle{% elif forloop.counter == 2 %}bg-warning bg-opacity-15 text-dark border border-warning-subtle{% else %}bg-primary bg-opacity-10 text-primary border border-primary-subtle{% endif %} fw-bold text-uppercase px-2.5 py-1 rounded-pill mb-1 d-inline-block" style="font-size: 10px; letter-spacing: 0.5px;">
+                    {% if forloop.counter == 1 %}Starter Plan{% elif forloop.counter == 2 %}Popular Choice{% else %}Elite VIP{% endif %}
+                  </span>
+                  <h5 class="fw-black mb-0 text-dark">{{ package.title }}</h5>
+                </div>
+                <span class="badge bg-white text-dark fw-bold border shadow-sm px-2.5 py-1.5 rounded-pill d-inline-flex align-items-center gap-1" style="font-size: 11px;">
+                  <i class="bi bi-clock-history text-primary"></i>{{ package.duration }}
+                </span>
+              </div>
+
+              <!-- Price & Membership Duration -->
+              <div class="px-4 py-3 bg-white border-bottom">
+                <div class="d-flex align-items-baseline gap-1.5">
+                  <span class="fs-2 fw-black text-primary" style="letter-spacing: -0.5px;">₹{{ package.price }}</span>
+                  <span class="text-muted fw-bold small">/ {{ package.membership_duration }}</span>
+                </div>
+              </div>
+
+              <!-- Features List -->
+              <div class="p-4 flex-grow-1 d-flex flex-column">
+                <div class="d-flex flex-column gap-2.5 flex-grow-1">
+                  
+                  <!-- Access Hours -->
+                  <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light-subtle">
+                    <div class="d-flex align-items-center text-muted fw-semibold small flex-shrink-0" style="min-width: 140px;">
+                      <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #f0f9ff; color: #0284c7;">
+                        <i class="bi bi-clock"></i>
+                      </span>
+                      <span>Access Hours</span>
+                    </div>
+                    <div class="text-end flex-grow-1 ms-2">
+                      <strong class="text-dark small">{{ package.access_hours }}</strong>
+                    </div>
+                  </div>
+
+                  <!-- Classes / Week -->
+                  <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light-subtle">
+                    <div class="d-flex align-items-center text-muted fw-semibold small flex-shrink-0" style="min-width: 140px;">
+                      <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #f0fdf4; color: #16a34a;">
+                        <i class="bi bi-calendar-week"></i>
+                      </span>
+                      <span>Classes / Week</span>
+                    </div>
+                    <div class="text-end flex-grow-1 ms-2">
+                      <span class="badge bg-success-subtle text-success fw-bold text-wrap text-end px-2.5 py-1.5" style="font-size: 11px; line-height: 1.4;">
+                        {{ package.classes_per_week }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Instructor -->
+                  <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light-subtle">
+                    <div class="d-flex align-items-center text-muted fw-semibold small flex-shrink-0" style="min-width: 140px;">
+                      <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #fffbeb; color: #d97706;">
+                        <i class="bi bi-person-video3"></i>
+                      </span>
+                      <span>Instructor</span>
+                    </div>
+                    <div class="text-end flex-grow-1 ms-2">
+                      <span class="text-dark fw-semibold small">{{ package.personal_instructor }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Beverage -->
+                  <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light-subtle">
+                    <div class="d-flex align-items-center text-muted fw-semibold small flex-shrink-0" style="min-width: 140px;">
+                      <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #eef2ff; color: #4f46e5;">
+                        <i class="bi bi-cup-straw"></i>
+                      </span>
+                      <span>Beverage</span>
+                    </div>
+                    <div class="text-end flex-grow-1 ms-2">
+                      <span class="text-dark fw-semibold small">{{ package.drinking_package }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Equipment Included -->
+                  <div class="pt-2">
+                    <div class="d-flex align-items-center text-muted fw-semibold small mb-1.5">
+                      <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #f1f5f9; color: #475569;">
+                        <i class="bi bi-tools"></i>
+                      </span>
+                      <span>Equipment Included</span>
+                    </div>
+                    <div class="small text-secondary bg-light p-2.5 rounded-3 border border-light-subtle" style="font-size: 12px; line-height: 1.5; min-height: 56px;">
+                      {{ package.instruments }}
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Card Action Footer: View More Button (Task 1) -->
+                <div class="pt-3 mt-auto">
+                  <a href="{% url 'package_detail' package.pk %}" class="btn btn-outline-primary fw-bold w-100 d-flex align-items-center justify-content-center gap-2 py-2.5 shadow-sm rounded-3">
+                    <i class="bi bi-eye-fill"></i> View More Details &rarr;
+                  </a>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <div class="card border-0 rounded-4 shadow-sm bg-white p-5 text-center">
+              <i class="bi bi-inbox text-muted display-4 mb-3"></i>
+              <h5 class="fw-bold text-dark">No Packages Available</h5>
+              <p class="text-muted mb-0">Please check back soon for our latest fitness membership plans.</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
     </div>
 
-    <!-- 1 Box / Package Cards Grid -->
-    <div class="row g-4 mb-4">
-      {% for package in packages %}
-        <div class="col-12 col-md-6 col-xl-4 d-flex">
-          <div class="card h-100 w-100 border-0 rounded-4 shadow-sm bg-white overflow-hidden d-flex flex-column transition-hover" style="border: 1px solid #e2e8f0 !important;">
-            
-            <!-- Card Header: Title & Duration Badge with Tier Accent -->
-            <div class="p-3.5 border-bottom d-flex align-items-center justify-content-between" style="background-color: #f8fafc;">
+    <!-- =========================================================================
+         SECTION: WHY TRAIN WITH FITNESS MASTER? (4 ADVANTAGES)
+         ========================================================================= -->
+    <section class="mb-5">
+      <div class="text-center mb-4">
+        <span class="badge bg-info bg-opacity-10 text-info border border-info-subtle fw-bold px-3 py-1 rounded-pill mb-1.5" style="font-size: 11px;">
+          PREMIUM ADVANTAGES
+        </span>
+        <h3 class="fw-black text-dark mb-1">Why Choose Fitness Master?</h3>
+        <p class="text-muted small mx-auto" style="max-width: 600px;">
+          Experience an unrivaled gym atmosphere designed for beginners, fitness enthusiasts, and elite athletes alike.
+        </p>
+      </div>
+
+      <div class="row g-3 g-lg-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-4 h-100 text-center" style="border: 1px solid #e2e8f0 !important;">
+            <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
+              <i class="fa-solid fa-dumbbell fs-4"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-2">Biomechanical Equipment</h6>
+            <p class="text-muted small mb-0" style="line-height: 1.6;">
+              Industry-leading Hammer Strength, Rogue, and Life Fitness gear engineered for optimal joint biomechanics.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-4 h-100 text-center" style="border: 1px solid #e2e8f0 !important;">
+            <div class="rounded-circle bg-warning bg-opacity-15 text-warning d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
+              <i class="bi bi-person-badge-fill fs-4"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-2">Certified Personal Coaches</h6>
+            <p class="text-muted small mb-0" style="line-height: 1.6;">
+              Get customized body composition analysis, personalized meal planning, and dedicated 1-on-1 technique coaching.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-4 h-100 text-center" style="border: 1px solid #e2e8f0 !important;">
+            <div class="rounded-circle bg-success bg-opacity-15 text-success d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
+              <i class="bi bi-clock-history fs-4"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-2">24/7 VIP Smart Access</h6>
+            <p class="text-muted small mb-0" style="line-height: 1.6;">
+              Train whenever your schedule allows with keycard and mobile biometric access, 365 days a year.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-4 h-100 text-center" style="border: 1px solid #e2e8f0 !important;">
+            <div class="rounded-circle bg-danger bg-opacity-10 text-danger d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
+              <i class="bi bi-heart-pulse fs-4"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-2">Sauna &amp; Recovery Lounge</h6>
+            <p class="text-muted small mb-0" style="line-height: 1.6;">
+              Soothe muscles after heavy training with Finnish dry saunas, steam rooms, and post-workout protein shakes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION: WEEKLY CLASS SCHEDULE PREVIEW
+         ========================================================================= -->
+    <section id="schedule-section" class="mb-5 pt-3">
+      <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+        <div class="card-header bg-white border-bottom p-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div>
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-2.5 py-1 rounded-pill mb-1 d-inline-block" style="font-size: 10.5px;">
+              WEEKLY GROUP TIMETABLE
+            </span>
+            <h4 class="fw-black text-dark mb-0">
+              <i class="bi bi-calendar-week text-primary me-2"></i>Weekly Class &amp; Workout Disciplines
+            </h4>
+          </div>
+          <span class="badge bg-light text-muted border px-3 py-1.5 rounded-pill small">
+            Included in Gold &amp; Elite Plans
+          </span>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr class="small text-uppercase text-muted fw-bold">
+                  <th class="ps-4 py-3">Workout Discipline</th>
+                  <th class="py-3">Target Focus</th>
+                  <th class="py-3">Schedule Days</th>
+                  <th class="py-3">Timings</th>
+                  <th class="text-end pe-4 py-3">Instructor</th>
+                </tr>
+              </thead>
+              <tbody class="small">
+                <tr>
+                  <td class="ps-4 fw-bold text-dark">
+                    <span class="d-inline-flex align-items-center gap-2">
+                      <span class="badge rounded-circle p-1 bg-danger"></span>
+                      High-Intensity Interval Training (HIIT)
+                    </span>
+                  </td>
+                  <td><span class="badge bg-danger-subtle text-danger fw-semibold">Cardio &amp; Fat Burn</span></td>
+                  <td class="text-muted fw-semibold">Mon, Wed, Fri</td>
+                  <td><strong>07:00 AM &bull; 06:00 PM</strong></td>
+                  <td class="text-end pe-4"><span class="badge bg-light text-dark border">Coach Vikram</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4 fw-bold text-dark">
+                    <span class="d-inline-flex align-items-center gap-2">
+                      <span class="badge rounded-circle p-1 bg-success"></span>
+                      Power Vinyasa Yoga &amp; Mobility
+                    </span>
+                  </td>
+                  <td><span class="badge bg-success-subtle text-success fw-semibold">Flexibility &amp; Core</span></td>
+                  <td class="text-muted fw-semibold">Tue, Thu, Sat</td>
+                  <td><strong>08:00 AM &bull; 05:30 PM</strong></td>
+                  <td class="text-end pe-4"><span class="badge bg-light text-dark border">Yogini Ananya</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4 fw-bold text-dark">
+                    <span class="d-inline-flex align-items-center gap-2">
+                      <span class="badge rounded-circle p-1 bg-primary"></span>
+                      Strength &amp; Hypertrophy Bootcamp
+                    </span>
+                  </td>
+                  <td><span class="badge bg-primary-subtle text-primary fw-semibold">Muscle &amp; Power</span></td>
+                  <td class="text-muted fw-semibold">Mon to Sat</td>
+                  <td><strong>10:00 AM &bull; 07:00 PM</strong></td>
+                  <td class="text-end pe-4"><span class="badge bg-light text-dark border">Coach Aryan</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4 fw-bold text-dark">
+                    <span class="d-inline-flex align-items-center gap-2">
+                      <span class="badge rounded-circle p-1 bg-warning"></span>
+                      Zumba &amp; Dance Aerobics
+                    </span>
+                  </td>
+                  <td><span class="badge bg-warning-subtle text-dark fw-semibold">Rhythm Cardio</span></td>
+                  <td class="text-muted fw-semibold">Wed, Sat</td>
+                  <td><strong>06:30 PM</strong></td>
+                  <td class="text-end pe-4"><span class="badge bg-light text-dark border">Instructor Sneha</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION: GYM FACILITIES & AMENITIES
+         ========================================================================= -->
+    <section id="amenities-section" class="mb-5">
+      <div class="text-center mb-4">
+        <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle fw-bold px-3 py-1 rounded-pill mb-1.5" style="font-size: 11px;">
+          CLUB AMENITIES
+        </span>
+        <h3 class="fw-black text-dark mb-1">State-of-the-Art Facilities</h3>
+        <p class="text-muted small mx-auto" style="max-width: 600px;">
+          Everything you need for a frictionless workout routine, pristine hygiene, and post-exercise relaxation.
+        </p>
+      </div>
+
+      <div class="row g-3">
+        
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="p-3.5 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+            <div class="rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+              <i class="fa-solid fa-weight-hanging fs-5"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-0.5">Olympic Free Weights</h6>
+              <small class="text-muted">Barbells, bumper plates, &amp; dumbbells to 60kg</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="p-3.5 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+            <div class="rounded-3 bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+              <i class="bi bi-speedometer fs-5"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-0.5">Cardio Theater</h6>
+              <small class="text-muted">Digital touch treadmills, rowers &amp; spin bikes</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="p-3.5 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+            <div class="rounded-3 bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+              <i class="bi bi-shield-check fs-5"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-0.5">Private Lockers &amp; Showers</h6>
+              <small class="text-muted">Keyless secure lockers &amp; hot rainwater showers</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="p-3.5 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+            <div class="rounded-3 bg-warning bg-opacity-15 text-warning d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+              <i class="bi bi-cup-hot-fill fs-5"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-0.5">Protein Shake Bar</h6>
+              <small class="text-muted">Whey isolate, plant protein &amp; fruit smoothies</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="p-3.5 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+            <div class="rounded-3 bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+              <i class="bi bi-lightning-charge-fill fs-5"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-0.5">CrossFit AstroTurf</h6>
+              <small class="text-muted">Sled tracks, battle ropes &amp; plyometric boxes</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="p-3.5 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+            <div class="rounded-3 bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+              <i class="bi bi-wifi fs-5"></i>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-0.5">High-Speed Club WiFi</h6>
+              <small class="text-muted">Stream playlists &amp; workout telemetry seamlessly</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION: MEMBER TESTIMONIALS & TRANSFORMATION STORIES
+         ========================================================================= -->
+    <section class="mb-5">
+      <div class="text-center mb-4">
+        <span class="badge bg-warning bg-opacity-15 text-dark border border-warning-subtle fw-bold px-3 py-1 rounded-pill mb-1.5" style="font-size: 11px;">
+          SUCCESS STORIES
+        </span>
+        <h3 class="fw-black text-dark mb-1">What Our Members Say</h3>
+        <p class="text-muted small mx-auto" style="max-width: 600px;">
+          Real transformations, real results. Here is what members experience at Fitness Master.
+        </p>
+      </div>
+
+      <div class="row g-3 g-lg-4">
+        
+        <div class="col-12 col-md-4">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-4 h-100 d-flex flex-column" style="border: 1px solid #e2e8f0 !important;">
+            <div class="text-warning mb-2 fs-6">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="text-muted small mb-3 flex-grow-1" style="line-height: 1.6;">
+              "The personalized coaching and nutrition advice completely changed my life. I dropped 14 kg in 4 months and my energy levels are higher than ever."
+            </p>
+            <div class="d-flex align-items-center gap-2.5 pt-2 border-top">
+              <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; font-size: 13px;">
+                RV
+              </div>
               <div>
-                <span class="badge {% if forloop.counter == 1 %}bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle{% elif forloop.counter == 2 %}bg-warning bg-opacity-15 text-dark border border-warning-subtle{% else %}bg-primary bg-opacity-10 text-primary border border-primary-subtle{% endif %} fw-bold text-uppercase px-2.5 py-1 rounded-pill mb-1 d-inline-block" style="font-size: 10px; letter-spacing: 0.5px;">
-                  {% if forloop.counter == 1 %}Starter Plan{% elif forloop.counter == 2 %}Popular Choice{% else %}Elite VIP{% endif %}
-                </span>
-                <h5 class="fw-black mb-0 text-dark">{{ package.title }}</h5>
-              </div>
-              <span class="badge bg-white text-dark fw-bold border shadow-sm px-2.5 py-1.5 rounded-pill d-inline-flex align-items-center gap-1" style="font-size: 11px;">
-                <i class="bi bi-clock-history text-primary"></i>{{ package.duration }}
-              </span>
-            </div>
-
-            <!-- Price & Membership Duration -->
-            <div class="px-4 py-3 bg-white border-bottom">
-              <div class="d-flex align-items-baseline gap-1.5">
-                <span class="fs-2 fw-black text-primary" style="letter-spacing: -0.5px;">₹{{ package.price }}</span>
-                <span class="text-muted fw-bold small">/ {{ package.membership_duration }}</span>
+                <strong class="text-dark small d-block">Rahul Verma</strong>
+                <small class="text-muted" style="font-size: 11px;">Gold Member &bull; 8 Months</small>
               </div>
             </div>
-
-            <!-- Features List -->
-            <div class="p-4 flex-grow-1 d-flex flex-column">
-              <div class="d-flex flex-column gap-2.5 flex-grow-1">
-                
-                <!-- Access Hours -->
-                <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light-subtle">
-                  <div class="d-flex align-items-center text-muted fw-semibold small flex-shrink-0" style="min-width: 140px;">
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #f0f9ff; color: #0284c7;">
-                      <i class="bi bi-clock"></i>
-                    </span>
-                    <span>Access Hours</span>
-                  </div>
-                  <div class="text-end flex-grow-1 ms-2">
-                    <strong class="text-dark small">{{ package.access_hours }}</strong>
-                  </div>
-                </div>
-
-                <!-- Classes / Week -->
-                <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light-subtle">
-                  <div class="d-flex align-items-center text-muted fw-semibold small flex-shrink-0" style="min-width: 140px;">
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #f0fdf4; color: #16a34a;">
-                      <i class="bi bi-calendar-week"></i>
-                    </span>
-                    <span>Classes / Week</span>
-                  </div>
-                  <div class="text-end flex-grow-1 ms-2">
-                    <span class="badge bg-success-subtle text-success fw-bold text-wrap text-end px-2.5 py-1.5" style="font-size: 11px; line-height: 1.4;">
-                      {{ package.classes_per_week }}
-                    </span>
-                  </div>
-                </div>
-
-                <!-- Instructor -->
-                <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light-subtle">
-                  <div class="d-flex align-items-center text-muted fw-semibold small flex-shrink-0" style="min-width: 140px;">
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #fffbeb; color: #d97706;">
-                      <i class="bi bi-person-video3"></i>
-                    </span>
-                    <span>Instructor</span>
-                  </div>
-                  <div class="text-end flex-grow-1 ms-2">
-                    <span class="text-dark fw-semibold small">{{ package.personal_instructor }}</span>
-                  </div>
-                </div>
-
-                <!-- Beverage -->
-                <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light-subtle">
-                  <div class="d-flex align-items-center text-muted fw-semibold small flex-shrink-0" style="min-width: 140px;">
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #eef2ff; color: #4f46e5;">
-                      <i class="bi bi-cup-straw"></i>
-                    </span>
-                    <span>Beverage</span>
-                  </div>
-                  <div class="text-end flex-grow-1 ms-2">
-                    <span class="text-dark fw-semibold small">{{ package.drinking_package }}</span>
-                  </div>
-                </div>
-
-                <!-- Equipment Included -->
-                <div class="pt-2">
-                  <div class="d-flex align-items-center text-muted fw-semibold small mb-1.5">
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-2 me-2 flex-shrink-0" style="width: 28px; height: 28px; background-color: #f1f5f9; color: #475569;">
-                      <i class="bi bi-tools"></i>
-                    </span>
-                    <span>Equipment Included</span>
-                  </div>
-                  <div class="small text-secondary bg-light p-2.5 rounded-3 border border-light-subtle" style="font-size: 12px; line-height: 1.5; min-height: 56px;">
-                    {{ package.instruments }}
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Card Action Footer: View More Button (Task 1) -->
-              <div class="pt-3 mt-auto">
-                <a href="{% url 'package_detail' package.pk %}" class="btn btn-outline-primary fw-bold w-100 d-flex align-items-center justify-content-center gap-2 py-2.5 shadow-sm rounded-3">
-                  <i class="bi bi-eye-fill"></i> View More Details &rarr;
-                </a>
-              </div>
-
-            </div>
-
           </div>
         </div>
-      {% empty %}
-        <div class="col-12">
-          <div class="card border-0 rounded-4 shadow-sm bg-white p-5 text-center">
-            <i class="bi bi-inbox text-muted display-4 mb-3"></i>
-            <h5 class="fw-bold text-dark">No Packages Available</h5>
-            <p class="text-muted mb-0">Please check back soon for our latest fitness membership plans.</p>
+
+        <div class="col-12 col-md-4">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-4 h-100 d-flex flex-column" style="border: 1px solid #e2e8f0 !important;">
+            <div class="text-warning mb-2 fs-6">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="text-muted small mb-3 flex-grow-1" style="line-height: 1.6;">
+              "Having 24/7 access fits my hectic software developer schedule perfectly. Equipment is always pristine, sanitized, and trainers are exceptionally helpful."
+            </p>
+            <div class="d-flex align-items-center gap-2.5 pt-2 border-top">
+              <div class="rounded-circle bg-success text-white fw-bold d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; font-size: 13px;">
+                PP
+              </div>
+              <div>
+                <strong class="text-dark small d-block">Priya Patel</strong>
+                <small class="text-muted" style="font-size: 11px;">Elite VIP &bull; 1 Year</small>
+              </div>
+            </div>
           </div>
         </div>
-      {% endfor %}
+
+        <div class="col-12 col-md-4">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-4 h-100 d-flex flex-column" style="border: 1px solid #e2e8f0 !important;">
+            <div class="text-warning mb-2 fs-6">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="text-muted small mb-3 flex-grow-1" style="line-height: 1.6;">
+              "The CrossFit turf and Olympic platforms are top tier. Best gym community in town — motivational, clean, and the steam room is a game-changer!"
+            </p>
+            <div class="d-flex align-items-center gap-2.5 pt-2 border-top">
+              <div class="rounded-circle bg-danger text-white fw-bold d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; font-size: 13px;">
+                AS
+              </div>
+              <div>
+                <strong class="text-dark small d-block">Amit Sharma</strong>
+                <small class="text-muted" style="font-size: 11px;">Platinum Plan &bull; 6 Months</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION: FREQUENTLY ASKED QUESTIONS (FAQ) ACCORDION
+         ========================================================================= -->
+    <section class="mb-5">
+      <div class="card border-0 rounded-4 shadow-sm bg-white p-4 p-lg-5" style="border: 1px solid #e2e8f0 !important;">
+        <div class="text-center mb-4">
+          <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle fw-bold px-3 py-1 rounded-pill mb-1.5" style="font-size: 11px;">
+            MEMBER HELP &amp; FAQ
+          </span>
+          <h4 class="fw-black text-dark mb-1">Frequently Asked Questions</h4>
+          <p class="text-muted small mx-auto mb-0" style="max-width: 540px;">
+            Quick answers to the most common questions regarding gym packages, hours, and bookings.
+          </p>
+        </div>
+
+        <div class="accordion accordion-flush" id="faqAccordion">
+          
+          <div class="accordion-item border-bottom">
+            <h2 class="accordion-header" id="faqHeading1">
+              <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="false" aria-controls="faqCollapse1">
+                How do I book or activate my gym membership package?
+              </button>
+            </h2>
+            <div id="faqCollapse1" class="accordion-collapse collapse" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted small pt-0 pb-3" style="line-height: 1.6;">
+                Simply select any package above, click <strong>"View More Details"</strong>, and press the <strong>"Book Now"</strong> button. Your booking order will be created instantly, and you can view its receipt and activation status under <em>My Bookings</em>.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item border-bottom">
+            <h2 class="accordion-header" id="faqHeading2">
+              <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                Can I pause or freeze my membership while traveling?
+              </button>
+            </h2>
+            <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted small pt-0 pb-3" style="line-height: 1.6;">
+                Yes! Members on Gold Pro and Elite VIP plans can freeze their membership for up to 30 days per year free of charge by contacting the front desk or support team.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item border-bottom">
+            <h2 class="accordion-header" id="faqHeading3">
+              <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                Are personal instructors and nutrition plans included?
+              </button>
+            </h2>
+            <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted small pt-0 pb-3" style="line-height: 1.6;">
+                All premium packages include a certified dedicated trainer and bi-weekly diet consultations. You can see the exact instructor coverage on each package's detailed specifications page.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faqHeading4">
+              <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                What are the locker room and hygiene policies?
+              </button>
+            </h2>
+            <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted small pt-0 pb-3" style="line-height: 1.6;">
+                Lockers are complimentary for daily use. We provide fresh workout towels, antibacterial wipe stations across every training zone, and private shower suites sanitized hourly.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION: MOTIVATIONAL CALL-TO-ACTION (CTA) BANNER
+         ========================================================================= -->
+    <div class="rounded-4 p-4 p-lg-5 text-white shadow-lg text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid rgba(255,255,255,0.15);">
+      <div class="position-relative" style="z-index: 2;">
+        <span class="badge bg-info text-dark fw-bold px-3 py-1.5 rounded-pill mb-2 text-uppercase" style="font-size: 11px;">
+          START YOUR TRANSFORMATION TODAY
+        </span>
+        <h3 class="display-6 fw-black text-white mb-2">Ready to Reach Your Fitness Peak?</h3>
+        <p class="text-light text-opacity-80 small mx-auto mb-4" style="max-width: 580px; font-size: 0.95rem;">
+          Join Fitness Master today and unlock state-of-the-art gym access, world-class coaching, and an inspiring fitness community.
+        </p>
+        <div class="d-flex flex-wrap gap-2.5 justify-content-center">
+          <a href="#packages-section" class="btn btn-info text-dark fw-black px-4 py-2.5 rounded-pill shadow-sm">
+            <i class="bi bi-box-seam-fill me-1"></i> Choose a Membership Plan
+          </a>
+          <a href="{% url 'contact_us' %}" class="btn btn-outline-light fw-bold px-4 py-2.5 rounded-pill">
+            <i class="bi bi-chat-dots-fill me-1"></i> Speak with a Coach
+          </a>
+        </div>
+      </div>
     </div>
 
   </div>
 
-  <!-- Footer -->
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
   <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
-    <span>Fitness Master &copy; 2026 &bull; Member Operations Portal (Django Sessions)</span>
-    <span class="mx-2">&bull;</span>
-    <a href="{% url 'admin_gateway' %}" class="text-decoration-none text-muted">
-      <i class="bi bi-shield-lock me-1"></i>Staff / Admin Portal (/admin)
-    </a>
+    <div class="container">
+      <span>Fitness Master &copy; 2026 &bull; Member Operations Portal (Django Sessions)</span>
+      <span class="mx-2">&bull;</span>
+      <a href="{% url 'admin_gateway' %}" class="text-decoration-none text-muted">
+        <i class="bi bi-shield-lock me-1"></i>Staff / Admin Portal (/admin)
+      </a>
+    </div>
   </footer>
 
 </div>
