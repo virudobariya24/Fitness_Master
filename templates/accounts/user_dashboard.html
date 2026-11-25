@@ -6,10 +6,146 @@
 {% block auth_content %}
 <div class="min-vh-100 d-flex flex-column bg-light">
 
+  <style>
+    /* =========================================================================
+       FIXED HEADER STYLING
+       ========================================================================= */
+    .user-sticky-navbar {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 1040 !important;
+      background-color: rgba(255, 255, 255, 0.97) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.07) !important;
+      transition: all 0.25s ease;
+    }
+
+    /* =========================================================================
+       CINEMATIC & STYLISH CAROUSEL STYLING
+       ========================================================================= */
+    .stylish-carousel-container {
+      position: relative;
+      background-color: #0b1120;
+      overflow: hidden;
+    }
+
+    .stylish-carousel-item {
+      height: 520px;
+      position: relative;
+      background-color: #0b1120;
+      overflow: hidden;
+    }
+
+    @media (max-width: 991.98px) {
+      .stylish-carousel-item {
+        height: 420px;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      .stylish-carousel-item {
+        height: 350px;
+      }
+    }
+
+    .stylish-carousel-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.68) contrast(1.1);
+      transform: scale(1);
+      transition: transform 7s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .carousel-item.active .stylish-carousel-img {
+      transform: scale(1.07);
+    }
+
+    .stylish-carousel-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(11, 17, 32, 0.94) 0%, rgba(11, 17, 32, 0.65) 52%, rgba(11, 17, 32, 0.25) 100%),
+                  linear-gradient(180deg, rgba(11, 17, 32, 0.15) 0%, rgba(11, 17, 32, 0.85) 100%);
+      display: flex;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .carousel-glass-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .carousel-control-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .carousel-control-btn:hover {
+      background: #0ea5e9;
+      border-color: #0ea5e9;
+      color: #ffffff;
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.6);
+    }
+
+    .stylish-indicator {
+      width: 32px !important;
+      height: 4px !important;
+      border-radius: 999px !important;
+      border: none !important;
+      background-color: rgba(255, 255, 255, 0.35) !important;
+      transition: all 0.35s ease !important;
+      margin: 0 4px !important;
+    }
+
+    .stylish-indicator.active {
+      width: 52px !important;
+      background-color: #0ea5e9 !important;
+      box-shadow: 0 0 12px rgba(14, 165, 233, 0.9) !important;
+    }
+
+    .micro-tag-pill {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #f1f5f9;
+      display: inline-flex;
+      align-items: center;
+    }
+  </style>
+
   <!-- =========================================================================
-       MEMBER TOP NAVIGATION BAR WITH VALIDATION
+       FIXED TOP NAVIGATION BAR
        ========================================================================= -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top py-2">
+  <nav class="navbar navbar-expand-lg navbar-light user-sticky-navbar py-2.5">
     <div class="container">
       
       <!-- Brand Logo -->
@@ -108,168 +244,262 @@
   </nav>
 
   <!-- =========================================================================
-       FULL-WIDTH AUTO-SCROLLING FITNESS HERO CAROUSEL (3-4 IMAGES, 3s INTERVAL)
+       ULTRA-STYLISH AUTO-SCROLLING FITNESS HERO CAROUSEL (3-4 IMAGES, 3s INTERVAL)
        ========================================================================= -->
-  <section class="position-relative overflow-hidden bg-dark">
+  <section class="stylish-carousel-container">
     <div id="fitnessHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">
       
-      <!-- Carousel Indicators -->
+      <!-- Modern Animated Progress Indicators -->
       <div class="carousel-indicators mb-3 mb-md-4">
-        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="0" class="active rounded-pill" aria-current="true" aria-label="Slide 1: Strength & Free Weights" style="width: 36px; height: 5px;"></button>
-        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="1" class="rounded-pill" aria-label="Slide 2: Cardio Theater" style="width: 36px; height: 5px;"></button>
-        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="2" class="rounded-pill" aria-label="Slide 3: Functional & CrossFit Turf" style="width: 36px; height: 5px;"></button>
-        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="3" class="rounded-pill" aria-label="Slide 4: Wellness, Yoga & Spa" style="width: 36px; height: 5px;"></button>
+        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="0" class="active stylish-indicator" aria-current="true" aria-label="Slide 1: Iron & Strength Arena"></button>
+        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="1" class="stylish-indicator" aria-label="Slide 2: Cardio Theater"></button>
+        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="2" class="stylish-indicator" aria-label="Slide 3: Functional & CrossFit Turf"></button>
+        <button type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide-to="3" class="stylish-indicator" aria-label="Slide 4: Recovery, Yoga & Spa"></button>
       </div>
 
       <!-- Carousel Slides Container -->
       <div class="carousel-inner">
 
         <!-- Slide 1: Modern Strength & Free Weights Arena -->
-        <div class="carousel-item active" style="min-height: 380px; max-height: 560px;">
-          <div class="position-relative w-100 h-100" style="background-color: #0f172a;">
-            <img src="{% static 'images/fitness_carousel_1.jpg' %}" class="d-block w-100 object-fit-cover" alt="Elite Strength Training Gym" style="min-height: 380px; max-height: 560px; object-fit: cover; filter: brightness(0.72);">
-            <div class="position-absolute inset-0 d-flex align-items-center top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.3) 100%);">
+        <div class="carousel-item active">
+          <div class="stylish-carousel-item">
+            <img src="{% static 'images/fitness_carousel_1.jpg' %}" class="stylish-carousel-img" alt="Elite Strength Training Gym Arena">
+            
+            <div class="stylish-carousel-overlay">
               <div class="container py-4 py-lg-5">
                 <div class="row">
                   <div class="col-12 col-md-10 col-lg-8">
-                    <span class="badge bg-info text-dark fw-bold px-3 py-1.5 rounded-pill mb-2.5 text-uppercase shadow-sm" style="font-size: 11px; letter-spacing: 0.5px;">
-                      <i class="fa-solid fa-dumbbell me-1.5"></i> Elite Iron &amp; Strength Arena
-                    </span>
-                    <h1 class="display-5 fw-black text-white mb-2.5 lh-sm">
-                      Unleash Your <span class="text-info">Maximum Power</span> &amp; Athletic Performance
+                    
+                    <!-- Glassmorphism Member Greeting Badge -->
+                    <div class="carousel-glass-badge mb-3">
+                      <span class="badge rounded-circle p-1 bg-info d-inline-block" style="box-shadow: 0 0 10px #0ea5e9;"></span>
+                      <span class="text-white fw-bold small text-uppercase" style="letter-spacing: 0.8px; font-size: 11px;">
+                        Welcome, {{ user.name|default:user.username }} &bull; Elite Iron Arena
+                      </span>
+                    </div>
+
+                    <h1 class="display-4 fw-black text-white mb-3 lh-sm" style="letter-spacing: -0.5px;">
+                      Sculpt Your <span style="background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Peak Strength</span> &amp; Power
                     </h1>
-                    <p class="lead text-light text-opacity-85 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px;">
+
+                    <p class="lead text-light text-opacity-90 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px; line-height: 1.6;">
                       Train on Olympic competition platforms, precision barbell stations, and biomechanical machines engineered to sculpt lean muscle.
                     </p>
+
+                    <!-- Feature Micro Tags -->
+                    <div class="d-flex flex-wrap gap-2 mb-4 d-none d-sm-flex">
+                      <span class="micro-tag-pill">
+                        <i class="fa-solid fa-dumbbell text-info me-1.5"></i> Olympic Barbells
+                      </span>
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-shield-check text-success me-1.5"></i> Biomechanical Gear
+                      </span>
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-clock-history text-warning me-1.5"></i> 24/7 Access
+                      </span>
+                    </div>
+
+                    <!-- Glowing Action Buttons -->
                     <div class="d-flex flex-wrap gap-2.5">
-                      <a href="#packages-section" class="btn btn-info text-dark fw-black px-4 py-2.5 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                      <a href="#packages-section" class="btn btn-info text-dark fw-black px-4 py-2.5 rounded-pill shadow-lg d-inline-flex align-items-center gap-2" style="box-shadow: 0 10px 25px -4px rgba(14,165,233,0.5) !important;">
                         <i class="bi bi-box-seam-fill"></i> View Gym Packages &darr;
                       </a>
-                      <a href="{% url 'user_orders' %}" class="btn btn-outline-light fw-bold px-3.5 py-2.5 rounded-pill d-inline-flex align-items-center gap-2">
+                      <a href="{% url 'user_orders' %}" class="btn btn-outline-light fw-bold px-4 py-2.5 rounded-pill d-inline-flex align-items-center gap-2" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); border-color: rgba(255,255,255,0.3);">
                         <i class="bi bi-receipt"></i> My Bookings
                       </a>
                     </div>
+
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
         <!-- Slide 2: High-Energy Cardio Theater -->
-        <div class="carousel-item" style="min-height: 380px; max-height: 560px;">
-          <div class="position-relative w-100 h-100" style="background-color: #0f172a;">
-            <img src="{% static 'images/fitness_carousel_2.jpg' %}" class="d-block w-100 object-fit-cover" alt="Cardio &amp; Endurance Theater" style="min-height: 380px; max-height: 560px; object-fit: cover; filter: brightness(0.72);">
-            <div class="position-absolute inset-0 d-flex align-items-center top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.3) 100%);">
+        <div class="carousel-item">
+          <div class="stylish-carousel-item">
+            <img src="{% static 'images/fitness_carousel_2.jpg' %}" class="stylish-carousel-img" alt="Cardio &amp; Endurance Theater">
+            
+            <div class="stylish-carousel-overlay">
               <div class="container py-4 py-lg-5">
                 <div class="row">
                   <div class="col-12 col-md-10 col-lg-8">
-                    <span class="badge bg-warning text-dark fw-bold px-3 py-1.5 rounded-pill mb-2.5 text-uppercase shadow-sm" style="font-size: 11px; letter-spacing: 0.5px;">
-                      <i class="bi bi-speedometer2 me-1.5"></i> 24/7 Cardio &amp; Endurance Theater
-                    </span>
-                    <h2 class="display-5 fw-black text-white mb-2.5 lh-sm">
-                      Ignite Your <span class="text-warning">Stamina &amp; Heart</span> Health
+                    
+                    <div class="carousel-glass-badge mb-3">
+                      <span class="badge rounded-circle p-1 bg-warning d-inline-block" style="box-shadow: 0 0 10px #f59e0b;"></span>
+                      <span class="text-white fw-bold small text-uppercase" style="letter-spacing: 0.8px; font-size: 11px;">
+                        24/7 Digital Cardio &bull; High-Octane Endurance
+                      </span>
+                    </div>
+
+                    <h2 class="display-4 fw-black text-white mb-3 lh-sm" style="letter-spacing: -0.5px;">
+                      Ignite Your <span style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Cardio Stamina</span> &amp; Heart Health
                     </h2>
-                    <p class="lead text-light text-opacity-85 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px;">
-                      Supercharge endurance with high-tech digital touchscreen treadmills, air-resistance rowers, and dynamic spin bikes with live telemetry.
+
+                    <p class="lead text-light text-opacity-90 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px; line-height: 1.6;">
+                      Supercharge cardiovascular health with high-tech digital touchscreen treadmills, air-resistance rowing machines, and spin bikes with live telemetry.
                     </p>
+
+                    <!-- Feature Micro Tags -->
+                    <div class="d-flex flex-wrap gap-2 mb-4 d-none d-sm-flex">
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-heart-pulse-fill text-danger me-1.5"></i> Heart-Rate Telemetry
+                      </span>
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-speedometer2 text-warning me-1.5"></i> Sprint Treadmills
+                      </span>
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-water text-info me-1.5"></i> Air Rowers
+                      </span>
+                    </div>
+
                     <div class="d-flex flex-wrap gap-2.5">
-                      <a href="#packages-section" class="btn btn-warning text-dark fw-black px-4 py-2.5 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                      <a href="#packages-section" class="btn btn-warning text-dark fw-black px-4 py-2.5 rounded-pill shadow-lg d-inline-flex align-items-center gap-2" style="box-shadow: 0 10px 25px -4px rgba(245,158,11,0.5) !important;">
                         <i class="bi bi-lightning-charge-fill"></i> Choose Your Plan &darr;
                       </a>
-                      <a href="#schedule-section" class="btn btn-outline-light fw-bold px-3.5 py-2.5 rounded-pill d-inline-flex align-items-center gap-2">
+                      <a href="#schedule-section" class="btn btn-outline-light fw-bold px-4 py-2.5 rounded-pill d-inline-flex align-items-center gap-2" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); border-color: rgba(255,255,255,0.3);">
                         <i class="bi bi-calendar-week"></i> Class Schedule
                       </a>
                     </div>
+
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
         <!-- Slide 3: Functional & CrossFit Turf Arena -->
-        <div class="carousel-item" style="min-height: 380px; max-height: 560px;">
-          <div class="position-relative w-100 h-100" style="background-color: #0f172a;">
-            <img src="{% static 'images/fitness_carousel_3.jpg' %}" class="d-block w-100 object-fit-cover" alt="Functional &amp; CrossFit Turf Arena" style="min-height: 380px; max-height: 560px; object-fit: cover; filter: brightness(0.72);">
-            <div class="position-absolute inset-0 d-flex align-items-center top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.3) 100%);">
+        <div class="carousel-item">
+          <div class="stylish-carousel-item">
+            <img src="{% static 'images/fitness_carousel_3.jpg' %}" class="stylish-carousel-img" alt="Functional &amp; CrossFit Turf Arena">
+            
+            <div class="stylish-carousel-overlay">
               <div class="container py-4 py-lg-5">
                 <div class="row">
                   <div class="col-12 col-md-10 col-lg-8">
-                    <span class="badge bg-danger text-white fw-bold px-3 py-1.5 rounded-pill mb-2.5 text-uppercase shadow-sm" style="font-size: 11px; letter-spacing: 0.5px;">
-                      <i class="bi bi-fire me-1.5"></i> High-Intensity Functional Turf
-                    </span>
-                    <h2 class="display-5 fw-black text-white mb-2.5 lh-sm">
-                      Battle Ropes, <span class="text-danger">AstroTurf</span> &amp; HIIT Sprints
+                    
+                    <div class="carousel-glass-badge mb-3">
+                      <span class="badge rounded-circle p-1 bg-danger d-inline-block" style="box-shadow: 0 0 10px #ef4444;"></span>
+                      <span class="text-white fw-bold small text-uppercase" style="letter-spacing: 0.8px; font-size: 11px;">
+                        Functional Conditioning &bull; CrossFit Turf
+                      </span>
+                    </div>
+
+                    <h2 class="display-4 fw-black text-white mb-3 lh-sm" style="letter-spacing: -0.5px;">
+                      Battle Ropes, <span style="background: linear-gradient(135deg, #f87171 0%, #ef4444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Sprint Turf</span> &amp; HIIT Arena
                     </h2>
-                    <p class="lead text-light text-opacity-85 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px;">
-                      Push past your limits with indoor sled tracks, cast-iron kettlebells, plyometric boxes, and certified CrossFit instructors.
+
+                    <p class="lead text-light text-opacity-90 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px; line-height: 1.6;">
+                      Push past your limits with indoor sprint tracks, heavy cast-iron kettlebells, plyometric jump boxes, and certified functional coaches.
                     </p>
+
+                    <!-- Feature Micro Tags -->
+                    <div class="d-flex flex-wrap gap-2 mb-4 d-none d-sm-flex">
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-lightning-charge text-warning me-1.5"></i> HIIT &amp; Sprints
+                      </span>
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-check2-circle text-success me-1.5"></i> Sled Tracks
+                      </span>
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-people-fill text-info me-1.5"></i> Functional Coaching
+                      </span>
+                    </div>
+
                     <div class="d-flex flex-wrap gap-2.5">
-                      <a href="#packages-section" class="btn btn-danger fw-black px-4 py-2.5 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                      <a href="#packages-section" class="btn btn-danger fw-black px-4 py-2.5 rounded-pill shadow-lg d-inline-flex align-items-center gap-2" style="box-shadow: 0 10px 25px -4px rgba(239,68,68,0.5) !important;">
                         <i class="bi bi-box-seam"></i> Unlock VIP Membership &darr;
                       </a>
-                      <a href="#amenities-section" class="btn btn-outline-light fw-bold px-3.5 py-2.5 rounded-pill d-inline-flex align-items-center gap-2">
+                      <a href="#amenities-section" class="btn btn-outline-light fw-bold px-4 py-2.5 rounded-pill d-inline-flex align-items-center gap-2" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); border-color: rgba(255,255,255,0.3);">
                         <i class="bi bi-stars"></i> Gym Facilities
                       </a>
                     </div>
+
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
         <!-- Slide 4: Luxury Wellness, Yoga & Post-Workout Spa -->
-        <div class="carousel-item" style="min-height: 380px; max-height: 560px;">
-          <div class="position-relative w-100 h-100" style="background-color: #0f172a;">
-            <img src="{% static 'images/fitness_carousel_4.jpg' %}" class="d-block w-100 object-fit-cover" alt="Luxury Wellness, Yoga &amp; Spa" style="min-height: 380px; max-height: 560px; object-fit: cover; filter: brightness(0.72);">
-            <div class="position-absolute inset-0 d-flex align-items-center top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.65) 50%, rgba(15,23,42,0.3) 100%);">
+        <div class="carousel-item">
+          <div class="stylish-carousel-item">
+            <img src="{% static 'images/fitness_carousel_4.jpg' %}" class="stylish-carousel-img" alt="Luxury Wellness, Yoga &amp; Spa">
+            
+            <div class="stylish-carousel-overlay">
               <div class="container py-4 py-lg-5">
                 <div class="row">
                   <div class="col-12 col-md-10 col-lg-8">
-                    <span class="badge bg-success text-white fw-bold px-3 py-1.5 rounded-pill mb-2.5 text-uppercase shadow-sm" style="font-size: 11px; letter-spacing: 0.5px;">
-                      <i class="bi bi-flower1 me-1.5"></i> Recovery Lounge, Yoga &amp; Sauna
-                    </span>
-                    <h2 class="display-5 fw-black text-white mb-2.5 lh-sm">
-                      Balance, Mobility &amp; <span class="text-success">Rapid Recovery</span>
+                    
+                    <div class="carousel-glass-badge mb-3">
+                      <span class="badge rounded-circle p-1 bg-success d-inline-block" style="box-shadow: 0 0 10px #22c55e;"></span>
+                      <span class="text-white fw-bold small text-uppercase" style="letter-spacing: 0.8px; font-size: 11px;">
+                        Holistic Wellness &bull; Recovery Spa Lounge
+                      </span>
+                    </div>
+
+                    <h2 class="display-4 fw-black text-white mb-3 lh-sm" style="letter-spacing: -0.5px;">
+                      Mind-Body Yoga, <span style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Sauna &amp; Recovery</span> Lounge
                     </h2>
-                    <p class="lead text-light text-opacity-85 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px;">
-                      Recover faster with therapeutic steam rooms, Finnish dry saunas, guided yoga flows, and freshly blended organic protein shakes.
+
+                    <p class="lead text-light text-opacity-90 mb-3.5 fs-6 fw-normal d-none d-sm-block" style="max-width: 620px; line-height: 1.6;">
+                      Accelerate muscle recovery with therapeutic steam rooms, Finnish dry saunas, guided yoga flows, and freshly blended organic protein shakes.
                     </p>
+
+                    <!-- Feature Micro Tags -->
+                    <div class="d-flex flex-wrap gap-2 mb-4 d-none d-sm-flex">
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-flower1 text-success me-1.5"></i> Finnish Sauna
+                      </span>
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-heart text-info me-1.5"></i> Yoga &amp; Core
+                      </span>
+                      <span class="micro-tag-pill">
+                        <i class="bi bi-cup-hot text-warning me-1.5"></i> Protein Bar
+                      </span>
+                    </div>
+
                     <div class="d-flex flex-wrap gap-2.5">
-                      <a href="#packages-section" class="btn btn-success fw-black px-4 py-2.5 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                      <a href="#packages-section" class="btn btn-success fw-black px-4 py-2.5 rounded-pill shadow-lg d-inline-flex align-items-center gap-2" style="box-shadow: 0 10px 25px -4px rgba(34,197,94,0.5) !important;">
                         <i class="bi bi-check2-circle"></i> Browse All Plans &darr;
                       </a>
-                      <a href="{% url 'contact_us' %}" class="btn btn-outline-light fw-bold px-3.5 py-2.5 rounded-pill d-inline-flex align-items-center gap-2">
+                      <a href="{% url 'contact_us' %}" class="btn btn-outline-light fw-bold px-4 py-2.5 rounded-pill d-inline-flex align-items-center gap-2" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(8px); border-color: rgba(255,255,255,0.3);">
                         <i class="bi bi-telephone-outbound"></i> Contact Coaches
                       </a>
                     </div>
+
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
       </div>
 
-      <!-- Carousel Previous & Next Controls (Glassmorphism Styled) -->
-      <button class="carousel-control-prev" type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide="prev" aria-label="Previous Slide" style="width: 50px; opacity: 0.85;">
-        <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-dark bg-opacity-60 text-white shadow" style="width: 44px; height: 44px;">
+      <!-- Carousel Previous & Next Controls (Circular Frosted Glass Buttons) -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide="prev" aria-label="Previous Slide" style="width: 70px; opacity: 1;">
+        <span class="carousel-control-btn">
           <i class="bi bi-chevron-left fs-5"></i>
         </span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide="next" aria-label="Next Slide" style="width: 50px; opacity: 0.85;">
-        <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-dark bg-opacity-60 text-white shadow" style="width: 44px; height: 44px;">
+      <button class="carousel-control-next" type="button" data-bs-target="#fitnessHeroCarousel" data-bs-slide="next" aria-label="Next Slide" style="width: 70px; opacity: 1;">
+        <span class="carousel-control-btn">
           <i class="bi bi-chevron-right fs-5"></i>
         </span>
       </button>
 
       <!-- Carousel Floating Auto-Scroll Status Pill -->
-      <div class="position-absolute bottom-0 end-0 p-3 d-none d-md-block" style="z-index: 10;">
-        <span class="badge bg-dark bg-opacity-75 text-light border border-white border-opacity-20 px-2.5 py-1.5 rounded-pill small">
-          <i class="bi bi-play-circle-fill text-info me-1"></i> Auto-scrolls every 3s
+      <div class="position-absolute bottom-0 end-0 p-3.5 d-none d-md-block" style="z-index: 10;">
+        <span class="badge rounded-pill px-3 py-1.5 text-light" style="background: rgba(11,17,32,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.18); font-size: 11px;">
+          <i class="bi bi-arrow-repeat text-info me-1.5"></i> Auto-Play &bull; 3s
         </span>
       </div>
 
@@ -277,58 +507,9 @@
   </section>
 
   <!-- =========================================================================
-       VALIDATED MEMBER SESSION BAR & QUICK ACCESS STRIP
-       ========================================================================= -->
-  <div class="border-bottom bg-white py-3 shadow-sm">
-    <div class="container">
-      <div class="row align-items-center g-3">
-        
-        <!-- Left: Member Greeting & Active Badge -->
-        <div class="col-lg-7">
-          <div class="d-flex flex-wrap align-items-center gap-2.5">
-            <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 15px;">
-              {{ user.username|slice:":2"|upper }}
-            </div>
-            <div>
-              <div class="d-flex align-items-center gap-2 flex-wrap">
-                <h5 class="fw-black text-dark mb-0">Welcome back, {{ user.name|default:user.username }}!</h5>
-                <span class="badge bg-success bg-opacity-15 text-success border border-success-subtle rounded-pill fw-bold" style="font-size: 11px;">
-                  <i class="bi bi-check-circle-fill me-1"></i>Active Member
-                </span>
-                <span class="badge bg-light text-secondary border rounded-pill" style="font-size: 11px;">
-                  ID #MEM-{{ user.id|stringformat:"04d" }}
-                </span>
-              </div>
-              <small class="text-muted d-block" style="font-size: 12.5px;">
-                Registered Email: <strong>{{ user.email }}</strong> &bull; Access your workout plans and active bookings below.
-              </small>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Fast Actions -->
-        <div class="col-lg-5 text-lg-end">
-          <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-lg-end">
-            <a href="{% url 'user_orders' %}" class="btn btn-outline-secondary btn-sm fw-bold px-3 py-1.5 rounded-pill">
-              <i class="bi bi-receipt me-1"></i> My Bookings
-            </a>
-            <a href="{% url 'user_profile' %}" class="btn btn-outline-primary btn-sm fw-bold px-3 py-1.5 rounded-pill">
-              <i class="bi bi-person-circle me-1"></i> My Profile
-            </a>
-            <a href="#packages-section" class="btn btn-primary btn-sm fw-bold px-3.5 py-1.5 rounded-pill shadow-sm">
-              <i class="bi bi-box-seam me-1"></i> Packages &darr;
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- =========================================================================
        COMMUNITY METRIC COUNTERS / LIVE STATS (4-CARD GRID)
        ========================================================================= -->
-  <section class="py-4 bg-white border-bottom">
+  <section class="py-4 bg-white border-bottom shadow-sm">
     <div class="container">
       <div class="row g-3 text-center">
         
@@ -408,7 +589,7 @@
           <h3 class="fw-black text-dark mb-1">
             <i class="bi bi-box-seam text-primary me-2"></i>Available Gym Packages
           </h3>
-          <p class="text-muted small mb-0">Browse packages and click "View More" for complete features, terms, and direct booking.</p>
+          <p class="text-muted small mb-0">Browse packages and click "View More Details" for complete features, terms, and direct booking.</p>
         </div>
         <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-3 py-1.5 rounded-pill">
           {{ packages.count }} Active Plan{{ packages.count|pluralize }}
@@ -515,7 +696,7 @@
 
                 </div>
 
-                <!-- Card Action Footer: View More Button (Task 1) -->
+                <!-- Card Action Footer: View More Button -->
                 <div class="pt-3 mt-auto">
                   <a href="{% url 'package_detail' package.pk %}" class="btn btn-outline-primary fw-bold w-100 d-flex align-items-center justify-content-center gap-2 py-2.5 shadow-sm rounded-3">
                     <i class="bi bi-eye-fill"></i> View More Details &rarr;
@@ -744,7 +925,7 @@
 
         <div class="col-12 col-sm-6 col-lg-4">
           <div class="p-3.5 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
-            <div class="rounded-3 bg-warning bg-opacity-15 text-warning d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+            <div class="rounded-3 bg-warning bg-opacity-15 text-warning d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
               <i class="bi bi-cup-hot-fill fs-5"></i>
             </div>
             <div>
