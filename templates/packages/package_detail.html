@@ -20,12 +20,14 @@
   </nav>
 
   <!-- Hero Banner Card -->
-  <div class="card border-0 rounded-4 shadow-sm mb-4 text-white overflow-hidden" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+  <div class="card border-0 rounded-4 shadow-sm mb-4 text-white overflow-hidden"
+    style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
     <div class="card-body p-4 p-lg-5">
       <div class="row align-items-center g-3">
         <div class="col-lg-8">
           <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="badge bg-info text-dark fw-bold text-uppercase px-2.5 py-1 rounded-pill" style="font-size: 11px;">
+            <span class="badge bg-info text-dark fw-bold text-uppercase px-2.5 py-1 rounded-pill"
+              style="font-size: 11px;">
               <i class="bi bi-box-seam me-1"></i> Package #PKG-{{ package.id }}
             </span>
             <span class="badge bg-white text-dark fw-bold px-2.5 py-1 rounded-pill shadow-sm" style="font-size: 11px;">
@@ -38,10 +40,13 @@
           </p>
         </div>
         <div class="col-lg-4 text-lg-end">
-          <div class="d-inline-block bg-white bg-opacity-10 rounded-4 p-3.5 border border-white border-opacity-10 text-center">
-            <small class="text-light text-opacity-75 fw-bold text-uppercase d-block" style="font-size: 11px; letter-spacing: 0.5px;">Subscription Price</small>
+          <div
+            class="d-inline-block bg-white bg-opacity-10 rounded-4 p-3.5 border border-white border-opacity-10 text-center">
+            <small class="text-light text-opacity-75 fw-bold text-uppercase d-block"
+              style="font-size: 11px; letter-spacing: 0.5px;">Subscription Price</small>
             <span class="display-5 fw-black text-info">₹{{ package.price }}</span>
-            <small class="text-light text-opacity-75 d-block fw-semibold" style="font-size: 11px;">per {{ package.membership_duration }}</small>
+            <small class="text-light text-opacity-75 d-block fw-semibold" style="font-size: 11px;">per {{
+              package.membership_duration }}</small>
           </div>
         </div>
       </div>
@@ -50,7 +55,7 @@
 
   <!-- Specifications Grid (All 9 Model Fields) -->
   <div class="row g-4 mb-4">
-    
+
     <!-- Left Column: Specs List -->
     <div class="col-lg-7">
       <div class="card border-0 rounded-4 shadow-sm h-100 bg-white">
@@ -61,7 +66,7 @@
         </div>
         <div class="card-body p-3.5 p-lg-4">
           <div class="row g-3">
-            
+
             <!-- 1. Access Hours -->
             <div class="col-sm-6">
               <div class="p-3 bg-light rounded-3 border h-100">
@@ -184,7 +189,8 @@
             <a href="{% url 'package_edit' package.id %}" class="btn btn-primary fw-bold flex-grow-1 py-2">
               <i class="bi bi-pencil-square me-1"></i> Edit Plan
             </a>
-            <button type="button" class="btn btn-outline-danger fw-bold py-2 px-3" data-bs-toggle="modal" data-bs-target="#deletePackageModalDetail">
+            <button type="button" class="btn btn-outline-danger fw-bold py-2 px-3" data-bs-toggle="modal"
+              data-bs-target="#deletePackageModalDetail">
               <i class="bi bi-trash3"></i>
             </button>
           </div>
@@ -232,53 +238,55 @@
   <!-- Responsive Top Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top py-2.5">
     <div class="container">
-      
+
       <!-- Brand Logo -->
-      <a href="{% if request.session.is_user_authenticated %}{% url 'user_dashboard' %}{% else %}{% url 'packages_cards' %}{% endif %}" class="navbar-brand d-flex align-items-center gap-2 me-lg-4 text-decoration-none">
-        <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+      <a href="{% if request.session.is_user_authenticated %}{% url 'user_dashboard' %}{% else %}{% url 'packages_cards' %}{% endif %}"
+        class="navbar-brand d-flex align-items-center gap-2 me-lg-4 text-decoration-none">
+        <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm"
+          style="width: 38px; height: 38px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
           <i class="fa-solid fa-dumbbell fs-5"></i>
         </div>
         <span class="fw-black text-dark tracking-wide fs-5">FITNESS<span class="text-info">MASTER</span></span>
       </a>
 
       <!-- Mobile Hamburger Button -->
-      <button class="navbar-toggler border-0 shadow-none p-1.5" type="button" data-bs-toggle="collapse" data-bs-target="#detailGlobalNavbar" aria-controls="detailGlobalNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler border-0 shadow-none p-1.5" type="button" data-bs-toggle="collapse"
+        data-bs-target="#detailGlobalNavbar" aria-controls="detailGlobalNavbar" aria-expanded="false"
+        aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <!-- Navbar Collapse Links & Profile -->
       <div class="collapse navbar-collapse" id="detailGlobalNavbar">
-        
+
         <!-- Navigation Links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center gap-1 gap-lg-1.5 pt-2 pt-lg-0">
           {% if request.session.is_user_authenticated %}
-            <li class="nav-item">
-              <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'user_dashboard' %}">
-                <i class="bi bi-speedometer2 text-muted"></i>
-                <span>Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'user_profile' %}">
-                <i class="bi bi-person-circle text-muted"></i>
-                <span>Profile</span>
-              </a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap"
+              href="{% url 'user_dashboard' %}">
+              <i class="bi bi-speedometer2 text-muted"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
           {% endif %}
           <li class="nav-item">
-            <a class="nav-link active fw-bold text-primary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10 text-nowrap" href="{% url 'packages_cards' %}">
+            <a class="nav-link active fw-bold text-primary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10 text-nowrap"
+              href="{% url 'packages_cards' %}">
               <i class="bi bi-grid-fill"></i>
               <span>Packages Catalog</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'about_us' %}">
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap"
+              href="{% url 'about_us' %}">
               <i class="bi bi-info-circle-fill text-muted"></i>
               <span>About Us</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'contact_us' %}">
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap"
+              href="{% url 'contact_us' %}">
               <i class="bi bi-telephone-fill text-muted"></i>
               <span>Contact Us</span>
             </a>
@@ -288,54 +296,69 @@
         <!-- Right Side User Authentication Controls -->
         <div class="d-flex flex-wrap align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0">
           {% if request.session.is_user_authenticated %}
-            <!-- Member Profile Dropdown -->
-            <div class="dropdown">
-              <button class="btn btn-light border bg-white rounded-pill px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm dropdown-toggle text-dark fw-bold" type="button" id="detailProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 13px;">
-                <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 11px;">
-                  {{ request.session.user_username|slice:":2"|upper }}
-                </div>
-                <span class="text-truncate" style="max-width: 140px;">{{ request.session.user_username }}</span>
-              </button>
+          <!-- Member Profile Dropdown -->
+          <div class="dropdown">
+            <button
+              class="btn btn-light border bg-white rounded-pill px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm dropdown-toggle text-dark fw-bold"
+              type="button" id="detailProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+              style="font-size: 13px;">
+              <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center"
+                style="width: 28px; height: 28px; font-size: 11px;">
+                {{ request.session.user_username|slice:":2"|upper }}
+              </div>
+              <span class="text-truncate" style="max-width: 140px;">{{ request.session.user_username }}</span>
+            </button>
 
-              <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2" aria-labelledby="detailProfileDropdown" style="min-width: 260px; border: 1px solid #e2e8f0 !important;">
-                <li class="px-3 py-2.5 border-bottom bg-light rounded-3 mb-1">
-                  <div class="d-flex align-items-center justify-content-between mb-1">
-                    <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Authenticated Member</small>
-                    <span class="badge bg-success text-white px-2 py-0.5 rounded-pill" style="font-size: 9.5px;">Active</span>
-                  </div>
-                  <strong class="text-dark d-block text-truncate fs-6">{{ request.session.user_name|default:request.session.user_username }}</strong>
-                  <small class="text-muted d-block text-truncate" style="font-size: 11.5px;"><i class="bi bi-envelope me-1"></i>{{ request.session.user_email }}</small>
-                </li>
-                <li>
-                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_profile' %}">
-                    <i class="bi bi-person-circle text-primary"></i> My Profile
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-success" href="{% url 'user_orders' %}">
-                    <i class="bi bi-receipt"></i> My Bookings &amp; Orders
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_dashboard' %}">
-                    <i class="bi bi-speedometer2 text-info"></i> Member Dashboard
-                  </a>
-                </li>
-                <li><hr class="dropdown-divider my-1"></li>
-                <li>
-                  <a class="dropdown-item rounded-3 py-2 fw-bold text-danger d-flex align-items-center gap-2 small" href="{% url 'user_logout' %}">
-                    <i class="bi bi-box-arrow-right"></i> Sign Out
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2"
+              aria-labelledby="detailProfileDropdown" style="min-width: 260px; border: 1px solid #e2e8f0 !important;">
+              <li class="px-3 py-2.5 border-bottom bg-light rounded-3 mb-1">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                  <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Authenticated Member</small>
+                  <span class="badge bg-success text-white px-2 py-0.5 rounded-pill"
+                    style="font-size: 9.5px;">Active</span>
+                </div>
+                <strong class="text-dark d-block text-truncate fs-6">{{
+                  request.session.user_name|default:request.session.user_username }}</strong>
+                <small class="text-muted d-block text-truncate" style="font-size: 11.5px;"><i
+                    class="bi bi-envelope me-1"></i>{{ request.session.user_email }}</small>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small"
+                  href="{% url 'user_profile' %}">
+                  <i class="bi bi-person-circle text-primary"></i> My Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-success"
+                  href="{% url 'user_orders' %}">
+                  <i class="bi bi-receipt"></i> My Bookings &amp; Orders
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small"
+                  href="{% url 'user_dashboard' %}">
+                  <i class="bi bi-speedometer2 text-info"></i> Member Dashboard
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider my-1">
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-bold text-danger d-flex align-items-center gap-2 small"
+                  href="{% url 'user_logout' %}">
+                  <i class="bi bi-box-arrow-right"></i> Sign Out
+                </a>
+              </li>
+            </ul>
+          </div>
           {% else %}
-            <a href="{% url 'user_login' %}" class="btn btn-outline-primary btn-sm fw-bold px-3 py-1.5 rounded-pill">
-              <i class="bi bi-box-arrow-in-right me-1"></i> Member Sign In
-            </a>
-            <a href="{% url 'user_register' %}" class="btn btn-primary btn-sm fw-bold px-3 py-1.5 rounded-pill shadow-sm" style="background-color: #0284c7; border-color: #0284c7;">
-              Register
-            </a>
+          <a href="{% url 'user_login' %}" class="btn btn-outline-primary btn-sm fw-bold px-3 py-1.5 rounded-pill">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Member Sign In
+          </a>
+          <a href="{% url 'user_register' %}" class="btn btn-primary btn-sm fw-bold px-3 py-1.5 rounded-pill shadow-sm"
+            style="background-color: #0284c7; border-color: #0284c7;">
+            Register
+          </a>
           {% endif %}
         </div>
 
@@ -344,9 +367,12 @@
   </nav>
 
   <!-- Hero Header Banner -->
-  <div class="py-5 text-center text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
-    <div class="position-absolute top-0 start-50 translate-middle-x rounded-circle pointer-events-none" style="width: 600px; height: 350px; background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0) 70%); filter: blur(45px); z-index: 0;"></div>
-    
+  <div class="py-5 text-center text-white position-relative overflow-hidden"
+    style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+    <div class="position-absolute top-0 start-50 translate-middle-x rounded-circle pointer-events-none"
+      style="width: 600px; height: 350px; background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0) 70%); filter: blur(45px); z-index: 0;">
+    </div>
+
     <div class="container py-3 position-relative" style="z-index: 1;">
       <div class="d-inline-flex align-items-center gap-2 mb-3">
         <span class="badge bg-info text-dark fw-bold px-3 py-1.5 rounded-pill" style="font-size: 11.5px;">
@@ -355,7 +381,9 @@
         <span class="badge bg-white text-dark fw-bold px-3 py-1.5 rounded-pill shadow-sm" style="font-size: 11.5px;">
           ₹{{ package.price }}
         </span>
-        <span class="badge bg-success bg-opacity-25 text-success border border-success-subtle fw-bold px-3 py-1.5 rounded-pill" style="font-size: 11.5px;">
+        <span
+          class="badge bg-success bg-opacity-25 text-success border border-success-subtle fw-bold px-3 py-1.5 rounded-pill"
+          style="font-size: 11.5px;">
           <i class="bi bi-check-circle-fill me-1"></i>{{ package.membership_duration }}
         </span>
       </div>
@@ -371,28 +399,34 @@
 
     <!-- Flash Alert Messages -->
     {% if messages %}
-      <div class="mb-4">
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 px-3 rounded-3" role="alert">
-            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-info{% endif %} fs-5 flex-shrink-0"></i>
-            <div class="fw-semibold">{{ message }}</div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
+    <div class="mb-4">
+      {% for message in messages %}
+      <div
+        class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 px-3 rounded-3"
+        role="alert">
+        <i
+          class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-info{% endif %} fs-5 flex-shrink-0"></i>
+        <div class="fw-semibold">{{ message }}</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
+      {% endfor %}
+    </div>
     {% endif %}
 
     <div class="row g-4 justify-content-center">
-      
+
       <!-- Left Main Specifications Card -->
       <div class="col-lg-8">
-        
-        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden mb-4" style="border: 1px solid #e2e8f0 !important;">
-          
+
+        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden mb-4"
+          style="border: 1px solid #e2e8f0 !important;">
+
           <!-- Card Header: Title & Indian Rupee Pricing -->
           <div class="p-4 bg-light border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
             <div>
-              <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-2.5 py-1 rounded-pill mb-1" style="font-size: 11px;">
+              <span
+                class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold px-2.5 py-1 rounded-pill mb-1"
+                style="font-size: 11px;">
                 Plan Overview
               </span>
               <h3 class="fw-black text-dark mb-0 fs-4">{{ package.title }}</h3>
@@ -400,7 +434,8 @@
             </div>
             <div class="text-end">
               <span class="display-6 fw-black text-primary">₹{{ package.price }}</span>
-              <small class="text-muted d-block fw-semibold" style="font-size: 12px;">per {{ package.membership_duration }}</small>
+              <small class="text-muted d-block fw-semibold" style="font-size: 12px;">per {{ package.membership_duration
+                }}</small>
             </div>
           </div>
 
@@ -409,13 +444,14 @@
             <h5 class="fw-bold text-dark mb-3 fs-6">
               <i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>Full Package Specifications
             </h5>
-            
+
             <div class="row g-3 mb-4">
-              
+
               <!-- 1. Access Hours -->
               <div class="col-12 col-md-6">
                 <div class="p-3 bg-light rounded-3 border h-100">
-                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1" style="font-size: 11px;">
+                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1"
+                    style="font-size: 11px;">
                     <i class="bi bi-clock-fill text-primary"></i>
                     <span>Access Hours</span>
                   </div>
@@ -426,7 +462,8 @@
               <!-- 2. Classes Per Week -->
               <div class="col-12 col-md-6">
                 <div class="p-3 bg-light rounded-3 border h-100">
-                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1" style="font-size: 11px;">
+                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1"
+                    style="font-size: 11px;">
                     <i class="bi bi-calendar2-check-fill text-success"></i>
                     <span>Classes / Week</span>
                   </div>
@@ -437,7 +474,8 @@
               <!-- 3. Duration -->
               <div class="col-12 col-md-6">
                 <div class="p-3 bg-light rounded-3 border h-100">
-                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1" style="font-size: 11px;">
+                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1"
+                    style="font-size: 11px;">
                     <i class="bi bi-hourglass-split text-info"></i>
                     <span>Duration</span>
                   </div>
@@ -448,7 +486,8 @@
               <!-- 4. Membership Term -->
               <div class="col-12 col-md-6">
                 <div class="p-3 bg-light rounded-3 border h-100">
-                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1" style="font-size: 11px;">
+                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1"
+                    style="font-size: 11px;">
                     <i class="bi bi-tag-fill text-primary"></i>
                     <span>Membership Term</span>
                   </div>
@@ -459,7 +498,8 @@
               <!-- 5. Drinking Package -->
               <div class="col-12 col-md-6">
                 <div class="p-3 bg-light rounded-3 border h-100">
-                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1" style="font-size: 11px;">
+                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1"
+                    style="font-size: 11px;">
                     <i class="bi bi-cup-straw text-primary"></i>
                     <span>Drinking Package</span>
                   </div>
@@ -470,7 +510,8 @@
               <!-- 6. Personal Instructor -->
               <div class="col-12 col-md-6">
                 <div class="p-3 bg-light rounded-3 border h-100">
-                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1" style="font-size: 11px;">
+                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1"
+                    style="font-size: 11px;">
                     <i class="bi bi-person-badge-fill text-warning"></i>
                     <span>Personal Instructor</span>
                   </div>
@@ -481,7 +522,8 @@
               <!-- 7. Instruments & Equipment -->
               <div class="col-12">
                 <div class="p-3 bg-light rounded-3 border">
-                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1.5" style="font-size: 11px;">
+                  <div class="d-flex align-items-center gap-2 text-muted text-uppercase fw-bold mb-1.5"
+                    style="font-size: 11px;">
                     <i class="bi bi-tools text-secondary"></i>
                     <span>Instruments &amp; Equipment Included</span>
                   </div>
@@ -523,7 +565,8 @@
             </div>
 
             <!-- TASK (3): ACTION ROW - "BOOK NOW" BUTTON VISIBLE ONLY IF USER IS LOGGED IN -->
-            <div class="p-3.5 bg-light rounded-4 border d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
+            <div
+              class="p-3.5 bg-light rounded-4 border d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
               <div>
                 <span class="text-muted small d-block">Price:</span>
                 <span class="fs-4 fw-black text-primary">₹{{ package.price }}</span>
@@ -537,25 +580,31 @@
 
                 <!-- Conditional Rendering: Task 3 (Visible only if user is logged in) -->
                 {% if is_member_authenticated %}
-                  {% if user_has_booked %}
-                    <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle px-3 py-2.5 rounded-3 fw-bold d-flex align-items-center gap-1.5">
-                      <i class="bi bi-check-circle-fill"></i> Currently Booked
-                    </span>
-                    <a href="{% url 'user_order_detail' active_order.id %}" class="btn btn-outline-success fw-bold px-3 py-2 rounded-3">
-                      <i class="bi bi-receipt me-1"></i> Receipt
-                    </a>
-                  {% else %}
-                    <!-- BOOK NOW BUTTON: Visible Only When Logged In -->
-                    <button type="button" class="btn btn-success fw-bold px-4 py-2.5 shadow-sm rounded-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#bookPackageModal" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">
-                      <i class="bi bi-lightning-charge-fill"></i>
-                      <span>Book Now</span>
-                    </button>
-                  {% endif %}
+                {% if user_has_booked %}
+                <span
+                  class="badge bg-success bg-opacity-10 text-success border border-success-subtle px-3 py-2.5 rounded-3 fw-bold d-flex align-items-center gap-1.5">
+                  <i class="bi bi-check-circle-fill"></i> Currently Booked
+                </span>
+                <a href="{% url 'user_order_detail' active_order.id %}"
+                  class="btn btn-outline-success fw-bold px-3 py-2 rounded-3">
+                  <i class="bi bi-receipt me-1"></i> Receipt
+                </a>
                 {% else %}
-                  <!-- When NOT logged in: Book Now button is NOT visible -->
-                  <a href="{% url 'user_login' %}" class="btn btn-primary fw-bold px-3 py-2 rounded-3" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); border: none;">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Book
-                  </a>
+                <!-- BOOK NOW BUTTON: Visible Only When Logged In -->
+                <button type="button"
+                  class="btn btn-success fw-bold px-4 py-2.5 shadow-sm rounded-3 d-flex align-items-center gap-2"
+                  data-bs-toggle="modal" data-bs-target="#bookPackageModal"
+                  style="background: linear-gradient(135deg, #10b981, #059669); border: none;">
+                  <i class="bi bi-lightning-charge-fill"></i>
+                  <span>Book Now</span>
+                </button>
+                {% endif %}
+                {% else %}
+                <!-- When NOT logged in: Book Now button is NOT visible -->
+                <a href="{% url 'user_login' %}" class="btn btn-primary fw-bold px-3 py-2 rounded-3"
+                  style="background: linear-gradient(135deg, #0ea5e9, #0284c7); border: none;">
+                  <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Book
+                </a>
                 {% endif %}
               </div>
 
@@ -569,9 +618,10 @@
 
       <!-- Right Column: Membership Summary & Assistance -->
       <div class="col-lg-4">
-        
+
         <!-- Summary Card -->
-        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden mb-4" style="border: 1px solid #e2e8f0 !important;">
+        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden mb-4"
+          style="border: 1px solid #e2e8f0 !important;">
           <div class="card-header bg-white border-bottom p-3.5">
             <h6 class="fw-bold text-dark mb-0">
               <i class="bi bi-shield-lock-fill text-primary me-2"></i>Gym Membership Guarantee
@@ -603,14 +653,18 @@
         </div>
 
         <!-- Need Help Card -->
-        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden"
+          style="border: 1px solid #e2e8f0 !important;">
           <div class="card-body p-3.5 text-center">
-            <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px;">
+            <div
+              class="rounded-circle bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-2"
+              style="width: 48px; height: 48px;">
               <i class="bi bi-headset fs-4"></i>
             </div>
             <h6 class="fw-bold text-dark mb-1">Have Questions?</h6>
             <p class="text-muted small mb-3">Our fitness counselors are available to help you choose the best plan.</p>
-            <a href="{% url 'contact_us' %}" class="btn btn-outline-primary btn-sm fw-bold px-3 py-1.5 rounded-pill w-100">
+            <a href="{% url 'contact_us' %}"
+              class="btn btn-outline-primary btn-sm fw-bold px-3 py-1.5 rounded-pill w-100">
               <i class="bi bi-chat-dots-fill me-1"></i> Contact Gym Team
             </a>
           </div>
@@ -638,11 +692,12 @@
 <div class="modal fade" id="bookPackageModal" tabindex="-1" aria-labelledby="bookPackageModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-      
+
       <!-- Modal Header -->
       <div class="modal-header text-white p-3.5" style="background: linear-gradient(135deg, #0f172a, #1e293b);">
         <div class="d-flex align-items-center gap-2">
-          <div class="rounded-3 p-1.5 text-white d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #10b981, #059669); width: 32px; height: 32px;">
+          <div class="rounded-3 p-1.5 text-white d-flex align-items-center justify-content-center"
+            style="background: linear-gradient(135deg, #10b981, #059669); width: 32px; height: 32px;">
             <i class="bi bi-lightning-charge-fill fs-6"></i>
           </div>
           <div>
@@ -658,7 +713,7 @@
         {% csrf_token %}
 
         <div class="modal-body p-4">
-          
+
           <!-- Package Summary Box -->
           <div class="p-3 rounded-3 bg-light border mb-3">
             <div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
@@ -671,9 +726,12 @@
               </div>
             </div>
             <div class="small text-muted">
-              <div><i class="bi bi-check2 text-success me-1"></i> Access Hours: <strong>{{ package.access_hours }}</strong></div>
-              <div><i class="bi bi-check2 text-success me-1"></i> Classes: <strong>{{ package.classes_per_week }}</strong></div>
-              <div><i class="bi bi-check2 text-success me-1"></i> Trainer: <strong>{{ package.personal_instructor }}</strong></div>
+              <div><i class="bi bi-check2 text-success me-1"></i> Access Hours: <strong>{{ package.access_hours
+                  }}</strong></div>
+              <div><i class="bi bi-check2 text-success me-1"></i> Classes: <strong>{{ package.classes_per_week
+                  }}</strong></div>
+              <div><i class="bi bi-check2 text-success me-1"></i> Trainer: <strong>{{ package.personal_instructor
+                  }}</strong></div>
             </div>
           </div>
 
@@ -696,7 +754,8 @@
 
           <!-- Payment Mode -->
           <div class="mb-3">
-            <label for="paymentMethodSelect" class="form-label small fw-bold text-secondary text-uppercase mb-1" style="font-size: 11px;">
+            <label for="paymentMethodSelect" class="form-label small fw-bold text-secondary text-uppercase mb-1"
+              style="font-size: 11px;">
               Payment Method
             </label>
             <select name="payment_method" id="paymentMethodSelect" class="form-select form-select-sm py-2">
@@ -709,10 +768,12 @@
 
           <!-- Notes (Optional) -->
           <div class="mb-2">
-            <label for="bookingNotes" class="form-label small fw-bold text-secondary text-uppercase mb-1" style="font-size: 11px;">
+            <label for="bookingNotes" class="form-label small fw-bold text-secondary text-uppercase mb-1"
+              style="font-size: 11px;">
               Special Requests / Notes <span class="text-muted fw-normal">(Optional)</span>
             </label>
-            <input type="text" name="notes" id="bookingNotes" class="form-control form-control-sm" placeholder="e.g. Preferred morning training hours, beginner guidance">
+            <input type="text" name="notes" id="bookingNotes" class="form-control form-control-sm"
+              placeholder="e.g. Preferred morning training hours, beginner guidance">
           </div>
 
         </div>
@@ -722,7 +783,9 @@
           <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" data-bs-dismiss="modal">
             Cancel
           </button>
-          <button type="submit" class="btn btn-success fw-bold px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-1.5" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">
+          <button type="submit"
+            class="btn btn-success fw-bold px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-1.5"
+            style="background: linear-gradient(135deg, #10b981, #059669); border: none;">
             <i class="bi bi-check2-circle fs-5"></i>
             <span>Confirm &amp; Book Package</span>
           </button>
