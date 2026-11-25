@@ -108,35 +108,72 @@
   </nav>
 
   <!-- =========================================================================
-       HERO WELCOME BANNER WITH VALIDATION DETAILS
+       HERO WELCOME BANNER WITH FITNESS IMAGE & VALIDATION DETAILS
        ========================================================================= -->
   <div class="text-white py-4 py-lg-5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
     <div class="container">
-      <div class="row align-items-center g-3">
-        <div class="col-lg-8">
+      <div class="row align-items-center g-4">
+        
+        <!-- Left Column: Welcome Details & Quick Actions -->
+        <div class="col-lg-7">
           <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white bg-opacity-10 border border-white border-opacity-10 mb-2.5">
             <span class="badge rounded-circle p-1 bg-info d-inline-block" style="width: 8px; height: 8px;"></span>
             <span class="text-info fw-bold small"><i class="bi bi-person-fill me-1"></i>Member Portal</span>
             <span class="text-light opacity-50">&bull;</span>
             <span class="text-light small fw-medium">ID #MEM-{{ user.id|stringformat:"04d" }}</span>
           </div>
+
           <h1 class="display-6 fw-black text-white mb-2">
             Welcome back, <span class="text-info">{{ user.name|default:user.username }}</span>!
           </h1>
-          <p class="text-light text-opacity-75 mb-0" style="font-size: 0.95rem;">
-            Explore our curated fitness plans below. Click "View More Details" on any package for full features and terms.
+          <p class="text-light text-opacity-75 mb-3" style="font-size: 0.95rem;">
+            Explore our curated fitness plans below. Transform your body with state-of-the-art gym equipment, certified trainers, and personalized coaching.
           </p>
-        </div>
-        <div class="col-lg-4 text-lg-end">
-          <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-lg-end">
-            <a href="{% url 'user_orders' %}" class="btn btn-outline-light fw-bold px-3 py-2 rounded-3">
+
+          <!-- Quick Feature Highlights -->
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="badge bg-white bg-opacity-10 text-light border border-white border-opacity-10 px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
+              <i class="fa-solid fa-dumbbell text-info me-1"></i> Modern Gym Equipment
+            </span>
+            <span class="badge bg-white bg-opacity-10 text-light border border-white border-opacity-10 px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
+              <i class="bi bi-person-badge-fill text-warning me-1"></i> Certified Coaches
+            </span>
+            <span class="badge bg-white bg-opacity-10 text-light border border-white border-opacity-10 px-2.5 py-1.5 rounded-pill" style="font-size: 11px;">
+              <i class="bi bi-clock-fill text-success me-1"></i> 24/7 Access Hours
+            </span>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'user_orders' %}" class="btn btn-outline-light fw-bold px-3.5 py-2 rounded-3">
               <i class="bi bi-receipt me-1"></i> My Bookings
             </a>
-            <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-info fw-bold px-3 py-2 shadow-sm text-dark rounded-3">
-              <i class="bi bi-grid-fill me-1"></i> Packages &rarr;
+            <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-info fw-bold px-3.5 py-2 shadow-sm text-dark rounded-3">
+              <i class="bi bi-grid-fill me-1"></i> Browse All Packages &rarr;
             </a>
           </div>
         </div>
+
+        <!-- Right Column: Fitness Related Photo Showcase -->
+        <div class="col-lg-5">
+          <div class="position-relative rounded-4 overflow-hidden shadow-lg border border-white border-opacity-15" style="box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6) !important;">
+            <img src="{% static 'images/fitness_hero.jpg' %}" alt="Fitness Master Gym Facility &amp; Training Equipment" class="img-fluid w-100" style="object-fit: cover; max-height: 260px; min-height: 200px; display: block; filter: brightness(0.95);">
+            <div class="position-absolute bottom-0 start-0 end-0 p-3" style="background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 70%, transparent 100%);">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <span class="badge bg-info text-dark fw-bold px-2.5 py-1 rounded-pill mb-1" style="font-size: 10px;">
+                    <i class="fa-solid fa-dumbbell me-1"></i> State-of-the-Art Club
+                  </span>
+                  <small class="d-block text-white fw-semibold" style="font-size: 12px;">Strength, Cardio &amp; Functional Training</small>
+                </div>
+                <span class="badge bg-success text-white px-2.5 py-1 rounded-pill fw-bold small" style="font-size: 10.5px;">
+                  <i class="bi bi-check-circle-fill me-1"></i> Active Club
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

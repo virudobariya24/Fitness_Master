@@ -266,7 +266,7 @@ class FitnessMaster6TasksTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Gold Pro Membership')
         self.assertContains(resp, '₹79.99')
-        self.assertContains(resp, 'Plan Specifications')
+        self.assertContains(resp, 'Package Specifications')
         self.assertContains(resp, '24/7 Access')
 
     def test_cards_and_dashboard_contain_view_more_buttons(self):
