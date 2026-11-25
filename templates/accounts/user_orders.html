@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Package Bookings | Fitness Master{% endblock %}
+
+{% block auth_content %}
+<div class="min-vh-100 d-flex flex-column bg-light">
+
+  <!-- Top Responsive Member Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top py-2.5">
+    <div class="container">
+      
+      <!-- Brand Logo -->
+      <a href="{% url 'user_dashboard' %}" class="navbar-brand d-flex align-items-center gap-2 me-lg-4 text-decoration-none">
+        <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+          <i class="fa-solid fa-dumbbell fs-5"></i>
+        </div>
+        <span class="fw-black text-dark tracking-wide fs-5">FITNESS<span class="text-info">MASTER</span></span>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="navbar-toggler border-0 shadow-none p-1.5" type="button" data-bs-toggle="collapse" data-bs-target="#userOrdersNavbar" aria-controls="userOrdersNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Content -->
+      <div class="collapse navbar-collapse" id="userOrdersNavbar">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 pt-2 pt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_dashboard' %}">
+              <i class="bi bi-speedometer2 text-muted"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_profile' %}">
+              <i class="bi bi-person-circle text-muted"></i> Profile
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active fw-bold text-primary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10" href="{% url 'user_orders' %}">
+              <i class="bi bi-receipt"></i> My Bookings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}?portal=user">
+              <i class="bi bi-grid-fill text-muted"></i> Packages Catalog
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'about_us' %}">
+              <i class="bi bi-info-circle-fill text-muted"></i> About Us
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'contact_us' %}">
+              <i class="bi bi-telephone-fill text-muted"></i> Contact Us
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right Side User Dropdown -->
+        <div class="d-flex flex-wrap align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0">
+          <div class="dropdown">
+            <button class="btn btn-light border bg-white rounded-pill px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm dropdown-toggle text-dark fw-bold" type="button" id="ordersProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 13px;">
+              <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 11px;">
+                {{ user.username|slice:":2"|upper }}
+              </div>
+              <span class="text-truncate" style="max-width: 140px;">{{ user.name|default:user.username }}</span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2" aria-labelledby="ordersProfileDropdown" style="min-width: 260px; border: 1px solid #e2e8f0 !important;">
+              <li class="px-3 py-2.5 border-bottom bg-light rounded-3 mb-1">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                  <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Authenticated Member</small>
+                  <span class="badge bg-success text-white px-2 py-0.5 rounded-pill" style="font-size: 9.5px;">Active</span>
+                </div>
+                <strong class="text-dark d-block text-truncate fs-6">{{ user.name|default:user.username }}</strong>
+                <small class="text-muted d-block text-truncate" style="font-size: 11.5px;"><i class="bi bi-envelope me-1"></i>{{ user.email }}</small>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_profile' %}">
+                  <i class="bi bi-person-circle text-primary"></i> My Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-primary bg-primary bg-opacity-10" href="{% url 'user_orders' %}">
+                  <i class="bi bi-receipt"></i> My Bookings
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_dashboard' %}">
+                  <i class="bi bi-speedometer2 text-info"></i> Member Dashboard
+                </a>
+              </li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-bold text-danger d-flex align-items-center gap-2 small" href="{% url 'user_logout' %}">
+                  <i class="bi bi-box-arrow-right"></i> Sign Out
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Header Banner -->
+  <div class="text-white py-4 py-lg-5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+    <div class="container">
+      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+        <div>
+          <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb small mb-0">
+              <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}" class="text-info text-decoration-none">Dashboard</a></li>
+              <li class="breadcrumb-item active text-light text-opacity-75" aria-current="page">My Bookings</li>
+            </ol>
+          </nav>
+          <h1 class="display-6 fw-black text-white mb-1">My Package Bookings &amp; Orders</h1>
+          <p class="text-light text-opacity-75 mb-0" style="font-size: 0.95rem;">
+            Review your gym memberships, booking references, and transaction receipts.
+          </p>
+        </div>
+        <div>
+          <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-info fw-bold px-3.5 py-2.5 rounded-3 text-dark shadow-sm">
+            <i class="bi bi-plus-circle-fill me-1.5"></i> Book Another Package
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container py-4 py-lg-5 flex-grow-1">
+
+    <!-- Flash Alert Messages -->
+    {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 px-3 rounded-3" role="alert">
+            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-info{% endif %} fs-5 flex-shrink-0"></i>
+            <div class="fw-semibold">{{ message }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Bookings Overview -->
+    {% if orders %}
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-4">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-3.5" style="border: 1px solid #e2e8f0 !important;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2.5 bg-primary bg-opacity-10 text-primary fs-4 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                <i class="bi bi-receipt"></i>
+              </div>
+              <div>
+                <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 11px;">Total Bookings</small>
+                <h4 class="fw-black text-dark mb-0">{{ total_orders }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-4">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-3.5" style="border: 1px solid #e2e8f0 !important;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2.5 bg-success bg-opacity-10 text-success fs-4 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+              <div>
+                <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 11px;">Active Memberships</small>
+                <h4 class="fw-black text-dark mb-0">{{ active_orders_count }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-4">
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-3.5" style="border: 1px solid #e2e8f0 !important;">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2.5 bg-warning bg-opacity-10 text-warning fs-4 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                <i class="bi bi-award-fill"></i>
+              </div>
+              <div>
+                <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 11px;">Member Status</small>
+                <h4 class="fw-black text-dark mb-0">Verified</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders List Cards -->
+      <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+        <div class="card-header bg-white border-bottom p-3.5 pb-3 d-flex align-items-center justify-content-between">
+          <h5 class="fw-bold text-dark mb-0 fs-6">
+            <i class="bi bi-list-stars text-primary me-2"></i>Booking History
+          </h5>
+          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-2.5 py-1 rounded-pill small">
+            {{ total_orders }} Total
+          </span>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-uppercase small text-muted" style="font-size: 11px; letter-spacing: 0.5px;">
+              <tr>
+                <th class="ps-4">Order Reference</th>
+                <th>Package Plan</th>
+                <th>Duration</th>
+                <th>Price Paid</th>
+                <th>Booking Date</th>
+                <th>Status</th>
+                <th class="text-end pe-4">Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ord in orders %}
+                <tr>
+                  <td class="ps-4">
+                    <span class="fw-bold text-primary font-monospace">{{ ord.order_number }}</span>
+                  </td>
+                  <td>
+                    <strong class="text-dark d-block fs-6">{{ ord.package_title }}</strong>
+                    <small class="text-muted"><i class="bi bi-credit-card me-1"></i>{{ ord.payment_method }}</small>
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark border px-2.5 py-1 rounded-pill">
+                      {{ ord.package_duration }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="fw-black text-dark fs-6">₹{{ ord.package_price }}</span>
+                  </td>
+                  <td>
+                    <span class="text-muted small">{{ ord.booking_date|date:"M d, Y, h:i A" }}</span>
+                  </td>
+                  <td>
+                    {% if ord.status == 'Confirmed' or ord.status == 'Active' %}
+                      <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle px-2.5 py-1 rounded-pill fw-bold">
+                        <i class="bi bi-check-circle-fill me-1"></i>{{ ord.status }}
+                      </span>
+                    {% elif ord.status == 'Pending' %}
+                      <span class="badge bg-warning bg-opacity-10 text-warning border border-warning-subtle px-2.5 py-1 rounded-pill fw-bold">
+                        <i class="bi bi-clock-history me-1"></i>Pending
+                      </span>
+                    {% else %}
+                      <span class="badge bg-secondary px-2.5 py-1 rounded-pill">{{ ord.status }}</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end pe-4">
+                    <a href="{% url 'user_order_detail' ord.id %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold">
+                      <i class="bi bi-file-earmark-text me-1"></i> Receipt
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    {% else %}
+      <!-- Empty State -->
+      <div class="card border-0 rounded-4 shadow-sm bg-white text-center p-5" style="border: 1px solid #e2e8f0 !important;">
+        <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 64px; height: 64px;">
+          <i class="bi bi-receipt fs-2"></i>
+        </div>
+        <h4 class="fw-bold text-dark mb-1">No Package Bookings Yet</h4>
+        <p class="text-muted small mb-4 mx-auto" style="max-width: 440px;">
+          You haven't booked any gym memberships yet. Browse our fitness plans to start your membership today!
+        </p>
+        <div>
+          <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-primary fw-bold px-4 py-2.5 rounded-3 shadow-sm">
+            <i class="bi bi-grid-fill me-1.5"></i> Browse Gym Packages
+          </a>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
+    <div class="container">
+      <span>Fitness Master &copy; 2026. All rights reserved.</span>
+    </div>
+  </footer>
+
+</div>
+{% endblock %}

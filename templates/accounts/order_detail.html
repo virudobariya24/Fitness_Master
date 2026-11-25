@@ -1,0 +1,369 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.order_number }} Receipt | Fitness Master{% endblock %}
+
+{% block extra_css %}
+<style>
+  @media print {
+    /* Hide top navbar, breadcrumbs, action buttons, and footer on print */
+    nav.navbar,
+    .no-print,
+    .breadcrumb,
+    footer {
+      display: none !important;
+    }
+    body {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      font-size: 12pt;
+    }
+    .print-card {
+      border: 1px solid #000000 !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      width: 100% !important;
+    }
+    .badge {
+      border: 1px solid #000000 !important;
+      color: #000000 !important;
+      background: transparent !important;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block auth_content %}
+<div class="min-vh-100 d-flex flex-column bg-light">
+
+  <!-- Top Responsive Member Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top py-2.5 no-print">
+    <div class="container">
+      
+      <!-- Brand Logo -->
+      <a href="{% url 'user_dashboard' %}" class="navbar-brand d-flex align-items-center gap-2 me-lg-4 text-decoration-none">
+        <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+          <i class="fa-solid fa-dumbbell fs-5"></i>
+        </div>
+        <span class="fw-black text-dark tracking-wide fs-5">FITNESS<span class="text-info">MASTER</span></span>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="navbar-toggler border-0 shadow-none p-1.5" type="button" data-bs-toggle="collapse" data-bs-target="#orderDetailNavbar" aria-controls="orderDetailNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Content -->
+      <div class="collapse navbar-collapse" id="orderDetailNavbar">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 pt-2 pt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_dashboard' %}">
+              <i class="bi bi-speedometer2 text-muted"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_profile' %}">
+              <i class="bi bi-person-circle text-muted"></i> Profile
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active fw-bold text-primary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10" href="{% url 'user_orders' %}">
+              <i class="bi bi-receipt"></i> My Bookings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}?portal=user">
+              <i class="bi bi-grid-fill text-muted"></i> Packages Catalog
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right Side User Dropdown -->
+        <div class="d-flex flex-wrap align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0">
+          <a href="{% url 'user_orders' %}" class="btn btn-outline-secondary btn-sm fw-semibold rounded-pill px-3">
+            <i class="bi bi-arrow-left me-1"></i> Back to My Bookings
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Header Banner (no-print) -->
+  <div class="text-white py-4 no-print" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+    <div class="container">
+      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+        <div>
+          <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb small mb-0">
+              <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}" class="text-info text-decoration-none">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'user_orders' %}" class="text-info text-decoration-none">My Bookings</a></li>
+              <li class="breadcrumb-item active text-light text-opacity-75" aria-current="page">Receipt #{{ order.order_number }}</li>
+            </ol>
+          </nav>
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success text-white px-2.5 py-1 rounded-pill fw-bold" style="font-size: 11px;">
+              <i class="bi bi-check-circle-fill me-1"></i> {{ order.status }}
+            </span>
+            <span class="badge bg-info text-dark px-2.5 py-1 rounded-pill fw-bold" style="font-size: 11px;">
+              <i class="bi bi-shield-check me-1"></i> Payment: {{ order.payment_status }}
+            </span>
+          </div>
+          <h1 class="display-6 fw-black text-white mt-1 mb-0">Booking Confirmation &amp; Receipt</h1>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button" onclick="window.print()" class="btn btn-info fw-bold px-3 py-2 text-dark shadow-sm rounded-3">
+            <i class="bi bi-printer-fill me-1.5"></i> Print Receipt
+          </button>
+          <a href="{% url 'user_orders' %}" class="btn btn-outline-light fw-bold px-3 py-2 rounded-3">
+            <i class="bi bi-list-check me-1.5"></i> View All Bookings
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Receipt Container -->
+  <div class="container py-4 py-lg-5 flex-grow-1">
+
+    <!-- Flash Alert Messages -->
+    {% if messages %}
+      <div class="mb-4 no-print">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 px-3 rounded-3" role="alert">
+            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-info{% endif %} fs-5 flex-shrink-0"></i>
+            <div class="fw-semibold">{{ message }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="row justify-content-center">
+      <div class="col-lg-9 col-xl-8">
+        
+        <!-- Printable Invoice Card -->
+        <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden print-card" style="border: 1px solid #e2e8f0 !important;">
+          
+          <!-- Invoice Header -->
+          <div class="p-4 p-md-5 border-bottom" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+            <div class="row align-items-center g-3">
+              <div class="col-sm-7">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+                    <i class="fa-solid fa-dumbbell fs-5"></i>
+                  </div>
+                  <div>
+                    <h5 class="fw-black text-dark tracking-wide mb-0">FITNESS<span class="text-info">MASTER</span></h5>
+                    <small class="text-muted fw-semibold" style="font-size: 11px;">GYM &amp; HEALTH CLUB OFFICIAL RECEIPT</small>
+                  </div>
+                </div>
+                <p class="text-muted small mb-0">
+                  Fitness Master Center &bull; High Performance Gym<br>
+                  <i class="bi bi-envelope me-1"></i> support@fitnessmaster.com &bull; <i class="bi bi-globe me-1"></i> www.fitnessmaster.com
+                </p>
+              </div>
+              <div class="col-sm-5 text-sm-end">
+                <div class="d-inline-block bg-white p-3 rounded-3 border shadow-sm text-sm-end">
+                  <small class="text-muted fw-bold text-uppercase d-block" style="font-size: 10px; letter-spacing: 0.5px;">Order Reference</small>
+                  <strong class="text-primary fs-6 font-monospace d-block">{{ order.order_number }}</strong>
+                  <small class="text-muted d-block mt-1" style="font-size: 11px;">
+                    <i class="bi bi-calendar3 me-1"></i>{{ order.booking_date|date:"d M Y, h:i A" }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer & Order Meta Information -->
+          <div class="p-4 p-md-4.5 border-bottom">
+            <div class="row g-3">
+              <div class="col-sm-6 border-end-sm">
+                <small class="text-muted text-uppercase fw-bold d-block mb-1.5" style="font-size: 11px;">
+                  <i class="bi bi-person-fill text-primary me-1"></i> Billed To (Member Details)
+                </small>
+                <h6 class="fw-bold text-dark mb-0.5">{{ order.user.name|default:order.user.username }}</h6>
+                <div class="text-secondary small"><i class="bi bi-envelope me-1"></i>{{ order.user.email }}</div>
+                <div class="text-muted small"><i class="bi bi-person-badge me-1"></i>Member ID: #MEM-{{ order.user.id|stringformat:"04d" }}</div>
+              </div>
+
+              <div class="col-sm-6 ps-sm-4">
+                <small class="text-muted text-uppercase fw-bold d-block mb-1.5" style="font-size: 11px;">
+                  <i class="bi bi-credit-card-2-front-fill text-success me-1"></i> Payment &amp; Status
+                </small>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <span class="text-muted small">Status:</span>
+                  <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold px-2 py-0.5 rounded-pill" style="font-size: 11px;">
+                    {{ order.status }}
+                  </span>
+                </div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <span class="text-muted small">Payment:</span>
+                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold px-2 py-0.5 rounded-pill" style="font-size: 11px;">
+                    {{ order.payment_status }}
+                  </span>
+                </div>
+                <div class="text-muted small">
+                  <span>Method:</span> <strong class="text-dark">{{ order.payment_method }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Package Details Breakdown -->
+          <div class="p-4 p-md-4.5">
+            <h6 class="fw-bold text-dark mb-3">
+              <i class="bi bi-box-seam-fill text-primary me-2"></i>Booked Fitness Plan
+            </h6>
+
+            <div class="table-responsive mb-4">
+              <table class="table table-bordered align-middle mb-0">
+                <thead class="table-light text-uppercase fw-bold text-secondary" style="font-size: 11px;">
+                  <tr>
+                    <th>Package Description</th>
+                    <th class="text-center" style="width: 140px;">Duration</th>
+                    <th class="text-center" style="width: 150px;">Billing Term</th>
+                    <th class="text-end" style="width: 160px;">Total (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="fw-bold text-dark fs-6">{{ order.package_title }}</div>
+                      <small class="text-muted d-block mt-0.5">
+                        Includes Gym Access ({{ order.package.access_hours }}), {{ order.package.classes_per_week }}, and Trainer guidance.
+                      </small>
+                    </td>
+                    <td class="text-center fw-semibold text-secondary small">
+                      {{ order.package_duration }}
+                    </td>
+                    <td class="text-center fw-semibold text-secondary small">
+                      {{ order.package.membership_duration }}
+                    </td>
+                    <td class="text-end fw-black text-primary fs-5">
+                      ₹{{ order.package_price }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- All Included Package Specifications -->
+            <h6 class="fw-bold text-dark mb-3">
+              <i class="bi bi-check2-all text-success me-2"></i>Active Membership Amenities &amp; Privileges
+            </h6>
+
+            <div class="row g-2.5 mb-4">
+              <div class="col-sm-6">
+                <div class="p-2.5 bg-light rounded-3 border d-flex align-items-center gap-2">
+                  <i class="bi bi-clock-fill text-primary flex-shrink-0"></i>
+                  <div>
+                    <small class="text-muted d-block" style="font-size: 10.5px;">ACCESS HOURS</small>
+                    <strong class="text-dark small">{{ order.package.access_hours }}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="p-2.5 bg-light rounded-3 border d-flex align-items-center gap-2">
+                  <i class="bi bi-calendar2-check-fill text-success flex-shrink-0"></i>
+                  <div>
+                    <small class="text-muted d-block" style="font-size: 10.5px;">CLASSES / WEEK</small>
+                    <strong class="text-dark small">{{ order.package.classes_per_week }}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="p-2.5 bg-light rounded-3 border d-flex align-items-center gap-2">
+                  <i class="bi bi-person-badge-fill text-warning flex-shrink-0"></i>
+                  <div>
+                    <small class="text-muted d-block" style="font-size: 10.5px;">PERSONAL INSTRUCTOR</small>
+                    <strong class="text-dark small">{{ order.package.personal_instructor }}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="p-2.5 bg-light rounded-3 border d-flex align-items-center gap-2">
+                  <i class="bi bi-cup-straw text-info flex-shrink-0"></i>
+                  <div>
+                    <small class="text-muted d-block" style="font-size: 10.5px;">DRINKING PACKAGE</small>
+                    <strong class="text-dark small">{{ order.package.drinking_package }}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="p-2.5 bg-light rounded-3 border d-flex align-items-center gap-2">
+                  <i class="bi bi-tools text-secondary flex-shrink-0"></i>
+                  <div>
+                    <small class="text-muted d-block" style="font-size: 10.5px;">INSTRUMENTS &amp; EQUIPMENT</small>
+                    <strong class="text-dark small">{{ order.package.instruments }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pricing Summary Card -->
+            <div class="row justify-content-end mb-4">
+              <div class="col-sm-7 col-md-6 col-lg-5">
+                <div class="bg-light p-3.5 rounded-3 border">
+                  <div class="d-flex justify-content-between mb-2 small text-secondary">
+                    <span>Package Price:</span>
+                    <strong class="text-dark">₹{{ order.package_price }}</strong>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2 small text-secondary">
+                    <span>Taxes &amp; Fees (GST):</span>
+                    <span class="text-success fw-bold">Inclusive</span>
+                  </div>
+                  <hr class="my-2 border-secondary border-opacity-25">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-dark">Total Amount Paid:</span>
+                    <span class="fs-4 fw-black text-primary">₹{{ order.package_price }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Notes / Remarks -->
+            {% if order.notes %}
+              <div class="alert alert-light border small text-muted mb-4">
+                <strong>Booking Notes:</strong> {{ order.notes }}
+              </div>
+            {% endif %}
+
+            <!-- Actions Row (no-print) -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 pt-3 border-top no-print">
+              <a href="{% url 'user_orders' %}" class="btn btn-outline-secondary fw-semibold px-3 py-2 rounded-3">
+                <i class="bi bi-arrow-left me-1"></i> All Bookings
+              </a>
+
+              <div class="d-flex flex-wrap gap-2">
+                <button type="button" onclick="window.print()" class="btn btn-outline-primary fw-semibold px-3 py-2 rounded-3">
+                  <i class="bi bi-printer me-1"></i> Print / Save PDF
+                </button>
+                <a href="{% url 'package_detail' order.package.id %}" class="btn btn-info text-dark fw-bold px-3 py-2 rounded-3">
+                  <i class="bi bi-box-seam me-1"></i> Package Details
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer (no-print) -->
+  <footer class="bg-white border-top py-3 text-center text-muted small no-print">
+    <div class="container">
+      &copy; 2026 Fitness Master Gym Club. All rights reserved. &bull; Registered Member Booking Receipt
+    </div>
+  </footer>
+
+</div>
+{% endblock %}

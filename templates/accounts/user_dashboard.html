@@ -41,6 +41,11 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_orders' %}">
+              <i class="bi bi-receipt text-muted"></i> My Bookings
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}?portal=user">
               <i class="bi bi-grid-fill text-muted"></i> Packages Catalog
             </a>
@@ -84,6 +89,11 @@
                 </a>
               </li>
               <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_orders' %}">
+                  <i class="bi bi-receipt text-success"></i> My Bookings
+                </a>
+              </li>
+              <li>
                 <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'packages_cards' %}?portal=user">
                   <i class="bi bi-box-seam text-info"></i> Browse Packages
                 </a>
@@ -124,9 +134,14 @@
           </p>
         </div>
         <div class="col-lg-4 text-lg-end">
-          <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-info fw-bold px-3.5 py-2.5 shadow-sm text-dark rounded-3">
-            <i class="bi bi-grid-fill me-1.5"></i> All Packages View &rarr;
-          </a>
+          <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-lg-end">
+            <a href="{% url 'user_orders' %}" class="btn btn-outline-light fw-bold px-3 py-2 rounded-3">
+              <i class="bi bi-receipt me-1"></i> My Bookings
+            </a>
+            <a href="{% url 'packages_cards' %}?portal=user" class="btn btn-info fw-bold px-3 py-2 shadow-sm text-dark rounded-3">
+              <i class="bi bi-grid-fill me-1"></i> Packages &rarr;
+            </a>
+          </div>
         </div>
       </div>
     </div>

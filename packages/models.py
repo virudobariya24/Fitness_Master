@@ -68,4 +68,101 @@ class Packages(models.Model):
         ordering = ['price']
 
     def __str__(self):
-        return f"{self.title} (${self.price}) - {self.duration}"
+        return f"{self.title} (₹{self.price}) - {self.duration}"
+
+
+class Order(models.Model):
+    """
+    Task (1): Order model representing a member's package booking.
+    Fields:
+    - user: Foreign key to custom User model
+    - package: The booked fitness package
+    - order_number: Unique tracking reference (e.g. ORD-20261125-1234)
+    - package_title: Snapshot of package title at booking time
+    - package_price: Snapshot of package price at booking time (in Indian Rupees ₹)
+    - package_duration: Snapshot of package duration
+    - booking_date: Timestamp of order placement
+    - status: Current order status ('Confirmed', 'Active', 'Completed', 'Cancelled')
+    - payment_status: Payment state ('Paid', 'Pending', 'Refunded')
+    - payment_method: Payment mode (e.g. 'UPI / Online Payment', 'Credit/Debit Card')
+    - notes: Optional member or admin remarks
+    """
+    STATUS_CHOICES = [
+        ('Confirmed', 'Confirmed'),
+        ('Active', 'Active'),
+        ('Pending', 'Pending'),
+        ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
+    ]
+
+    PAYMENT_STATUS_CHOICES = [
+        ('Paid', 'Paid'),
+        ('Pending', 'Pending'),
+        ('Refunded', 'Refunded'),
+    ]
+
+    user = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.CASCADE,
+        related_name='orders',
+        verbose_name="Gym Member"
+    )
+    package = models.ForeignKey(
+        Packages,
+        on_delete=models.CASCADE,
+        related_name='orders',
+        verbose_name="Fitness Package"
+    )
+    order_number = models.CharField(
+        max_length=64,
+        unique=True,
+        verbose_name="Order Reference Number"
+    )
+    package_title = models.CharField(
+        max_length=150,
+        verbose_name="Package Title"
+    )
+    package_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Price Paid (₹)"
+    )
+    package_duration = models.CharField(
+        max_length=80,
+        verbose_name="Package Duration"
+    )
+    booking_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Booking Timestamp"
+    )
+    status = models.CharField(
+        max_length=30,
+        choices=STATUS_CHOICES,
+        default='Confirmed',
+        verbose_name="Booking Status"
+    )
+    payment_status = models.CharField(
+        max_length=30,
+        choices=PAYMENT_STATUS_CHOICES,
+        default='Paid',
+        verbose_name="Payment Status"
+    )
+    payment_method = models.CharField(
+        max_length=80,
+        default='UPI / Online Payment',
+        verbose_name="Payment Method"
+    )
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Additional Notes"
+    )
+
+    class Meta:
+        verbose_name = "Package Booking Order"
+        verbose_name_plural = "Package Booking Orders"
+        ordering = ['-booking_date']
+
+    def __str__(self):
+        return f"Order #{self.order_number} - {self.user.username} ({self.package_title})"
+

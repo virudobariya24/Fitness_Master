@@ -41,6 +41,11 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'user_orders' %}">
+              <i class="bi bi-receipt text-muted"></i> My Bookings
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link fw-semibold text-secondary d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill" href="{% url 'packages_cards' %}?portal=user">
               <i class="bi bi-grid-fill text-muted"></i> Packages Catalog
             </a>
@@ -79,6 +84,11 @@
               <li>
                 <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small text-primary bg-primary bg-opacity-10" href="{% url 'user_profile' %}">
                   <i class="bi bi-person-circle"></i> My Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-3 py-2 fw-semibold d-flex align-items-center gap-2 small" href="{% url 'user_orders' %}">
+                  <i class="bi bi-receipt text-success"></i> My Bookings
                 </a>
               </li>
               <li>

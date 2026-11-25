@@ -413,6 +413,12 @@
         </a>
       </li>
       <li class="nav-item">
+        <a href="{% url 'admin_orders' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_orders' %}active{% endif %}" title="Package Orders">
+          <i class="bi bi-receipt"></i>
+          <span class="nav-label">Package Orders</span>
+        </a>
+      </li>
+      <li class="nav-item">
         <a href="{% url 'admin_accounts' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_accounts' %}active{% endif %}" title="Admin Accounts">
           <i class="bi bi-shield-lock"></i>
           <span class="nav-label">Admin Accounts</span>
@@ -460,6 +466,11 @@
         <li class="nav-item">
           <a href="{% url 'packages_list' %}" class="nav-link {% if request.resolver_match.url_name == 'packages_list' or request.resolver_match.url_name == 'package_edit' or request.resolver_match.url_name == 'packages_cards' %}active{% endif %}">
             <i class="bi bi-box-seam"></i> Packages Management
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'admin_orders' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_orders' %}active{% endif %}">
+            <i class="bi bi-receipt"></i> Package Orders
           </a>
         </li>
         <li class="nav-item">

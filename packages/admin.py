@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Packages
+from .models import Packages, Order
 
 
 @admin.register(Packages)
@@ -12,3 +12,15 @@ class PackagesAdmin(admin.ModelAdmin):
     search_fields = ('title', 'instruments', 'membership_duration')
     list_filter = ('membership_duration',)
     ordering = ('price',)
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = (
+        'order_number', 'user', 'package_title', 'package_price',
+        'status', 'payment_status', 'booking_date'
+    )
+    list_filter = ('status', 'payment_status', 'booking_date')
+    search_fields = ('order_number', 'user__username', 'user__email', 'package_title')
+    ordering = ('-booking_date',)
+
