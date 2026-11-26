@@ -157,6 +157,7 @@ def package_detail_view(request, pk):
         'is_member_authenticated': is_member_authenticated,
         'user_has_booked': user_has_booked,
         'active_order': active_order,
+        'razorpay_key_id': getattr(settings, 'RAZORPAY_KEY_ID', 'rzp_test_RRohlnOxODtIQJ'),
     })
 
 
