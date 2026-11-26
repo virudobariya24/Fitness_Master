@@ -237,11 +237,21 @@ def user_dashboard_view(request):
     # 3. Keep session active and persistent across refreshes
     request.session.modified = True
 
+    from packages.models import Order
     packages = Packages.objects.all().order_by('price')
+    total_packages = packages.count()
+    total_members = User.objects.count()
+    total_orders = Order.objects.count()
+    total_trainers = AdminModel.objects.filter(is_staff=True).count()
+
     return render(request, 'accounts/user_dashboard.html', {
         'user': user,
         'packages': packages,
         'is_user_page': True,
+        'total_packages': total_packages,
+        'total_members': total_members,
+        'total_orders': total_orders,
+        'total_trainers': total_trainers,
     })
 
 
