@@ -40,7 +40,13 @@ class AdminLoginForm(forms.Form):
             # 1. Attempt standard authentication by username
             user = authenticate(self.request, username=username, password=password)
 
-            # 2. If not matched, attempt by email
+            # 2. If not matched, attempt case-insensitive username lookup (e.g. Admin or admin)
+            if user is None:
+                matched_user = AdminModel.objects.filter(username__iexact=username).first()
+                if matched_user:
+                    user = authenticate(self.request, username=matched_user.username, password=password)
+
+            # 3. If not matched, attempt by email
             if user is None:
                 matched = AdminModel.objects.filter(email__iexact=username).first()
                 if matched:
