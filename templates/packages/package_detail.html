@@ -45,8 +45,7 @@
             <small class="text-light text-opacity-75 fw-bold text-uppercase d-block"
               style="font-size: 11px; letter-spacing: 0.5px;">Subscription Price</small>
             <span class="display-5 fw-black text-info">₹{{ package.price }}</span>
-            <small class="text-light text-opacity-75 d-block fw-semibold" style="font-size: 11px;">per {{
-              package.membership_duration }}</small>
+            <small class="text-light text-opacity-75 d-block fw-semibold" style="font-size: 11px;">per {{ package.membership_duration }}</small>
           </div>
         </div>
       </div>
@@ -317,8 +316,7 @@
                   <span class="badge bg-success text-white px-2 py-0.5 rounded-pill"
                     style="font-size: 9.5px;">Active</span>
                 </div>
-                <strong class="text-dark d-block text-truncate fs-6">{{
-                  request.session.user_name|default:request.session.user_username }}</strong>
+                <strong class="text-dark d-block text-truncate fs-6">{{ request.session.user_name|default:request.session.user_username }}</strong>
                 <small class="text-muted d-block text-truncate" style="font-size: 11.5px;"><i
                     class="bi bi-envelope me-1"></i>{{ request.session.user_email }}</small>
               </li>
@@ -434,8 +432,7 @@
             </div>
             <div class="text-end">
               <span class="display-6 fw-black text-primary">₹{{ package.price }}</span>
-              <small class="text-muted d-block fw-semibold" style="font-size: 12px;">per {{ package.membership_duration
-                }}</small>
+              <small class="text-muted d-block fw-semibold" style="font-size: 12px;">per {{ package.membership_duration }}</small>
             </div>
           </div>
 
@@ -725,13 +722,19 @@
                 <span class="fs-4 fw-black text-primary">₹{{ package.price }}</span>
               </div>
             </div>
-            <div class="small text-muted">
-              <div><i class="bi bi-check2 text-success me-1"></i> Access Hours: <strong>{{ package.access_hours
-                  }}</strong></div>
-              <div><i class="bi bi-check2 text-success me-1"></i> Classes: <strong>{{ package.classes_per_week
-                  }}</strong></div>
-              <div><i class="bi bi-check2 text-success me-1"></i> Trainer: <strong>{{ package.personal_instructor
-                  }}</strong></div>
+            <div class="small text-muted d-flex flex-column gap-1.5 pt-1">
+              <div class="d-flex align-items-center justify-content-between py-1 border-bottom border-light-subtle">
+                <span class="d-inline-flex align-items-center gap-1.5"><i class="bi bi-clock-fill text-primary" style="font-size: 12px;"></i> Access Hours:</span>
+                <strong class="text-dark">{{ package.access_hours }}</strong>
+              </div>
+              <div class="d-flex align-items-center justify-content-between py-1 border-bottom border-light-subtle">
+                <span class="d-inline-flex align-items-center gap-1.5"><i class="bi bi-calendar2-check-fill text-success" style="font-size: 12px;"></i> Classes / Week:</span>
+                <strong class="text-dark">{{ package.classes_per_week }}</strong>
+              </div>
+              <div class="d-flex align-items-center justify-content-between py-1">
+                <span class="d-inline-flex align-items-center gap-1.5"><i class="bi bi-person-badge-fill text-warning" style="font-size: 12px;"></i> Trainer Support:</span>
+                <strong class="text-dark">{{ package.personal_instructor }}</strong>
+              </div>
             </div>
           </div>
 
