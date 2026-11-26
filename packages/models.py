@@ -157,6 +157,24 @@ class Order(models.Model):
         null=True,
         verbose_name="Additional Notes"
     )
+    razorpay_order_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Razorpay Order ID"
+    )
+    razorpay_payment_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Razorpay Payment ID"
+    )
+    razorpay_signature = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Razorpay Signature"
+    )
 
     class Meta:
         verbose_name = "Package Booking Order"

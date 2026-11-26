@@ -192,6 +192,9 @@
                   {{ order.payment_status }}
                 </span>
                 <small class="text-muted d-block" style="font-size: 10px;">{{ order.payment_method }}</small>
+                {% if order.razorpay_payment_id %}
+                  <small class="text-primary font-monospace d-block" style="font-size: 9.5px;">{{ order.razorpay_payment_id }}</small>
+                {% endif %}
               </td>
               <td class="text-end pe-4">
                 <a href="{% url 'package_detail' order.package.id %}" class="btn btn-outline-secondary btn-sm fw-semibold rounded-pill px-2.5 py-1" title="View Package Details">

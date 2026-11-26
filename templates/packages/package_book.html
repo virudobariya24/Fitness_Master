@@ -1,0 +1,566 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirm Booking: {{ package.title }} | Fitness Master{% endblock %}
+
+{% block extra_css %}
+<style>
+  .user-sticky-navbar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1040 !important;
+    background-color: rgba(255, 255, 255, 0.97) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.07) !important;
+  }
+
+  .payment-mode-card {
+    cursor: pointer;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 1rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #ffffff;
+  }
+
+  .payment-mode-card:hover {
+    border-color: #38bdf8 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15);
+  }
+
+  .payment-mode-card.selected {
+    border-color: #0ea5e9 !important;
+    background-color: #f0f9ff !important;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18), 0 10px 25px -5px rgba(14, 165, 233, 0.2);
+  }
+
+  .summary-card {
+    position: sticky;
+    top: 90px;
+  }
+</style>
+{% endblock %}
+
+{% block auth_content %}
+<div class="min-vh-100 d-flex flex-column bg-light">
+
+  <!-- =========================================================================
+       MEMBER TOP NAVIGATION BAR
+       ========================================================================= -->
+  <nav class="navbar navbar-expand-lg navbar-light user-sticky-navbar py-2.5">
+    <div class="container">
+      
+      <!-- Brand Logo -->
+      <a href="{% url 'user_dashboard' %}" class="navbar-brand d-flex align-items-center gap-2 me-lg-4 text-decoration-none">
+        <div class="rounded-3 p-2 text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+          <i class="fa-solid fa-dumbbell fs-5"></i>
+        </div>
+        <span class="fw-black text-dark tracking-wide fs-5">FITNESS<span class="text-info">MASTER</span></span>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="navbar-toggler border-0 shadow-none p-1.5" type="button" data-bs-toggle="collapse" data-bs-target="#packageBookNavbar" aria-controls="packageBookNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Content -->
+      <div class="collapse navbar-collapse" id="packageBookNavbar">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center gap-1 gap-lg-1.5 pt-2 pt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'user_dashboard' %}">
+              <i class="bi bi-speedometer2 text-muted"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active fw-bold text-primary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-primary bg-opacity-10 text-nowrap" href="{% url 'packages_cards' %}?portal=user">
+              <i class="bi bi-grid-fill"></i>
+              <span>Packages Catalog</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'about_us' %}">
+              <i class="bi bi-info-circle-fill text-muted"></i>
+              <span>About Us</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold text-secondary d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill text-nowrap" href="{% url 'contact_us' %}">
+              <i class="bi bi-telephone-fill text-muted"></i>
+              <span>Contact Us</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right Side: Member Actions -->
+        <div class="d-flex flex-wrap align-items-center gap-2 pt-2 pt-lg-0 border-top border-lg-0">
+          <a href="{% url 'user_orders' %}" class="btn btn-outline-secondary btn-sm fw-semibold rounded-pill px-3">
+            <i class="bi bi-receipt me-1"></i> My Bookings
+          </a>
+          <a href="{% url 'package_detail' package.id %}" class="btn btn-light border btn-sm fw-semibold rounded-pill px-3">
+            <i class="bi bi-arrow-left me-1"></i> Back to Package
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- =========================================================================
+       HERO HEADER & BREADCRUMB BANNER
+       ========================================================================= -->
+  <div class="text-white py-4 py-lg-4.5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+    <div class="container">
+      <nav aria-label="breadcrumb" class="mb-2">
+        <ol class="breadcrumb small mb-0">
+          <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}" class="text-info text-decoration-none">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'packages_cards' %}?portal=user" class="text-info text-decoration-none">Packages</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'package_detail' package.id %}" class="text-info text-decoration-none">{{ package.title }}</a></li>
+          <li class="breadcrumb-item active text-light text-opacity-75" aria-current="page">Booking Confirmation</li>
+        </ol>
+      </nav>
+      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+        <div>
+          <span class="badge bg-info text-dark fw-bold px-3 py-1 rounded-pill mb-1.5 text-uppercase" style="font-size: 10.5px;">
+            <i class="bi bi-shield-check me-1"></i> Step 2 of 2: Checkout &amp; Payment
+          </span>
+          <h1 class="display-6 fw-black text-white mb-1">Confirm Package Booking</h1>
+          <p class="text-light text-opacity-75 small mb-0">
+            Select your preferred payment method and confirm your gym membership enrollment.
+          </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-white bg-opacity-10 text-white border border-white border-opacity-20 px-3 py-2 rounded-pill fw-bold">
+            <i class="bi bi-lock-fill text-info me-1"></i> 256-Bit SSL Encrypted
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MAIN BOOKING FORM & ORDER SUMMARY CONTAINER
+       ========================================================================= -->
+  <div class="container py-4 py-lg-5 flex-grow-1">
+
+    <!-- Flash Alert Messages -->
+    {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm d-flex align-items-center gap-2 small py-2.5 px-3 rounded-3" role="alert">
+            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% else %}bi-info-circle-fill text-info{% endif %} fs-5 flex-shrink-0"></i>
+            <div class="fw-semibold">{{ message }}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="row g-4">
+
+      <!-- =====================================================================
+           LEFT COLUMN: BOOKING FORM & PAYMENT MODE SELECTION
+           ===================================================================== -->
+      <div class="col-lg-7 col-xl-8">
+        
+        <form id="bookingCheckoutForm" method="post" action="{% url 'package_book' package.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="order_id" id="hiddenOrderId" value="">
+          <input type="hidden" name="razorpay_order_id" id="hiddenRazorpayOrderId" value="">
+          <input type="hidden" name="razorpay_payment_id" id="hiddenRazorpayPaymentId" value="">
+          <input type="hidden" name="razorpay_signature" id="hiddenRazorpaySignature" value="">
+
+          <!-- Card 1: Gym Member Details Confirmation -->
+          <div class="card border-0 rounded-4 shadow-sm bg-white mb-4 overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+            <div class="card-header bg-white border-bottom p-3.5 d-flex align-items-center justify-content-between">
+              <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-person-badge-fill text-primary"></i>
+                <span>Member Account Information</span>
+              </h6>
+              <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill fw-bold" style="font-size: 11px;">
+                <i class="bi bi-check-circle-fill me-1"></i>Validated Member
+              </span>
+            </div>
+            <div class="card-body p-3.5 p-lg-4">
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <label class="form-label text-muted small fw-bold text-uppercase mb-1" style="font-size: 11px;">Member Name</label>
+                  <div class="p-2.5 rounded-3 bg-light border fw-bold text-dark">
+                    <i class="bi bi-person-fill text-primary me-1.5"></i>{{ user.name|default:user.username }}
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label text-muted small fw-bold text-uppercase mb-1" style="font-size: 11px;">Registered Email</label>
+                  <div class="p-2.5 rounded-3 bg-light border fw-semibold text-dark text-truncate">
+                    <i class="bi bi-envelope-fill text-info me-1.5"></i>{{ user.email }}
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label text-muted small fw-bold text-uppercase mb-1" style="font-size: 11px;">Member Username</label>
+                  <div class="p-2.5 rounded-3 bg-light border small text-muted">
+                    @{{ user.username }}
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label text-muted small fw-bold text-uppercase mb-1" style="font-size: 11px;">Membership ID</label>
+                  <div class="p-2.5 rounded-3 bg-light border small font-monospace text-primary fw-bold">
+                    #MEM-{{ user.id|stringformat:"04d" }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Choose Payment Mode (Online Razorpay or Cash) -->
+          <div class="card border-0 rounded-4 shadow-sm bg-white mb-4 overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+            <div class="card-header bg-white border-bottom p-3.5">
+              <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-credit-card-2-front-fill text-success"></i>
+                <span>Choose Payment Mode</span>
+              </h6>
+              <small class="text-muted">Select how you would like to complete your membership payment</small>
+            </div>
+            
+            <div class="card-body p-3.5 p-lg-4">
+              <div class="row g-3">
+                
+                <!-- Option 1: Online Payment via Razorpay -->
+                <div class="col-12">
+                  <label class="payment-mode-card selected p-3.5 d-flex align-items-start gap-3 w-100" id="cardModeOnline">
+                    <input class="form-check-input mt-1 flex-shrink-0" type="radio" name="payment_mode" id="modeOnline" value="online" checked style="width: 20px; height: 20px; cursor: pointer;">
+                    <div class="flex-grow-1">
+                      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-1">
+                        <strong class="text-dark fs-6 d-flex align-items-center gap-2">
+                          <i class="bi bi-lightning-charge-fill text-warning"></i>
+                          <span>Online Payment (Razorpay Payment Gateway)</span>
+                        </strong>
+                        <span class="badge bg-primary text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size: 11px;">
+                          Recommended &bull; Instant Activation
+                        </span>
+                      </div>
+                      <p class="text-muted small mb-2" style="line-height: 1.5;">
+                        Pay securely with UPI (Google Pay, PhonePe, Paytm, BHIM), Credit/Debit Cards (Visa, Mastercard, RuPay), Net Banking (All Indian Banks), or Mobile Wallets.
+                      </p>
+                      <div class="d-flex flex-wrap align-items-center gap-2">
+                        <span class="badge bg-white text-secondary border px-2 py-1 rounded" style="font-size: 10.5px;">
+                          <i class="bi bi-shield-check text-success me-1"></i>Razorpay Verified
+                        </span>
+                        <span class="badge bg-white text-secondary border px-2 py-1 rounded" style="font-size: 10.5px;">
+                          <i class="bi bi-qr-code text-primary me-1"></i>UPI QR &amp; Apps
+                        </span>
+                        <span class="badge bg-white text-secondary border px-2 py-1 rounded" style="font-size: 10.5px;">
+                          <i class="bi bi-credit-card text-info me-1"></i>All Major Cards
+                        </span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Option 2: Cash on Arrival -->
+                <div class="col-12">
+                  <label class="payment-mode-card p-3.5 d-flex align-items-start gap-3 w-100" id="cardModeCash">
+                    <input class="form-check-input mt-1 flex-shrink-0" type="radio" name="payment_mode" id="modeCash" value="cash" style="width: 20px; height: 20px; cursor: pointer;">
+                    <div class="flex-grow-1">
+                      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-1">
+                        <strong class="text-dark fs-6 d-flex align-items-center gap-2">
+                          <i class="bi bi-cash-stack text-success"></i>
+                          <span>Cash on Arrival (Pay at Gym Reception Desk)</span>
+                        </strong>
+                        <span class="badge bg-secondary-subtle text-secondary rounded-pill px-2.5 py-1 fw-bold" style="font-size: 11px;">
+                          Pay at Facility
+                        </span>
+                      </div>
+                      <p class="text-muted small mb-2" style="line-height: 1.5;">
+                        Reserve your fitness package today. Present your digital order reference and pay in cash or card at the gym reception desk when you arrive for your first workout.
+                      </p>
+                      <div class="d-flex flex-wrap align-items-center gap-2">
+                        <span class="badge bg-white text-secondary border px-2 py-1 rounded" style="font-size: 10.5px;">
+                          <i class="bi bi-shop text-dark me-1"></i>Front Desk Reception
+                        </span>
+                        <span class="badge bg-white text-secondary border px-2 py-1 rounded" style="font-size: 10.5px;">
+                          <i class="bi bi-wallet2 text-success me-1"></i>Cash / POS Machine
+                        </span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Optional Notes & Special Requests -->
+          <div class="card border-0 rounded-4 shadow-sm bg-white mb-4 overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+            <div class="card-header bg-white border-bottom p-3.5">
+              <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-chat-text-fill text-info"></i>
+                <span>Special Requests &amp; Notes <span class="text-muted fw-normal small">(Optional)</span></span>
+              </h6>
+            </div>
+            <div class="card-body p-3.5 p-lg-4">
+              <textarea name="notes" id="bookingNotes" class="form-control" rows="2" placeholder="e.g. Prefer morning workout slots (7 AM - 9 AM), beginner trainer guidance required, dietary questions."></textarea>
+              <small class="text-muted d-block mt-1.5" style="font-size: 11.5px;">
+                Our gym counselor and fitness trainers will review these notes when setting up your schedule.
+              </small>
+            </div>
+          </div>
+
+          <!-- Submission & Payment Button Container -->
+          <div class="card border-0 rounded-4 shadow-sm bg-white p-3.5 p-lg-4" style="border: 1px solid #e2e8f0 !important;">
+            
+            <!-- Online Razorpay Trigger Button -->
+            <div id="onlineSubmitSection">
+              <button type="button" id="payRazorpayBtn" class="btn btn-primary fw-black w-100 py-3 rounded-3 shadow-lg d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #0ea5e9, #0284c7); border: none; font-size: 1.05rem;">
+                <i class="bi bi-lightning-charge-fill fs-5"></i>
+                <span>Proceed to Pay ₹{{ package.price }} via Razorpay &rarr;</span>
+              </button>
+              <div class="text-center mt-2.5">
+                <small class="text-muted d-inline-flex align-items-center gap-1.5">
+                  <i class="bi bi-shield-lock-fill text-success"></i>
+                  <span>Official Razorpay Gateway Test Mode &bull; Safe &amp; Instant Verification</span>
+                </small>
+              </div>
+            </div>
+
+            <!-- Cash on Arrival Submission Button -->
+            <div id="cashSubmitSection" class="d-none">
+              <button type="submit" id="confirmCashBtn" class="btn btn-success fw-black w-100 py-3 rounded-3 shadow-lg d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #10b981, #059669); border: none; font-size: 1.05rem;">
+                <i class="bi bi-check-circle-fill fs-5"></i>
+                <span>Confirm Booking (Pay ₹{{ package.price }} Cash at Reception) &rarr;</span>
+              </button>
+              <div class="text-center mt-2.5">
+                <small class="text-muted d-inline-flex align-items-center gap-1.5">
+                  <i class="bi bi-calendar-check text-primary"></i>
+                  <span>Your booking reference will be generated immediately. Show receipt at gym desk.</span>
+                </small>
+              </div>
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- =====================================================================
+           RIGHT COLUMN: STICKY ORDER & PACKAGE SUMMARY
+           ===================================================================== -->
+      <div class="col-lg-5 col-xl-4">
+        <div class="summary-card">
+          
+          <!-- Package Summary Card -->
+          <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden mb-3" style="border: 1px solid #e2e8f0 !important;">
+            <div class="p-3.5 border-bottom bg-light d-flex align-items-center justify-content-between">
+              <div>
+                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle fw-bold text-uppercase px-2.5 py-1 rounded-pill mb-1 d-inline-block" style="font-size: 10px;">
+                  Selected Membership
+                </span>
+                <h5 class="fw-black text-dark mb-0">{{ package.title }}</h5>
+              </div>
+              <span class="badge bg-white text-dark border shadow-sm px-2.5 py-1.5 rounded-pill fw-bold" style="font-size: 11px;">
+                <i class="bi bi-clock-history text-primary me-1"></i>{{ package.duration }}
+              </span>
+            </div>
+
+            <div class="p-3.5 p-lg-4">
+              
+              <!-- Pricing Breakdown -->
+              <div class="p-3 rounded-3 bg-light border mb-3.5">
+                <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
+                  <span>Package Base Price</span>
+                  <span class="text-dark fw-bold">₹{{ package.price }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
+                  <span>Locker &amp; Facility Access</span>
+                  <span class="text-success fw-bold">FREE (₹0)</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2 small text-muted">
+                  <span>Taxes &amp; GST</span>
+                  <span class="text-success fw-bold">Included</span>
+                </div>
+                <hr class="my-2">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <strong class="text-dark">Total Amount:</strong>
+                  <div class="text-end">
+                    <span class="fs-3 fw-black text-primary">₹{{ package.price }}</span>
+                    <small class="text-muted d-block" style="font-size: 11px;">/ {{ package.membership_duration }}</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Package Highlights Checklist -->
+              <h6 class="fw-bold text-dark small text-uppercase mb-2.5" style="letter-spacing: 0.5px; font-size: 11px;">
+                <i class="bi bi-check2-all text-primary me-1"></i>Included Specifications
+              </h6>
+
+              <ul class="list-unstyled d-flex flex-column gap-2 small mb-0">
+                <li class="d-flex align-items-center justify-content-between py-1 border-bottom border-light-subtle">
+                  <span class="text-muted"><i class="bi bi-clock text-primary me-1.5"></i>Access Hours</span>
+                  <strong class="text-dark">{{ package.access_hours }}</strong>
+                </li>
+                <li class="d-flex align-items-center justify-content-between py-1 border-bottom border-light-subtle">
+                  <span class="text-muted"><i class="bi bi-calendar-week text-success me-1.5"></i>Classes / Week</span>
+                  <span class="badge bg-success-subtle text-success fw-bold">{{ package.classes_per_week }}</span>
+                </li>
+                <li class="d-flex align-items-center justify-content-between py-1 border-bottom border-light-subtle">
+                  <span class="text-muted"><i class="bi bi-person-badge text-warning me-1.5"></i>Instructor</span>
+                  <span class="text-dark fw-semibold">{{ package.personal_instructor }}</span>
+                </li>
+                <li class="d-flex align-items-center justify-content-between py-1 border-bottom border-light-subtle">
+                  <span class="text-muted"><i class="bi bi-cup-straw text-info me-1.5"></i>Beverage</span>
+                  <span class="text-dark fw-semibold">{{ package.drinking_package }}</span>
+                </li>
+                <li class="py-1">
+                  <span class="text-muted d-block mb-1"><i class="bi bi-tools text-secondary me-1.5"></i>Equipment Included</span>
+                  <div class="bg-light p-2 rounded-2 border small text-secondary" style="font-size: 11.5px;">
+                    {{ package.instruments }}
+                  </div>
+                </li>
+              </ul>
+
+            </div>
+
+            <!-- Guarantee Footer -->
+            <div class="p-3 bg-light border-top text-center small text-muted" style="font-size: 11px;">
+              <i class="bi bi-shield-check text-success me-1"></i>
+              <span>100% Satisfaction Guarantee &bull; Certified Gym Coaches</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-top py-3 text-center text-muted small mt-auto">
+    <div class="container">
+      <span>Fitness Master &copy; 2026 &bull; Official Gym Membership Operations</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- =========================================================================
+     RAZORPAY CHECKOUT SCRIPT & INTERACTIVE PAYMENT MODE LOGIC
+     ========================================================================= -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const modeOnline = document.getElementById('modeOnline');
+    const modeCash = document.getElementById('modeCash');
+    const cardModeOnline = document.getElementById('cardModeOnline');
+    const cardModeCash = document.getElementById('cardModeCash');
+    const onlineSubmitSection = document.getElementById('onlineSubmitSection');
+    const cashSubmitSection = document.getElementById('cashSubmitSection');
+    const payRazorpayBtn = document.getElementById('payRazorpayBtn');
+    const checkoutForm = document.getElementById('bookingCheckoutForm');
+
+    // Switch payment mode cards visually
+    function updatePaymentModeUI() {
+      if (modeOnline && modeOnline.checked) {
+        cardModeOnline.classList.add('selected');
+        cardModeCash.classList.remove('selected');
+        onlineSubmitSection.classList.remove('d-none');
+        cashSubmitSection.classList.add('d-none');
+      } else if (modeCash && modeCash.checked) {
+        cardModeCash.classList.add('selected');
+        cardModeOnline.classList.remove('selected');
+        cashSubmitSection.classList.remove('d-none');
+        onlineSubmitSection.classList.add('d-none');
+      }
+    }
+
+    if (modeOnline) modeOnline.addEventListener('change', updatePaymentModeUI);
+    if (modeCash) modeCash.addEventListener('change', updatePaymentModeUI);
+
+    // Razorpay Integration
+    if (payRazorpayBtn) {
+      payRazorpayBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        payRazorpayBtn.disabled = true;
+        const originalText = payRazorpayBtn.innerHTML;
+        payRazorpayBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Initializing Razorpay Checkout...';
+
+        try {
+          // 1. Request Razorpay Order ID from backend
+          const formData = new FormData(checkoutForm);
+          formData.append('action', 'create_razorpay_order');
+
+          const response = await fetch("{% url 'package_book' package.id %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+
+          const data = await response.json();
+
+          if (data.status === 'success') {
+            document.getElementById('hiddenOrderId').value = data.order_id;
+            document.getElementById('hiddenRazorpayOrderId').value = data.razorpay_order_id;
+
+            // 2. Open Razorpay Checkout Modal
+            const options = {
+              "key": data.key || "{{ razorpay_key_id }}",
+              "amount": data.amount,
+              "currency": data.currency || "INR",
+              "name": "Fitness Master Health Club",
+              "description": "Enrollment for " + data.package_title,
+              "image": "https://cdn-icons-png.flaticon.com/512/2964/2964514.png",
+              "order_id": data.razorpay_order_id,
+              "prefill": {
+                "name": data.user_name || "{{ user.name|default:user.username }}",
+                "email": data.user_email || "{{ user.email }}"
+              },
+              "theme": {
+                "color": "#0ea5e9"
+              },
+              "handler": function (response) {
+                // Payment Succeeded! Submit verification
+                payRazorpayBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Verifying Payment...';
+                
+                document.getElementById('hiddenRazorpayPaymentId').value = response.razorpay_payment_id;
+                document.getElementById('hiddenRazorpaySignature').value = response.razorpay_signature || '';
+                
+                // Submit form to complete order confirmation
+                checkoutForm.submit();
+              },
+              "modal": {
+                "ondismiss": function() {
+                  payRazorpayBtn.disabled = false;
+                  payRazorpayBtn.innerHTML = originalText;
+                }
+              }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function (resp) {
+              payRazorpayBtn.disabled = false;
+              payRazorpayBtn.innerHTML = originalText;
+              alert("Payment could not be completed: " + (resp.error.description || "Transaction cancelled."));
+            });
+            rzp.open();
+
+          } else {
+            alert("Could not initialize payment: " + (data.message || "Unknown error"));
+            payRazorpayBtn.disabled = false;
+            payRazorpayBtn.innerHTML = originalText;
+          }
+
+        } catch (err) {
+          console.error("Razorpay Error:", err);
+          // Fallback: standard form submit
+          checkoutForm.submit();
+        }
+      });
+    }
+
+  });
+</script>
+{% endblock %}

@@ -18,9 +18,9 @@ class PackagesAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'order_number', 'user', 'package_title', 'package_price',
-        'status', 'payment_status', 'booking_date'
+        'status', 'payment_status', 'payment_method', 'razorpay_payment_id', 'booking_date'
     )
-    list_filter = ('status', 'payment_status', 'booking_date')
-    search_fields = ('order_number', 'user__username', 'user__email', 'package_title')
+    list_filter = ('status', 'payment_status', 'payment_method', 'booking_date')
+    search_fields = ('order_number', 'user__username', 'user__email', 'package_title', 'razorpay_payment_id', 'razorpay_order_id')
     ordering = ('-booking_date',)
 

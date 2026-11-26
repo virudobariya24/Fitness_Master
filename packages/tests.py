@@ -289,3 +289,135 @@ class BookNowButtonVisibilityAndOrderFlowTests(TestCase):
         self.assertContains(resp, "ORD-20261125-3333")
         self.assertContains(resp, "CrossFit Champion")
         self.assertContains(resp, "₹899.0")
+
+    def test_package_book_get_renders_booking_form_with_payment_modes(self):
+        """GET /packages/<pk>/book/ renders dedicated booking form with Online & Cash payment options"""
+        session = self.client.session
+        session['is_user_authenticated'] = True
+        session['user_id'] = self.user.id
+        session['user_username'] = self.user.username
+        session.save()
+
+        url = reverse('package_book', kwargs={'pk': self.package.pk})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Confirm Package Booking")
+        self.assertContains(resp, "CrossFit Champion")
+        self.assertContains(resp, "Online Payment (Razorpay Payment Gateway)")
+        self.assertContains(resp, "Cash on Arrival (Pay at Gym Reception Desk)")
+        self.assertContains(resp, "rzp_test_RRohlnOxODtIQJ")
+
+    def test_package_book_cash_payment_mode(self):
+        """Booking with Cash on Arrival payment mode creates Confirmed order with Pending payment"""
+        session = self.client.session
+        session['is_user_authenticated'] = True
+        session['user_id'] = self.user.id
+        session['user_username'] = self.user.username
+        session.save()
+
+        url = reverse('package_book', kwargs={'pk': self.package.pk})
+        resp = self.client.post(url, {
+            'payment_mode': 'cash',
+            'notes': 'Will pay cash at reception tomorrow'
+        })
+        self.assertEqual(resp.status_code, 302)
+
+        order = Order.objects.filter(user=self.user, package=self.package, payment_method='Cash (Pay at Gym Desk)').first()
+        self.assertIsNotNone(order)
+        self.assertEqual(order.status, 'Confirmed')
+        self.assertEqual(order.payment_status, 'Pending')
+        self.assertRedirects(resp, reverse('user_order_detail', kwargs={'order_id': order.id}))
+
+    def test_package_book_razorpay_create_order_ajax(self):
+        """AJAX request to create Razorpay order returns JSON with razorpay_order_id and creates pending order"""
+        session = self.client.session
+        session['is_user_authenticated'] = True
+        session['user_id'] = self.user.id
+        session['user_username'] = self.user.username
+        session.save()
+
+        url = reverse('package_book', kwargs={'pk': self.package.pk})
+        resp = self.client.post(url, {
+            'action': 'create_razorpay_order',
+            'notes': 'Online payment test'
+        }, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data['status'], 'success')
+        self.assertIn('razorpay_order_id', data)
+        self.assertEqual(data['amount'], 89900)
+        self.assertEqual(data['key'], 'rzp_test_RRohlnOxODtIQJ')
+
+        # Pending order exists in DB
+        order = Order.objects.filter(pk=data['order_id']).first()
+        self.assertIsNotNone(order)
+        self.assertEqual(order.status, 'Pending')
+        self.assertEqual(order.payment_status, 'Pending')
+        self.assertEqual(order.payment_method, 'Online (Razorpay)')
+
+    def test_razorpay_verify_payment_view_updates_order_to_paid(self):
+        """Payment verification endpoint confirms order and marks payment as Paid"""
+        order = Order.objects.create(
+            user=self.user,
+            package=self.package,
+            order_number="ORD-20261126-RP999",
+            package_title=self.package.title,
+            package_price=self.package.price,
+            package_duration=self.package.duration,
+            status='Pending',
+            payment_status='Pending',
+            payment_method='Online (Razorpay)',
+            razorpay_order_id='order_test_999'
+        )
+
+        session = self.client.session
+        session['is_user_authenticated'] = True
+        session['user_id'] = self.user.id
+        session['user_username'] = self.user.username
+        session.save()
+
+        url = reverse('razorpay_verify_payment')
+        resp = self.client.post(url, {
+            'order_id': order.id,
+            'razorpay_order_id': 'order_test_999',
+            'razorpay_payment_id': 'pay_test_999888',
+            'razorpay_signature': 'mock_signature_abc'
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data['status'], 'success')
+
+        order.refresh_from_db()
+        self.assertEqual(order.status, 'Confirmed')
+        self.assertEqual(order.payment_status, 'Paid')
+        self.assertEqual(order.razorpay_payment_id, 'pay_test_999888')
+
+    def test_booking_confirmation_page_displays_summary(self):
+        """Booking confirmation page displays complete order summary and details"""
+        order = Order.objects.create(
+            user=self.user,
+            package=self.package,
+            order_number="ORD-20261126-CONFIRM",
+            package_title=self.package.title,
+            package_price=self.package.price,
+            package_duration=self.package.duration,
+            status='Confirmed',
+            payment_status='Paid',
+            payment_method='Online (Razorpay)',
+            razorpay_payment_id='pay_live_confirm_123'
+        )
+
+        session = self.client.session
+        session['is_user_authenticated'] = True
+        session['user_id'] = self.user.id
+        session['user_username'] = self.user.username
+        session.save()
+
+        url = reverse('booking_confirmation', kwargs={'order_id': order.id})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "ORD-20261126-CONFIRM")
+        self.assertContains(resp, "CrossFit Champion")
+        self.assertContains(resp, "Online (Razorpay)")
+        self.assertContains(resp, "pay_live_confirm_123")
